@@ -7,56 +7,62 @@ import { he } from "date-fns/locale";
 import { Calendar, AlertCircle } from "lucide-react";
 
 const priorityColors = {
-  "נמוכה": "bg-blue-100 text-blue-800",
-  "בינונית": "bg-yellow-100 text-yellow-800",
-  "גבוהה": "bg-orange-100 text-orange-800",
-  "דחוף": "bg-red-100 text-red-800"
+  "נמוכה": "bg-blue-500/15 text-blue-400",
+  "בינונית": "bg-yellow-500/15 text-yellow-400",
+  "גבוהה": "bg-orange-500/15 text-orange-400",
+  "דחוף": "bg-red-500/15 text-red-400"
 };
 
 export default function UpcomingTasks({ tasks, isLoading }) {
   return (
-    <Card className="shadow-lg border-0 bg-[#1a1d27]">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-bold text-slate-100 flex items-center gap-2">
+    <div className="rounded-xl animate-in" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="p-6 pb-4">
+        <h3 className="text-lg font-bold flex items-center gap-2" style={{ color: 'var(--argaman)' }}>
           <Calendar className="w-5 h-5" />
           משימות קרובות
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
+      </div>
+      <div className="px-6 pb-6">
         <div className="space-y-4">
           {isLoading ? (
             Array(3).fill(0).map((_, i) => (
-              <div key={i} className="p-3 border border-[#2d3348] rounded-lg">
-                <Skeleton className="h-4 w-32 mb-2 bg-[#2d3348]" />
-                <Skeleton className="h-3 w-20 bg-[#2d3348]" />
+              <div key={i} className="p-3 rounded-lg" style={{ border: '1px solid var(--dark-border)' }}>
+                <Skeleton className="h-4 w-32 mb-2" style={{ background: 'var(--dark-border)' }} />
+                <Skeleton className="h-3 w-20" style={{ background: 'var(--dark-border)' }} />
               </div>
             ))
           ) : tasks.length === 0 ? (
-            <div className="text-center text-slate-400 py-4">
+            <div className="text-center py-4" style={{ color: 'var(--text-secondary)' }}>
               אין משימות קרובות
             </div>
           ) : (
             tasks.map((task) => (
-              <div key={task.id} className="p-3 border border-[#2d3348] rounded-lg hover:bg-[#252836] transition-colors">
+              <div
+                key={task.id}
+                className="p-3 rounded-lg transition-all duration-200"
+                style={{ border: '1px solid var(--dark-border)' }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--argaman-bg)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="text-right flex-1">
-                    <p className="font-medium text-slate-100 text-sm mb-1">{task.title}</p>
-                    <p className="text-xs text-slate-400 mb-2">
+                    <p className="font-medium text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{task.title}</p>
+                    <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
                       יעד: {format(new Date(task.due_date), 'dd/MM/yyyy', { locale: he })}
                     </p>
-                    <Badge className={`text-xs ${priorityColors[task.priority] || 'bg-gray-100 text-gray-800'}`}>
+                    <Badge className={`text-xs ${priorityColors[task.priority] || 'bg-gray-500/15 text-gray-400'}`}>
                       {task.priority}
                     </Badge>
                   </div>
                   {task.priority === 'דחוף' && (
-                    <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-1" />
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-1" style={{ color: 'var(--danger)' }} />
                   )}
                 </div>
               </div>
             ))
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

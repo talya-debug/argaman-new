@@ -58,11 +58,11 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-4 md:p-8 bg-[#0f1117] min-h-screen">
+    <div className="p-4 md:p-8 min-h-screen animate-in" style={{ background: 'var(--dark)' }}>
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-100 mb-2">לוח בקרה</h1>
-          <p className="text-slate-400">סקירה כוללת של המכירות והפרויקטים</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>לוח בקרה</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>סקירה כוללת של המכירות והפרויקטים</p>
         </div>
 
         <DashboardStats stats={stats} isLoading={isLoading} />

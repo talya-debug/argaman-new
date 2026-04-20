@@ -14,15 +14,15 @@ export default function TaskFilters({ onFilterChange, users = [], creators = [] 
   };
 
   return (
-    <div className="p-4 mb-6 bg-[#1a1d27] rounded-xl shadow-md border border-[#2d3348]" dir="rtl">
+    <div className="p-4 mb-6 rounded-xl" dir="rtl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-400 flex items-center gap-2">
+                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
                     <Filter className="w-4 h-4" />
                     סינון לפי אחראי
                 </label>
                 <Select onValueChange={(value) => handleFilter('assigned_to', value)}>
-                    <SelectTrigger className="bg-[#252836] border-[#2d3348] text-slate-200">
+                    <SelectTrigger style={{ background: 'var(--dark)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }}>
                         <SelectValue placeholder="כל האחראים" />
                     </SelectTrigger>
                     <SelectContent>
@@ -32,12 +32,12 @@ export default function TaskFilters({ onFilterChange, users = [], creators = [] 
                 </Select>
             </div>
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-400 flex items-center gap-2">
+                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
                     <Filter className="w-4 h-4" />
                     סינון לפי נותן המשימה
                 </label>
                 <Select onValueChange={(value) => handleFilter('creator', value)}>
-                    <SelectTrigger className="bg-[#252836] border-[#2d3348] text-slate-200">
+                    <SelectTrigger style={{ background: 'var(--dark)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }}>
                         <SelectValue placeholder="כל היוצרים" />
                     </SelectTrigger>
                     <SelectContent>

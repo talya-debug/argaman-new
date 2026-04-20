@@ -22,26 +22,33 @@ const statusColors = {
 };
 
 const ProjectCard = ({ project, onClick }) => (
-    <Card
-        className="shadow-lg border border-[#2d3348] bg-[#1a1d27] hover:shadow-xl hover:-translate-y-1 transition-all duration-200 cursor-pointer"
+    <div
+        className="rounded-xl cursor-pointer transition-all duration-300 hover:-translate-y-1"
+        style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
         onClick={() => onClick(project.id)}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = 'var(--argaman-border)';
+          e.currentTarget.style.boxShadow = '0 4px 16px rgba(196, 43, 43, 0.15)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = 'var(--dark-border)';
+          e.currentTarget.style.boxShadow = 'none';
+        }}
     >
-        <CardHeader>
-            <div className="flex justify-between items-start">
-                <CardTitle className="text-lg font-bold text-slate-100">{project.name}</CardTitle>
-                <FolderOpen className="w-5 h-5 text-blue-400" />
+        <div className="p-6">
+            <div className="flex justify-between items-start mb-2">
+                <h3 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{project.name}</h3>
+                <FolderOpen className="w-5 h-5" style={{ color: 'var(--argaman-light)' }} />
             </div>
-            <p className="text-sm text-slate-400">{project.client_name}</p>
-        </CardHeader>
-        <CardContent>
+            <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>{project.client_name}</p>
             <div className="flex justify-between items-center text-sm">
                 <Badge className={`${statusColors[project.status] || 'bg-gray-500/20 text-gray-400'} border`}>{project.status}</Badge>
-                <span className="text-slate-500">
+                <span style={{ color: 'var(--text-muted)' }}>
                     התחלה: {project.start_date ? format(new Date(project.start_date), 'dd/MM/yy', { locale: he }) : 'N/A'}
                 </span>
             </div>
-        </CardContent>
-    </Card>
+        </div>
+    </div>
 );
 
 export default function Projects() {
@@ -114,50 +121,62 @@ export default function Projects() {
   const archivedProjects = projects.filter(p => p.is_archived);
 
   return (
-    <div className="p-4 md:p-8 bg-[#0f1117] min-h-screen">
+    <div className="p-4 md:p-8 min-h-screen animate-in" style={{ background: 'var(--dark)' }}>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-100">ניהול פרויקטים</h1>
-            <p className="text-slate-400 mt-1">מעקב וניהול כל הפרויקטים הפעילים וההיסטוריים</p>
+            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>ניהול פרויקטים</h1>
+            <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>מעקב וניהול כל הפרויקטים הפעילים וההיסטוריים</p>
           </div>
-          <Button onClick={handleNewProject} className="bg-red-600 hover:bg-red-700 shadow-lg">
-            <Plus className="w-4 h-4 ml-2" />
+          <button onClick={handleNewProject} className="btn btn-primary">
+            <Plus className="w-4 h-4" />
             פרויקט חדש מהצעה מאושרת
-          </Button>
+          </button>
         </div>
 
         <Tabs defaultValue="active">
-            <TabsList className="grid w-full grid-cols-2 bg-[#1a1d27]">
-                <TabsTrigger value="active" className="data-[state=active]:bg-[#252836] data-[state=active]:text-slate-100">פרויקטים פעילים ({activeProjects.length})</TabsTrigger>
-                <TabsTrigger value="archived" className="data-[state=active]:bg-[#252836] data-[state=active]:text-slate-100">ארכיון ({archivedProjects.length})</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2" style={{ background: 'var(--dark-card)' }}>
+                <TabsTrigger value="active" className="data-[state=active]:text-white" style={{ '--tw-bg-opacity': 1 }}>פרויקטים פעילים ({activeProjects.length})</TabsTrigger>
+                <TabsTrigger value="archived" className="data-[state=active]:text-white">ארכיון ({archivedProjects.length})</TabsTrigger>
             </TabsList>
             <TabsContent value="active" className="mt-6">
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                      {isLoading ? (
                         Array.from({ length: 6 }).map((_, index) => (
-                            <Card key={index} className="shadow-lg border-0 p-4 space-y-4 bg-[#1a1d27]"><Skeleton className="h-6 w-3/4 bg-[#2d3348]" /><Skeleton className="h-4 w-1/2 bg-[#2d3348]" /><Skeleton className="h-5 w-1/4 bg-[#2d3348]" /></Card>
+                            <div key={index} className="rounded-xl p-4 space-y-4" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                              <Skeleton className="h-6 w-3/4" style={{ background: 'var(--dark-border)' }} />
+                              <Skeleton className="h-4 w-1/2" style={{ background: 'var(--dark-border)' }} />
+                              <Skeleton className="h-5 w-1/4" style={{ background: 'var(--dark-border)' }} />
+                            </div>
                         ))
                     ) : (
                         activeProjects.map(project => <ProjectCard key={project.id} project={project} onClick={handleProjectClick} />)
                     )}
                  </div>
                  { !isLoading && activeProjects.length === 0 && (
-                     <Card className="shadow-lg border-0 bg-[#1a1d27]"><CardContent className="p-12 text-center"><p className="text-slate-400">אין פרויקטים פעילים.</p></CardContent></Card>
+                     <div className="rounded-xl p-12 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                       <p style={{ color: 'var(--text-secondary)' }}>אין פרויקטים פעילים.</p>
+                     </div>
                  )}
             </TabsContent>
             <TabsContent value="archived" className="mt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                     {isLoading ? (
                         Array.from({ length: 6 }).map((_, index) => (
-                            <Card key={index} className="shadow-lg border-0 p-4 space-y-4 bg-[#1a1d27]"><Skeleton className="h-6 w-3/4 bg-[#2d3348]" /><Skeleton className="h-4 w-1/2 bg-[#2d3348]" /><Skeleton className="h-5 w-1/4 bg-[#2d3348]" /></Card>
+                            <div key={index} className="rounded-xl p-4 space-y-4" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                              <Skeleton className="h-6 w-3/4" style={{ background: 'var(--dark-border)' }} />
+                              <Skeleton className="h-4 w-1/2" style={{ background: 'var(--dark-border)' }} />
+                              <Skeleton className="h-5 w-1/4" style={{ background: 'var(--dark-border)' }} />
+                            </div>
                         ))
                     ) : (
                         archivedProjects.map(project => <ProjectCard key={project.id} project={project} onClick={handleProjectClick} />)
                     )}
                  </div>
                  { !isLoading && archivedProjects.length === 0 && (
-                     <Card className="shadow-lg border-0 bg-[#1a1d27]"><CardContent className="p-12 text-center"><p className="text-slate-400">אין פרויקטים בארכיון.</p></CardContent></Card>
+                     <div className="rounded-xl p-12 text-center" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                       <p style={{ color: 'var(--text-secondary)' }}>אין פרויקטים בארכיון.</p>
+                     </div>
                  )}
             </TabsContent>
         </Tabs>

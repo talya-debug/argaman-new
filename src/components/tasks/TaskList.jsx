@@ -20,11 +20,11 @@ import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 
 const statusColors = {
-  "חדש": "bg-blue-100 text-blue-800",
-  "בתהליך": "bg-yellow-100 text-yellow-800",
-  "בבדיקה": "bg-purple-100 text-purple-800",
-  "הושלם": "bg-green-100 text-green-800",
-  "בוטל": "bg-red-100 text-red-800"
+  "חדש": "bg-blue-500/15 text-blue-400",
+  "בתהליך": "bg-yellow-500/15 text-yellow-400",
+  "בבדיקה": "bg-purple-500/15 text-purple-400",
+  "הושלם": "bg-green-500/15 text-green-400",
+  "בוטל": "bg-red-500/15 text-red-400"
 };
 
 const priorityColors = {
@@ -102,7 +102,7 @@ function EditableCell({ value, task, fieldName, options = null, onUpdate }) {
              try {
                 return (
                     <div className="flex items-center gap-1.5">
-                        <Calendar className="w-4 h-4 text-slate-500" />
+                        <Calendar className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
                         <span>{format(new Date(value), 'dd/MM/yy', { locale: he })}</span>
                     </div>
                 );
@@ -112,7 +112,7 @@ function EditableCell({ value, task, fieldName, options = null, onUpdate }) {
         }
         if (fieldName === 'due_date' && !value) {
             return (
-                 <div className="flex items-center gap-1.5 text-slate-500">
+                 <div className="flex items-center gap-1.5" style={{ color: 'var(--text-muted)' }}>
                     <Calendar className="w-4 h-4" />
                     <span>לא הוגדר</span>
                 </div>
@@ -120,7 +120,7 @@ function EditableCell({ value, task, fieldName, options = null, onUpdate }) {
         }
         if (fieldName === 'status') {
             return (
-                <Badge className={`${statusColors[value] || 'bg-gray-100 text-gray-800'} hover:opacity-80 text-xs`}>
+                <Badge className={`${statusColors[value] || 'bg-gray-500/15 text-gray-400'} hover:opacity-80 text-xs`}>
                     {value}
                 </Badge>
             );
@@ -129,15 +129,25 @@ function EditableCell({ value, task, fieldName, options = null, onUpdate }) {
     };
 
     if (!isEditing) {
-        return <div className="cursor-pointer hover:bg-[#252836] p-1 rounded text-slate-200" onClick={() => setIsEditing(true)}>{displayValue()}</div>;
+        return (
+          <div
+            className="cursor-pointer p-1 rounded transition-colors"
+            style={{ color: 'var(--text-primary)' }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--argaman-bg)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = ''}
+            onClick={() => setIsEditing(true)}
+          >
+            {displayValue()}
+          </div>
+        );
     }
 
-    if (isLoading) return <Skeleton className="h-6 w-24 bg-[#2d3348]" />;
+    if (isLoading) return <Skeleton className="h-6 w-24" style={{ background: 'var(--dark-border)' }} />;
 
     if (options) {
         return (
             <Select value={editValue} onValueChange={setEditValue} onOpenChange={(open) => !open && handleSave()}>
-                <SelectTrigger className="h-8 text-xs bg-[#252836] border-[#2d3348] text-slate-200"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="h-8 text-xs" style={{ background: 'var(--dark)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }}><SelectValue /></SelectTrigger>
                 <SelectContent>
                     {options.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
                 </SelectContent>
@@ -151,7 +161,8 @@ function EditableCell({ value, task, fieldName, options = null, onUpdate }) {
             onChange={(e) => setEditValue(e.target.value)}
             onBlur={handleSave}
             onKeyDown={handleKeyDown}
-            className="h-8 text-xs bg-[#252836] border-[#2d3348] text-slate-100"
+            className="h-8 text-xs"
+            style={{ background: 'var(--dark)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }}
             type={fieldName === 'due_date' ? 'date' : 'text'}
             autoFocus
         />
@@ -163,27 +174,30 @@ function TaskCard({ task, onEdit, onUpdate }) {
     const priorityClass = priorityColors[task.priority] || '';
 
     return (
-        <Card className="mb-3 shadow-md hover:shadow-lg transition-shadow bg-[#1a1d27] border border-[#2d3348]">
-            <CardContent className="p-4">
+        <div className="mb-3 rounded-xl transition-all duration-200" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+            <div className="p-4">
                 <div className="space-y-3">
                     {/* Header */}
                     <div className="flex justify-between items-start">
                         <div className="flex-1">
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <h3 className="font-bold text-slate-100 cursor-pointer hover:text-blue-400 text-base">
+                                    <h3 className="font-bold cursor-pointer text-base transition-colors" style={{ color: 'var(--text-primary)' }}
+                                        onMouseEnter={(e) => e.target.style.color = 'var(--argaman-light)'}
+                                        onMouseLeave={(e) => e.target.style.color = 'var(--text-primary)'}
+                                    >
                                         {task.title}
                                     </h3>
                                 </DialogTrigger>
-                                <DialogContent className="max-w-2xl bg-[#1a1d27] border-[#2d3348] max-h-[90vh] overflow-y-auto">
-                                    <DialogHeader><DialogTitle className="text-slate-100">{task.title}</DialogTitle></DialogHeader>
+                                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)' }}>
+                                    <DialogHeader><DialogTitle style={{ color: 'var(--argaman)' }}>{task.title}</DialogTitle></DialogHeader>
                                     <div className="py-4">
-                                        {task.description && <p className='mb-4 text-slate-300'>{task.description}</p>}
+                                        {task.description && <p className='mb-4' style={{ color: 'var(--text-secondary)' }}>{task.description}</p>}
                                         <TaskActivityLog taskId={task.id} />
                                     </div>
                                 </DialogContent>
                             </Dialog>
-                            <p className="text-sm text-slate-400 mt-1">{task.client_name || 'לא שויך'}</p>
+                            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>{task.client_name || 'לא שויך'}</p>
                         </div>
                         <div className="flex flex-col items-end gap-1.5">
                             <EditableCell value={task.status} task={task} fieldName="status" options={Object.keys(statusColors)} onUpdate={onUpdate} />
@@ -198,41 +212,41 @@ function TaskCard({ task, onEdit, onUpdate }) {
                     {/* Details */}
                     <div className="grid grid-cols-2 gap-3 text-sm">
                         <div className="flex items-center gap-2">
-                            <User className="w-4 h-4 text-slate-500" />
-                            <span className="text-slate-500">נותן: </span>
+                            <User className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+                            <span style={{ color: 'var(--text-muted)' }}>נותן: </span>
                             <EditableCell value={task.creator} task={task} fieldName="creator" onUpdate={onUpdate} />
                         </div>
                         <div className="flex items-center gap-2">
-                            <User className="w-4 h-4 text-slate-500" />
-                            <span className="text-slate-500">אחראי: </span>
+                            <User className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+                            <span style={{ color: 'var(--text-muted)' }}>אחראי: </span>
                             <EditableCell value={task.assigned_to} task={task} fieldName="assigned_to" options={userOptions} onUpdate={onUpdate} />
                         </div>
                     </div>
 
                     <div className="flex items-center gap-2 text-sm">
-                        <Clock className="w-4 h-4 text-slate-500" />
-                        <span className="text-slate-500">יעד: </span>
+                        <Clock className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+                        <span style={{ color: 'var(--text-muted)' }}>יעד: </span>
                         <EditableCell value={task.due_date} task={task} fieldName="due_date" onUpdate={onUpdate} />
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-2 pt-2 border-t border-[#2d3348]">
+                    <div className="flex gap-2 pt-2" style={{ borderTop: '1px solid var(--dark-border)' }}>
                         {task.project_id && (
                             <Link to={createPageUrl(`ProjectDetails?id=${task.project_id}`)} className="flex-1">
-                                <Button variant="outline" size="sm" className="w-full text-green-400 border-[#2d3348] hover:bg-green-500/10">
+                                <Button variant="outline" size="sm" className="w-full text-green-400 hover:bg-green-500/10" style={{ borderColor: 'var(--dark-border)' }}>
                                     <LinkIcon className="w-4 h-4 ml-1" />
                                     קישור לפרויקט
                                 </Button>
                             </Link>
                         )}
-                        <Button variant="outline" size="sm" onClick={() => onEdit(task)} className="flex-1 border-[#2d3348] text-slate-300 hover:bg-[#252836]">
+                        <Button variant="outline" size="sm" onClick={() => onEdit(task)} className="flex-1" style={{ borderColor: 'var(--dark-border)', color: 'var(--text-secondary)' }}>
                             <Edit className="w-4 h-4 ml-1" />
                             ערוך
                         </Button>
                     </div>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }
 
@@ -241,58 +255,64 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
 
     if (isLoading) {
         return (
-             <Card className="bg-[#1a1d27] border-0">
-                <CardHeader><Skeleton className="h-6 w-1/3 bg-[#2d3348]" /></CardHeader>
-                <CardContent><Skeleton className="h-24 w-full bg-[#2d3348]" /></CardContent>
-             </Card>
+             <div className="rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+                <Skeleton className="h-6 w-1/3 mb-4" style={{ background: 'var(--dark-border)' }} />
+                <Skeleton className="h-24 w-full" style={{ background: 'var(--dark-border)' }} />
+             </div>
         )
     }
 
     return (
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-            <Card className="shadow-lg border-0 bg-[#1a1d27]">
+            <div className="rounded-xl overflow-hidden" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
                 <CollapsibleTrigger asChild>
-                    <CardHeader className="cursor-pointer hover:bg-[#252836]">
-                        <CardTitle className="flex items-center gap-3 text-lg md:text-xl text-slate-100">
+                    <div className="cursor-pointer p-6 transition-colors" onMouseEnter={(e) => e.currentTarget.style.background = 'var(--argaman-bg)'} onMouseLeave={(e) => e.currentTarget.style.background = ''}>
+                        <div className="flex items-center gap-3 text-lg md:text-xl" style={{ color: 'var(--text-primary)' }}>
                             {isOpen ? <ChevronDown className="w-5 h-5 md:w-6 md:h-6" /> : <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />}
                             {icon || null}
-                            <span className="flex-1">{title}</span>
-                            <span className="text-slate-500 font-medium text-base md:text-lg">({tasks.length})</span>
-                        </CardTitle>
-                    </CardHeader>
+                            <span className="flex-1 font-bold">{title}</span>
+                            <span className="font-medium text-base md:text-lg" style={{ color: 'var(--text-muted)' }}>({tasks.length})</span>
+                        </div>
+                    </div>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
-                    <CardContent className="p-0">
+                    <div>
                         {/* Desktop Table View */}
                         <div className="hidden md:block overflow-x-auto">
                             <Table dir="rtl">
                                 <TableHeader>
-                                    <TableRow className="bg-[#0f1117] border-b border-[#2d3348]">
-                                        <TableHead className="text-right font-semibold text-slate-300">שם הלקוח</TableHead>
-                                        <TableHead className="text-right font-semibold text-slate-300">פירוט המשימה</TableHead>
-                                        <TableHead className="text-right font-semibold text-slate-300">נותן המשימה</TableHead>
-                                        <TableHead className="text-right font-semibold text-slate-300">אחראי</TableHead>
-                                        <TableHead className="text-right font-semibold text-slate-300">תאריך יעד</TableHead>
-                                        <TableHead className="text-right font-semibold text-slate-300">סטטוס</TableHead>
-                                        <TableHead className="text-center font-semibold text-slate-300">פעולות</TableHead>
+                                    <TableRow style={{ background: 'rgba(196, 43, 43, 0.05)', borderBottom: '1px solid var(--dark-border)' }}>
+                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>שם הלקוח</TableHead>
+                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>פירוט המשימה</TableHead>
+                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>נותן המשימה</TableHead>
+                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>אחראי</TableHead>
+                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>תאריך יעד</TableHead>
+                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>סטטוס</TableHead>
+                                        <TableHead className="text-center font-semibold" style={{ color: 'var(--argaman)' }}>פעולות</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {tasks.map((task, index) => (
                                         <TableRow
                                             key={task.id}
-                                            className={`${index % 2 === 0 ? 'bg-[#1a1d27]' : 'bg-[#151821]'} hover:bg-[#252836] transition-colors border-b border-[#2d3348]`}
+                                            className="transition-colors"
+                                            style={{
+                                              background: index % 2 === 0 ? 'var(--dark-card)' : 'rgba(0,0,0,0.15)',
+                                              borderBottom: '1px solid var(--dark-border)'
+                                            }}
+                                            onMouseEnter={(e) => { for (const td of e.currentTarget.querySelectorAll('td')) td.style.background = 'var(--argaman-bg)'; }}
+                                            onMouseLeave={(e) => { for (const td of e.currentTarget.querySelectorAll('td')) td.style.background = ''; }}
                                         >
-                                            <TableCell className="font-medium text-slate-100">{task.client_name || 'לא שויך'}</TableCell>
+                                            <TableCell className="font-medium" style={{ color: 'var(--text-primary)' }}>{task.client_name || 'לא שויך'}</TableCell>
                                             <TableCell className="max-w-xs">
                                                  <Dialog>
                                                     <DialogTrigger asChild>
-                                                        <span className="cursor-pointer hover:underline text-blue-400">{task.title}</span>
+                                                        <span className="cursor-pointer hover:underline" style={{ color: 'var(--argaman-light)' }}>{task.title}</span>
                                                     </DialogTrigger>
-                                                    <DialogContent className="max-w-2xl bg-[#1a1d27] border-[#2d3348]">
-                                                        <DialogHeader><DialogTitle className="text-slate-100">{task.title}</DialogTitle></DialogHeader>
+                                                    <DialogContent className="max-w-2xl" style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)' }}>
+                                                        <DialogHeader><DialogTitle style={{ color: 'var(--argaman)' }}>{task.title}</DialogTitle></DialogHeader>
                                                         <div className="py-4">
-                                                            {task.description && <p className='mb-4 text-slate-300'>{task.description}</p>}
+                                                            {task.description && <p className='mb-4' style={{ color: 'var(--text-secondary)' }}>{task.description}</p>}
                                                             <TaskActivityLog taskId={task.id} />
                                                         </div>
                                                     </DialogContent>
@@ -311,7 +331,7 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                                                             </Button>
                                                         </Link>
                                                     )}
-                                                    <Button variant="ghost" size="icon" onClick={() => onEdit(task)} className="text-slate-300 hover:bg-[#252836]">
+                                                    <Button variant="ghost" size="icon" onClick={() => onEdit(task)} style={{ color: 'var(--text-secondary)' }}>
                                                         <Edit className="w-4 h-4" />
                                                     </Button>
                                                 </div>
@@ -320,7 +340,7 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                                     ))}
                                     {tasks.length === 0 && (
                                         <TableRow>
-                                            <TableCell colSpan={7} className="text-center text-slate-500 py-8">אין משימות להצגה בקטגוריה זו.</TableCell>
+                                            <TableCell colSpan={7} className="text-center py-8" style={{ color: 'var(--text-muted)' }}>אין משימות להצגה בקטגוריה זו.</TableCell>
                                         </TableRow>
                                     )}
                                 </TableBody>
@@ -330,16 +350,16 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                         {/* Mobile Card View */}
                         <div className="md:hidden p-3">
                             {tasks.length === 0 ? (
-                                <p className="text-center text-slate-500 py-8">אין משימות להצגה בקטגוריה זו.</p>
+                                <p className="text-center py-8" style={{ color: 'var(--text-muted)' }}>אין משימות להצגה בקטגוריה זו.</p>
                             ) : (
                                 tasks.map((task) => (
                                     <TaskCard key={task.id} task={task} onEdit={onEdit} onUpdate={onUpdate} />
                                 ))
                             )}
                         </div>
-                    </CardContent>
+                    </div>
                 </CollapsibleContent>
-            </Card>
+            </div>
         </Collapsible>
     );
 }

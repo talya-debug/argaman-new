@@ -3,21 +3,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { BarChart3 } from "lucide-react";
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#84cc16'];
+const COLORS = ['#c42b2b', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#84cc16'];
 
 export default function StatusChart({ data, isLoading }) {
   return (
-    <Card className="shadow-lg border-0 bg-[#1a1d27]">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-bold text-slate-100 flex items-center gap-2">
+    <div className="rounded-xl animate-in" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+      <div className="p-6 pb-4">
+        <h3 className="text-lg font-bold flex items-center gap-2" style={{ color: 'var(--argaman)' }}>
           <BarChart3 className="w-5 h-5" />
           לידים לפי סטטוס
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
+      </div>
+      <div className="px-6 pb-6">
         {isLoading || data.length === 0 ? (
           <div className="h-64 flex items-center justify-center">
-            <div className="text-slate-400">טוען נתונים...</div>
+            <div style={{ color: 'var(--text-secondary)' }}>טוען נתונים...</div>
           </div>
         ) : (
           <div className="h-64">
@@ -38,13 +38,13 @@ export default function StatusChart({ data, isLoading }) {
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#1a1d27', border: '1px solid #2d3348', color: '#f1f5f9' }}
+                  contentStyle={{ backgroundColor: 'var(--dark-card)', border: '1px solid var(--dark-border)', color: 'var(--text-primary)', borderRadius: '8px' }}
                 />
               </PieChart>
             </ResponsiveContainer>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

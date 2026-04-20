@@ -53,24 +53,20 @@ export default function Leads() {
   };
 
   const createProjectFromLead = async (lead) => {
-    // Check if already creating project for this lead
     if (projectCreationInProgress.has(lead.id)) {
         console.log(`Project creation already in progress for lead ${lead.id}`);
         return;
     }
 
-    // Check if global lock is active
     if (isCreatingProject) {
         console.log("Project creation already in progress globally");
         return;
     }
 
     try {
-      // Set both locks
       setIsCreatingProject(true);
       setProjectCreationInProgress(prev => new Set([...prev, lead.id]));
 
-      // Check if project already exists for this lead
       const existingProjects = await Project.filter({ lead_id: lead.id });
       if (existingProjects && existingProjects.length > 0) {
         const existingProject = existingProjects[0];
@@ -88,7 +84,6 @@ export default function Leads() {
 
       const quoteToApprove = relevantQuotes.sort((a, b) => new Date(b.updated_date) - new Date(a.updated_date))[0];
 
-      // Fetch ALL quote lines with proper order preservation
       const quoteLines = await QuoteLine.filter({ quote_id: quoteToApprove.id }, 'order_index', 2000);
 
       const newProject = await Project.create({
@@ -105,7 +100,6 @@ export default function Leads() {
         deduction_lab_tests_percentage: 0
       });
 
-      // Ensure order_index is preserved on all quote lines for the project
       for (let i = 0; i < quoteLines.length; i++) {
         const line = quoteLines[i];
         if (line.order_index === undefined || line.order_index === null) {
@@ -328,48 +322,45 @@ export default function Leads() {
   };
 
   return (
-    <div className="p-4 md:p-8 bg-[#0f1117] min-h-screen">
+    <div className="p-4 md:p-8 min-h-screen animate-in" style={{ background: 'var(--dark)' }}>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-100">ניהול לידים</h1>
-            <p className="text-slate-400 mt-1">מעקב וניהול כל הלידים במערכת</p>
+            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>ניהול לידים</h1>
+            <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>מעקב וניהול כל הלידים במערכת</p>
           </div>
           <div className="flex gap-3">
-            <Button
-              variant="outline"
+            <button
               onClick={refreshLeads}
               disabled={isRefreshing}
-              className="shadow-lg border-[#2d3348] text-slate-300 hover:bg-[#252836]"
+              className="btn btn-secondary"
             >
-              <RefreshCw className={`w-4 h-4 ml-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
               רענן
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => { setEditingLead(null); setShowForm(true); }}
-              className="bg-red-600 hover:bg-red-700 shadow-lg"
+              className="btn btn-primary"
             >
-              <Plus className="w-4 h-4 ml-2" />
+              <Plus className="w-4 h-4" />
               ליד חדש
-            </Button>
+            </button>
           </div>
         </div>
 
         <div className="flex gap-2 mb-4">
-          <Button
-            variant={activeView === 'active' ? 'default' : 'outline'}
+          <button
             onClick={() => setActiveView('active')}
-            className={activeView === 'active' ? 'bg-blue-600 hover:bg-blue-700' : 'border-[#2d3348] text-slate-300 hover:bg-[#252836]'}
+            className={`btn btn-sm ${activeView === 'active' ? 'btn-primary' : 'btn-secondary'}`}
           >
             לידים פעילים
-          </Button>
-          <Button
-            variant={activeView === 'archive' ? 'default' : 'outline'}
+          </button>
+          <button
             onClick={() => setActiveView('archive')}
-            className={activeView === 'archive' ? 'bg-slate-600 hover:bg-slate-700' : 'border-[#2d3348] text-slate-300 hover:bg-[#252836]'}
+            className={`btn btn-sm ${activeView === 'archive' ? 'btn-primary' : 'btn-secondary'}`}
           >
             ארכיון
-          </Button>
+          </button>
         </div>
 
         <LeadFilters onFilterChange={handleFilterChange} leads={leads} />
@@ -386,9 +377,9 @@ export default function Leads() {
           setShowForm(open);
           if (!open) setEditingLead(null);
         }}>
-          <DialogContent className="max-w-xl bg-[#1a1d27] border-[#2d3348]">
+          <DialogContent className="max-w-xl" style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)' }}>
             <DialogHeader>
-              <DialogTitle className="text-right text-slate-100">
+              <DialogTitle className="text-right" style={{ color: 'var(--argaman)' }}>
                 {editingLead ? 'עריכת ליד' : 'ליד חדש'}
               </DialogTitle>
             </DialogHeader>
@@ -403,17 +394,17 @@ export default function Leads() {
           </DialogContent>
         </Dialog>
 
-        <div className="mt-8 bg-[#1a1d27] border border-[#2d3348] rounded-lg p-6">
+        <div className="mt-8 rounded-xl p-6" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-blue-500/10 rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-blue-400 text-lg font-bold">💡</span>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--info-bg)' }}>
+              <span className="text-lg font-bold" style={{ color: 'var(--info)' }}>💡</span>
             </div>
             <div className="text-right flex-1">
-              <h4 className="font-bold text-blue-300 mb-3 text-lg">מדריך מהיר לניהול לידים:</h4>
+              <h4 className="font-bold mb-3 text-lg" style={{ color: 'var(--info)' }}>מדריך מהיר לניהול לידים:</h4>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h5 className="font-semibold text-blue-200 mb-2">עריכה מהירה:</h5>
-                  <ul className="text-blue-300/80 text-sm space-y-1">
+                  <h5 className="font-semibold mb-2" style={{ color: 'var(--info)' }}>עריכה מהירה:</h5>
+                  <ul className="text-sm space-y-1" style={{ color: 'rgba(96, 165, 250, 0.7)' }}>
                     <li>• לחץ על כל שדה לעריכה ישירה</li>
                     <li>• Enter לשמירה, Escape לביטול</li>
                     <li>• <FileText className="w-3 h-3 inline ml-1" />כפתור ירוק ליצירת/צפייה בהצעת מחיר</li>
@@ -421,8 +412,8 @@ export default function Leads() {
                   </ul>
                 </div>
                 <div>
-                  <h5 className="font-semibold text-blue-200 mb-2">זרימה אוטומטית:</h5>
-                  <ul className="text-blue-300/80 text-sm space-y-1">
+                  <h5 className="font-semibold mb-2" style={{ color: 'var(--info)' }}>זרימה אוטומטית:</h5>
+                  <ul className="text-sm space-y-1" style={{ color: 'rgba(96, 165, 250, 0.7)' }}>
                     <li>• שינוי סטטוס ל"אושר" יוצר פרויקט אוטומטית</li>
                     <li>• המערכת בודקת אם כבר קיים פרויקט למניעת כפילויות</li>
                     <li>• פרויקטים חדשים יפתחו עם משימות מוגדרות מראש</li>
