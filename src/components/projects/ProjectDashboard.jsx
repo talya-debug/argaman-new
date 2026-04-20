@@ -77,8 +77,8 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                 <CardContent className="pt-8 pb-8 space-y-8">
                     {/* סכום פרויקט שאושר */}
                     <div className="text-center pb-6 border-b-2 border-blue-200">
-                        <p className="text-sm text-slate-600 mb-1 font-bold">סכום פרויקט שאושר</p>
-                        <p className="text-[32px] font-bold text-blue-700">
+                        <p className="text-sm text-[#a0a0b8] mb-1 font-bold">סכום פרויקט שאושר</p>
+                        <p className="text-[32px] font-bold text-[#60a5fa]">
                             {Math.round(P).toLocaleString('he-IL')} ₪
                         </p>
                     </div>
@@ -111,7 +111,7 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                         </div>
 
                         {/* אגדת צבעים */}
-                        <div className="space-y-3 bg-white p-6 rounded-lg shadow-sm" dir="rtl" style={{ lineHeight: '1.8' }}>
+                        <div className="space-y-3 bg-[#1a1a2e] p-6 rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.3)]" dir="rtl" style={{ lineHeight: '1.8' }}>
                             <div className="flex items-center gap-2">
                                 <div className="w-5 h-5 rounded flex-shrink-0" style={{ backgroundColor: '#EF4444' }}></div>
                                 <span className="font-bold text-lg" style={{ color: '#EF4444' }}>{Math.round(remaining).toLocaleString('he-IL')} ₪</span>
@@ -124,7 +124,7 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-5 h-5 rounded flex-shrink-0" style={{ backgroundColor: '#22C55E' }}></div>
-                                <span className="font-bold text-green-600 text-lg">{Math.round(R).toLocaleString('he-IL')} ₪</span>
+                                <span className="font-bold text-[#4ade80] text-lg">{Math.round(R).toLocaleString('he-IL')} ₪</span>
                                 <span className="font-medium text-slate-800">תשלומים שהתקבלו</span>
                             </div>
                         </div>
@@ -132,13 +132,13 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                 </CardContent>
             </Card>
 
-            <Card className="shadow-lg border-0 bg-white">
+            <Card className="shadow-lg border-0 bg-[#1a1a2e]">
                 <CardHeader>
                     <CardTitle className="text-center text-xl font-bold text-slate-800">התקדמות ביצוע</CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
                      <div className="w-2/3 mx-auto mt-4 relative">
-                        <Progress value={validPercentage} className="h-4 bg-slate-200 [&>*]:bg-blue-500" />
+                        <Progress value={validPercentage} className="h-4 bg-slate-200 [&>*]:bg-[rgba(96,165,250,0.1)]0" />
                         <div className="absolute inset-0 flex items-center justify-center">
                             <span className="text-xs font-bold text-slate-800">
                                 {validPercentage.toFixed(1)}%
@@ -150,7 +150,7 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Income Section */}
-                <Card className="shadow-lg border-0 bg-green-50">
+                <Card className="shadow-lg border-0 bg-[rgba(74,222,128,0.1)]">
                     <CardHeader>
                         <CardTitle className="text-lg font-bold text-green-800 flex items-center gap-2">
                            <TrendingUp className="w-5 h-5"/> הכנסות
@@ -161,19 +161,19 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                             title="הכנסות שאושרו (חיובים)" 
                             value={totalRevenue} 
                             icon={DollarSign}
-                            colorClass="bg-green-100 text-green-900"
+                            colorClass="bg-[rgba(74,222,128,0.1)] text-green-900"
                         />
                          <StatCard 
                             title="נותר לחיוב" 
                             value={remainingToBill} 
                             icon={FileText}
-                            colorClass="bg-green-100 text-green-900"
+                            colorClass="bg-[rgba(74,222,128,0.1)] text-green-900"
                         />
                     </CardContent>
                 </Card>
 
                 {/* Expenses Section */}
-                <Card className="shadow-lg border-0 bg-red-50">
+                <Card className="shadow-lg border-0 bg-[rgba(248,113,113,0.1)]">
                     <CardHeader>
                         <CardTitle className="text-lg font-bold text-red-800 flex items-center gap-2">
                             <TrendingDown className="w-5 h-5"/> הוצאות
@@ -184,41 +184,41 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                             title="הוצאות רכש" 
                             value={totalProcurementCost} 
                             icon={ShoppingCart} 
-                            colorClass="bg-red-100 text-red-900"
+                            colorClass="bg-[rgba(248,113,113,0.1)] text-red-900"
                         />
                         <StatCard 
                             title="הוצאות כח אדם" 
                             value={totalLaborCost} 
                             icon={UserCheck}
-                            colorClass="bg-red-100 text-red-900"
+                            colorClass="bg-[rgba(248,113,113,0.1)] text-red-900"
                         />
                         <StatCard 
                             title="הוצאות קבלני משנה" 
                             value={subContractorCosts} 
                             icon={UserCheck}
-                            colorClass="bg-red-100 text-red-900"
+                            colorClass="bg-[rgba(248,113,113,0.1)] text-red-900"
                         />
                     </CardContent>
                 </Card>
             </div>
             
             {/* Summary Section */}
-            <Card className="shadow-xl border-2 border-slate-200 bg-white">
+            <Card className="shadow-xl border-2 border-[rgba(255,255,255,0.08)] bg-[#1a1a2e]">
                  <CardHeader>
                         <CardTitle className="text-center text-xl font-bold text-slate-800">סיכום כללי</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                    <div className="p-4 bg-green-50 rounded-lg">
-                        <p className="text-sm text-green-700">סה"כ הכנסות</p>
-                        <p className="text-2xl font-bold text-green-600">₪{totalRevenue.toLocaleString()}</p>
+                    <div className="p-4 bg-[rgba(74,222,128,0.1)] rounded-lg">
+                        <p className="text-sm text-[#4ade80]">סה"כ הכנסות</p>
+                        <p className="text-2xl font-bold text-[#4ade80]">₪{totalRevenue.toLocaleString()}</p>
                     </div>
-                     <div className="p-4 bg-red-50 rounded-lg">
-                        <p className="text-sm text-red-700">סה"כ הוצאות</p>
-                        <p className="text-2xl font-bold text-red-600">₪{totalExpenses.toLocaleString()}</p>
+                     <div className="p-4 bg-[rgba(248,113,113,0.1)] rounded-lg">
+                        <p className="text-sm text-[#f87171]">סה"כ הוצאות</p>
+                        <p className="text-2xl font-bold text-[#f87171]">₪{totalExpenses.toLocaleString()}</p>
                     </div>
-                     <div className="p-4 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-blue-700">רווח פרויקט</p>
-                        <p className={`text-2xl font-bold ${projectProfit >= 0 ? 'text-blue-600' : 'text-pink-600'}`}>
+                     <div className="p-4 bg-[rgba(96,165,250,0.1)] rounded-lg">
+                        <p className="text-sm text-[#60a5fa]">רווח פרויקט</p>
+                        <p className={`text-2xl font-bold ${projectProfit >= 0 ? 'text-[#60a5fa]' : 'text-pink-600'}`}>
                            ₪{projectProfit.toLocaleString()}
                         </p>
                     </div>

@@ -15,10 +15,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
 const statusConfig = {
-  "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-blue-500 text-white", icon: "🔵" },
+  "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-[rgba(96,165,250,0.1)]0 text-white", icon: "🔵" },
   "נשלחה חשבונית – ממתין לתשלום": { color: "bg-orange-500 text-white", icon: "🟠", displayName: "נשלח חשבון – ממתין לתשלום" },
-  "עיכוב בתשלום – לטיפול יניר": { color: "bg-yellow-500 text-white", icon: "🟡" },
-  "שולם ונשלחה חשבונית מס": { color: "bg-green-500 text-white", icon: "🟢" },
+  "עיכוב בתשלום – לטיפול יניר": { color: "bg-[rgba(251,191,36,0.1)]0 text-white", icon: "🟡" },
+  "שולם ונשלחה חשבונית מס": { color: "bg-[rgba(74,222,128,0.1)]0 text-white", icon: "🟢" },
   "בוטל / זיכוי": { color: "bg-gray-400 text-white", icon: "⚪" }
 };
 
@@ -53,9 +53,9 @@ const EditableCell = ({ value, onSave, type = "text", options = [], field }) => 
   return (
     <div
       onClick={() => setIsEditing(true)}
-      className="cursor-pointer hover:bg-blue-50 p-2 rounded transition-colors border border-transparent hover:border-blue-200"
+      className="cursor-pointer hover:bg-[rgba(96,165,250,0.1)] p-2 rounded transition-colors border border-transparent hover:border-blue-200"
     >
-      <span className="text-slate-700">
+      <span className="text-[#e0e0e0]">
         {type === "date" && value ? new Date(value).toLocaleDateString('he-IL') : (value || "לחץ להזנה")}
       </span>
     </div>
@@ -278,12 +278,12 @@ export default function CollectionTasks() {
   };
 
   return (
-    <div className="p-4 md:p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">לוח משימות גבייה</h1>
-            <p className="text-slate-500 mt-1">ניהול ומעקב גבייה</p>
+            <h1 className="text-3xl font-bold text-[#f0f0f0]">לוח משימות גבייה</h1>
+            <p className="text-[#a0a0b8] mt-1">ניהול ומעקב גבייה</p>
           </div>
           <div className="flex gap-3">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -294,16 +294,16 @@ export default function CollectionTasks() {
                 </Button>
               </DialogTrigger>
               <DialogContent
-                className="max-w-lg bg-white border-0 shadow-2xl max-h-[90vh] overflow-y-auto"
+                className="max-w-lg bg-[#1a1a2e] border-0 shadow-2xl max-h-[90vh] overflow-y-auto"
                 dir="rtl"
                 style={{ boxShadow: '0px 8px 24px rgba(0,0,0,0.15)' }}
               >
-                <DialogHeader className="text-right pb-4 border-b border-slate-200">
+                <DialogHeader className="text-right pb-4 border-b border-[rgba(255,255,255,0.08)]">
                   <DialogTitle className="text-xl font-semibold text-slate-800">משימת גבייה חדשה</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-5 py-6">
                   <div>
-                    <Label htmlFor="client_name" className="text-sm font-medium text-slate-700 mb-2 block text-right">
+                    <Label htmlFor="client_name" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
                       שם לקוח / ישות לחיוב *
                     </Label>
                     <Input
@@ -311,12 +311,12 @@ export default function CollectionTasks() {
                       value={formData.client_name}
                       onChange={(e) => setFormData({...formData, client_name: e.target.value})}
                       placeholder="שם הלקוח או הישות"
-                      className="bg-white border-slate-300 text-slate-900"
+                      className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="invoice_number" className="text-sm font-medium text-slate-700 mb-2 block text-right">
+                    <Label htmlFor="invoice_number" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
                       תיאור חיוב / משימה *
                     </Label>
                     <Input
@@ -324,51 +324,51 @@ export default function CollectionTasks() {
                       value={formData.invoice_number}
                       onChange={(e) => setFormData({...formData, invoice_number: e.target.value})}
                       placeholder="חשבון 1, תיקון, תשלום..."
-                      className="bg-white border-slate-300 text-slate-900"
+                      className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="amount" className="text-sm font-medium text-slate-700 mb-2 block text-right">סכום גבייה *</Label>
+                    <Label htmlFor="amount" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">סכום גבייה *</Label>
                     <Input
                       id="amount"
                       type="number"
                       value={formData.amount_to_collect}
                       onChange={(e) => setFormData({...formData, amount_to_collect: e.target.value})}
                       placeholder="0.00"
-                      className="bg-white border-slate-300 text-slate-900"
+                      className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="invoice_date" className="text-sm font-medium text-slate-700 mb-2 block text-right">תאריך חשבון</Label>
+                    <Label htmlFor="invoice_date" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">תאריך חשבון</Label>
                     <Input
                       id="invoice_date"
                       type="date"
                       value={formData.invoice_date}
                       onChange={(e) => setFormData({...formData, invoice_date: e.target.value})}
-                      className="bg-white border-slate-300 text-slate-900"
+                      className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="due_date" className="text-sm font-medium text-slate-700 mb-2 block text-right">תאריך יעד לתשלום</Label>
+                    <Label htmlFor="due_date" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">תאריך יעד לתשלום</Label>
                     <Input
                       id="due_date"
                       type="date"
                       value={formData.payment_due_date}
                       onChange={(e) => setFormData({...formData, payment_due_date: e.target.value})}
-                      className="bg-white border-slate-300 text-slate-900"
+                      className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="status" className="text-sm font-medium text-slate-700 mb-2 block text-right">סטטוס גבייה</Label>
+                    <Label htmlFor="status" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">סטטוס גבייה</Label>
                     <Select value={formData.collection_status} onValueChange={(val) => setFormData({...formData, collection_status: val})}>
-                      <SelectTrigger className="bg-white border-slate-300 text-slate-900">
+                      <SelectTrigger className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-white">
+                      <SelectContent className="bg-[#1a1a2e]">
                         {Object.entries(statusConfig).map(([status, config]) => (
                           <SelectItem key={status} value={status}>
                             {config.icon} {config.displayName || status}
@@ -379,12 +379,12 @@ export default function CollectionTasks() {
                   </div>
 
                   <div>
-                    <Label htmlFor="responsible" className="text-sm font-medium text-slate-700 mb-2 block text-right">אחראי</Label>
+                    <Label htmlFor="responsible" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">אחראי</Label>
                     <Select value={formData.responsible} onValueChange={(val) => setFormData({...formData, responsible: val})}>
-                      <SelectTrigger className="bg-white border-slate-300 text-slate-900">
+                      <SelectTrigger className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-white">
+                      <SelectContent className="bg-[#1a1a2e]">
                         {["חיה", "יניר", "דבורה", "יהודה", "רבקה", "שי"].map(name => (
                           <SelectItem key={name} value={name}>{name}</SelectItem>
                         ))}
@@ -392,19 +392,19 @@ export default function CollectionTasks() {
                     </Select>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-200">
-                    <p className="text-xs text-slate-500 mb-3">שדות אופציונליים</p>
+                  <div className="pt-4 border-t border-[rgba(255,255,255,0.08)]">
+                    <p className="text-xs text-[#a0a0b8] mb-3">שדות אופציונליים</p>
 
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="project" className="text-sm font-medium text-slate-700 mb-2 block text-right">
+                        <Label htmlFor="project" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
                           שיוך לפרויקט (אופציונלי)
                         </Label>
                         <Select value={formData.project_id} onValueChange={(val) => setFormData({...formData, project_id: val})}>
-                          <SelectTrigger className="bg-white border-slate-300 text-slate-900">
+                          <SelectTrigger className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]">
                             <SelectValue placeholder="ללא שיוך לפרויקט" />
                           </SelectTrigger>
-                          <SelectContent className="bg-white">
+                          <SelectContent className="bg-[#1a1a2e]">
                             {projects.map(p => (
                               <SelectItem key={p.id} value={p.id}>{p.name} - {p.client_name}</SelectItem>
                             ))}
@@ -414,8 +414,8 @@ export default function CollectionTasks() {
                     </div>
                   </div>
 
-                  <div className="flex justify-end gap-3 pt-6 border-t border-slate-200">
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-slate-300 text-slate-700">
+                  <div className="flex justify-end gap-3 pt-6 border-t border-[rgba(255,255,255,0.08)]">
+                    <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-[rgba(255,255,255,0.12)] text-[#e0e0e0]">
                       ביטול
                     </Button>
                     <Button onClick={handleCreateTask} className="text-white" style={{ backgroundColor: '#16A34A' }}>
@@ -440,14 +440,14 @@ export default function CollectionTasks() {
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle className="text-xl md:text-2xl flex items-center gap-3">
-                <Receipt className="w-6 h-6 text-blue-600" />
+                <Receipt className="w-6 h-6 text-[#60a5fa]" />
                 {showClosed ? 'משימות גבייה סגורות' : 'משימות גבייה פעילות'}
               </CardTitle>
               <div className="flex gap-2">
                 <Button
                   variant={!showClosed ? "default" : "outline"}
                   onClick={() => setShowClosed(false)}
-                  className={!showClosed ? "bg-blue-600" : ""}
+                  className={!showClosed ? "bg-[#c42b2b]" : ""}
                 >
                   פעילות ({tasks.filter(t => !t.is_closed).length})
                 </Button>
@@ -463,16 +463,16 @@ export default function CollectionTasks() {
           </CardHeader>
           <CardContent className="pt-6">
             {isLoading ? (
-              <div className="text-center py-12 text-slate-500">טוען...</div>
+              <div className="text-center py-12 text-[#a0a0b8]">טוען...</div>
             ) : filteredTasks.length === 0 ? (
-              <div className="text-center py-12 text-slate-500">
+              <div className="text-center py-12 text-[#a0a0b8]">
                 <p>{showClosed ? 'אין משימות סגורות' : 'אין משימות פעילות'}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-slate-100">
+                    <TableRow className="bg-[#1e1e36]">
                       <TableHead className="text-right font-bold w-[200px]">פרויקט</TableHead>
                       <TableHead className="text-right font-bold w-[120px]">סכום לגבייה</TableHead>
                       <TableHead className="text-right font-bold w-[120px]">תאריך חשבון</TableHead>
@@ -489,12 +489,12 @@ export default function CollectionTasks() {
                       const statusInfo = statusConfig[task.collection_status] || statusConfig["חשבון מאושר – יש לשלוח חשבון עסקה"];
 
                       return (
-                        <TableRow key={task.id} className="h-16 hover:bg-slate-50">
+                        <TableRow key={task.id} className="h-16 hover:bg-[#1a1a2e]">
                           <TableCell className="text-right align-middle">
                             {task.project_id ? (
                               <Link
                                 to={createPageUrl(`ProjectDetails?id=${task.project_id}`)}
-                                className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                                className="flex items-center gap-2 text-[#60a5fa] hover:text-blue-800 hover:underline font-medium"
                               >
                                 <span>{task.project_name}</span>
                                 <ExternalLink className="w-4 h-4" />
@@ -503,11 +503,11 @@ export default function CollectionTasks() {
                               <span className="font-medium">{task.project_name}</span>
                             )}
                           </TableCell>
-                          <TableCell className="text-right font-bold text-slate-900 align-middle">
+                          <TableCell className="text-right font-bold text-[#f0f0f0] align-middle">
                             ₪{task.amount_to_collect?.toLocaleString('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                           </TableCell>
                           <TableCell className="text-right align-middle">
-                            <span className="text-slate-700">
+                            <span className="text-[#e0e0e0]">
                               {task.invoice_date ? new Date(task.invoice_date).toLocaleDateString('he-IL') : '—'}
                             </span>
                           </TableCell>
@@ -520,9 +520,9 @@ export default function CollectionTasks() {
                           </TableCell>
                           <TableCell className="text-right align-middle">
                             {daysOverdue > 0 ? (
-                              <Badge className="bg-red-500 text-white font-semibold">{daysOverdue} ימים</Badge>
+                              <Badge className="bg-[rgba(248,113,113,0.1)]0 text-white font-semibold">{daysOverdue} ימים</Badge>
                             ) : (
-                              <span className="text-slate-400">—</span>
+                              <span className="text-[#6b6b80]">—</span>
                             )}
                           </TableCell>
                           <TableCell className="text-right align-middle">
@@ -568,7 +568,7 @@ export default function CollectionTasks() {
                               value={task.notes || ''}
                               onChange={(e) => handleUpdate(task.id, 'notes', e.target.value)}
                               placeholder="הוסף הערות..."
-                              className="min-h-[60px] text-sm resize-none bg-white"
+                              className="min-h-[60px] text-sm resize-none bg-[#1a1a2e]"
                               rows={2}
                             />
                           </TableCell>
@@ -595,20 +595,20 @@ export default function CollectionTasks() {
             });
           }
           }}>
-          <DialogContent className="max-w-md bg-white border-0 shadow-2xl" dir="rtl">
-            <DialogHeader className="text-right pb-4 border-b border-slate-200">
+          <DialogContent className="max-w-md bg-[#1a1a2e] border-0 shadow-2xl" dir="rtl">
+            <DialogHeader className="text-right pb-4 border-b border-[rgba(255,255,255,0.08)]">
               <DialogTitle className="text-xl font-semibold text-slate-800">קליטת תשלום</DialogTitle>
             </DialogHeader>
             <div className="space-y-5 py-6">
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <p className="text-sm text-slate-700 mb-1">סכום לגבייה מקורי:</p>
-                <p className="text-2xl font-bold text-blue-700">
+              <div className="bg-[rgba(96,165,250,0.1)] p-4 rounded-lg border border-blue-200">
+                <p className="text-sm text-[#e0e0e0] mb-1">סכום לגבייה מקורי:</p>
+                <p className="text-2xl font-bold text-[#60a5fa]">
                   ₪{(paymentDialog.task?.amount_to_collect || 0).toLocaleString('he-IL')}
                 </p>
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-slate-700 mb-3 block text-right">
+                <Label className="text-sm font-medium text-[#e0e0e0] mb-3 block text-right">
                   האם התקבל תשלום מלא?
                 </Label>
                 <div className="flex gap-3">
@@ -633,7 +633,7 @@ export default function CollectionTasks() {
 
               {!paymentDialog.isFullPayment && (
                 <div>
-                  <Label htmlFor="amount_received" className="text-sm font-medium text-slate-700 mb-2 block text-right">
+                  <Label htmlFor="amount_received" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
                     כמה התקבל בפועל? *
                   </Label>
                   <Input
@@ -642,7 +642,7 @@ export default function CollectionTasks() {
                     value={paymentDialog.amountReceived}
                     onChange={(e) => setPaymentDialog({...paymentDialog, amountReceived: e.target.value})}
                     placeholder="0.00"
-                    className="bg-white border-slate-300 text-slate-900"
+                    className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
                     required
                   />
                   {paymentDialog.amountReceived && (
@@ -654,7 +654,7 @@ export default function CollectionTasks() {
               )}
 
               <div>
-                <Label htmlFor="receipt_date" className="text-sm font-medium text-slate-700 mb-2 block text-right">
+                <Label htmlFor="receipt_date" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
                   תאריך קבלה
                 </Label>
                 <Input
@@ -662,12 +662,12 @@ export default function CollectionTasks() {
                   type="date"
                   value={paymentDialog.receiptDate}
                   onChange={(e) => setPaymentDialog({...paymentDialog, receiptDate: e.target.value})}
-                  className="bg-white border-slate-300 text-slate-900"
+                  className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
                 />
               </div>
 
               <div>
-                <Label htmlFor="payment_notes" className="text-sm font-medium text-slate-700 mb-2 block text-right">
+                <Label htmlFor="payment_notes" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
                   הערות
                 </Label>
                 <Textarea
@@ -676,11 +676,11 @@ export default function CollectionTasks() {
                   onChange={(e) => setPaymentDialog({...paymentDialog, notes: e.target.value})}
                   placeholder="הערות נוספות..."
                   rows={3}
-                  className="bg-white border-slate-300 text-slate-900"
+                  className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+              <div className="flex justify-end gap-3 pt-4 border-t border-[rgba(255,255,255,0.08)]">
                 <Button
                   variant="outline"
                   onClick={() => setPaymentDialog({
@@ -691,13 +691,13 @@ export default function CollectionTasks() {
                     receiptDate: new Date().toISOString().split('T')[0],
                     notes: ''
                   })}
-                  className="border-slate-300 text-slate-700"
+                  className="border-[rgba(255,255,255,0.12)] text-[#e0e0e0]"
                 >
                   ביטול
                 </Button>
                 <Button
                   onClick={handlePaymentConfirm}
-                  className="text-white bg-blue-600 hover:bg-blue-700"
+                  className="text-white bg-[#c42b2b] hover:bg-[#991b1b]"
                 >
                   אישור וסגירה
                 </Button>

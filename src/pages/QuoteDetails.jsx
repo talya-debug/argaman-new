@@ -538,12 +538,12 @@ export default function QuoteDetails() {
 
     return (
         <>
-            <div className={`bg-slate-50 min-h-screen p-4 md:p-8 ${showPreview ? 'hidden' : ''}`} dir="rtl">
+            <div className={`bg-[#1a1a2e] min-h-screen p-4 md:p-8 ${showPreview ? 'hidden' : ''}`} dir="rtl">
                 <div className="max-w-screen-2xl mx-auto">
                     <header className="flex justify-between items-center mb-6">
                         <div>
-                            <h1 className="text-3xl font-bold text-slate-900">{quote?.title || 'הצעת מחיר חדשה'}</h1>
-                            <p className="text-slate-500">עבור: {lead?.name || 'לקוח חדש'}</p>
+                            <h1 className="text-3xl font-bold text-[#f0f0f0]">{quote?.title || 'הצעת מחיר חדשה'}</h1>
+                            <p className="text-[#a0a0b8]">עבור: {lead?.name || 'לקוח חדש'}</p>
                         </div>
                         <div className="flex items-center gap-4">
                             <Button
@@ -560,7 +560,7 @@ export default function QuoteDetails() {
                             <Button
                                 variant={viewMode === 'build' ? 'default' : 'outline'}
                                 onClick={() => setViewMode('build')}
-                                className={viewMode === 'build' ? "bg-blue-600 text-white" : ""}
+                                className={viewMode === 'build' ? "bg-[#c42b2b] text-white" : ""}
                             >
                                 <Settings className="w-4 h-4 ml-2"/>
                                 בניית הצעה
@@ -610,7 +610,7 @@ export default function QuoteDetails() {
 
                                 <Button
                                     onClick={handleGeneratePDF}
-                                    className="bg-blue-600 hover:bg-blue-700 px-8 py-3"
+                                    className="bg-[#c42b2b] hover:bg-[#991b1b] px-8 py-3"
                                     disabled={quoteLines.length === 0}
                                 >
                                     <FileDown className="w-5 h-5 ml-2" />

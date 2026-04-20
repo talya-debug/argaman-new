@@ -7,11 +7,11 @@ import { he } from "date-fns/locale";
 import { User, Clock } from "lucide-react";
 
 const statusColors = {
-  "חדש": "bg-blue-500/15 text-blue-400 border border-blue-500/20",
-  "איסוף מידע מלקוח": "bg-yellow-500/15 text-yellow-400 border border-yellow-500/20",
+  "חדש": "bg-[rgba(96,165,250,0.1)]0/15 text-blue-400 border border-blue-500/20",
+  "איסוף מידע מלקוח": "bg-[rgba(251,191,36,0.1)]0/15 text-yellow-400 border border-yellow-500/20",
   "סיווג / הכנת הצעה": "bg-purple-500/15 text-purple-400 border border-purple-500/20",
   "תיאום סיור": "bg-orange-500/15 text-orange-400 border border-orange-500/20",
-  "הצעה נשלחה": "bg-green-500/15 text-green-400 border border-green-500/20",
+  "הצעה נשלחה": "bg-[rgba(74,222,128,0.1)]0/15 text-green-400 border border-green-500/20",
   "אושר": "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20"
 };
 
@@ -55,7 +55,7 @@ export default function RecentActivity({ leads, isLoading }) {
                     {format(new Date(lead.created_date), 'dd/MM/yyyy', { locale: he })}
                   </p>
                 </div>
-                <Badge className={`text-xs ${statusColors[lead.status] || 'bg-gray-500/15 text-gray-400'}`}>
+                <Badge className={`text-xs ${statusColors[lead.status] || 'bg-[#141428]0/15 text-gray-400'}`}>
                   {lead.status}
                 </Badge>
               </div>

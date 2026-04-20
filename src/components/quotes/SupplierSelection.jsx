@@ -4,11 +4,11 @@ import { Badge } from '@/components/ui/badge';
 import { Building2 } from 'lucide-react';
 
 const supplierColors = {
-  "סמסונג": "bg-blue-100 text-blue-800 border-blue-200",
-  "טורנדו": "bg-green-100 text-green-800 border-green-200",
+  "סמסונג": "bg-[rgba(96,165,250,0.1)] text-blue-800 border-blue-200",
+  "טורנדו": "bg-[rgba(74,222,128,0.1)] text-green-800 border-green-200",
   "הייסנס": "bg-purple-100 text-purple-800 border-purple-200",
   "אלקטרה": "bg-orange-100 text-orange-800 border-orange-200",
-  "אריאה": "bg-red-100 text-red-800 border-red-200"
+  "אריאה": "bg-[rgba(248,113,113,0.1)] text-red-800 border-red-200"
 };
 
 const suppliers = ["סמסונג", "טורנדו", "הייסנס", "אלקטרה", "אריאה"];

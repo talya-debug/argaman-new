@@ -20,18 +20,18 @@ import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 
 const statusColors = {
-  "חדש": "bg-blue-500/15 text-blue-400",
-  "בתהליך": "bg-yellow-500/15 text-yellow-400",
+  "חדש": "bg-[rgba(96,165,250,0.1)]0/15 text-blue-400",
+  "בתהליך": "bg-[rgba(251,191,36,0.1)]0/15 text-yellow-400",
   "בבדיקה": "bg-purple-500/15 text-purple-400",
-  "הושלם": "bg-green-500/15 text-green-400",
-  "בוטל": "bg-red-500/15 text-red-400"
+  "הושלם": "bg-[rgba(74,222,128,0.1)]0/15 text-green-400",
+  "בוטל": "bg-[rgba(248,113,113,0.1)]0/15 text-red-400"
 };
 
 const priorityColors = {
-  "גבוהה": "bg-red-500/20 text-red-400 border-red-500/30",
-  "דחוף": "bg-red-500/20 text-red-400 border-red-500/30",
-  "בינונית": "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-  "נמוכה": "bg-green-500/20 text-green-400 border-green-500/30"
+  "גבוהה": "bg-[rgba(248,113,113,0.1)]0/20 text-red-400 border-red-500/30",
+  "דחוף": "bg-[rgba(248,113,113,0.1)]0/20 text-red-400 border-red-500/30",
+  "בינונית": "bg-[rgba(251,191,36,0.1)]0/20 text-yellow-400 border-yellow-500/30",
+  "נמוכה": "bg-[rgba(74,222,128,0.1)]0/20 text-green-400 border-green-500/30"
 };
 
 const userOptions = ["חיה", "יניר", "דבורה", "יהודה", "רבקה", "שי"];
@@ -120,7 +120,7 @@ function EditableCell({ value, task, fieldName, options = null, onUpdate }) {
         }
         if (fieldName === 'status') {
             return (
-                <Badge className={`${statusColors[value] || 'bg-gray-500/15 text-gray-400'} hover:opacity-80 text-xs`}>
+                <Badge className={`${statusColors[value] || 'bg-[#141428]0/15 text-gray-400'} hover:opacity-80 text-xs`}>
                     {value}
                 </Badge>
             );
@@ -233,7 +233,7 @@ function TaskCard({ task, onEdit, onUpdate }) {
                     <div className="flex gap-2 pt-2" style={{ borderTop: '1px solid var(--dark-border)' }}>
                         {task.project_id && (
                             <Link to={createPageUrl(`ProjectDetails?id=${task.project_id}`)} className="flex-1">
-                                <Button variant="outline" size="sm" className="w-full text-green-400 hover:bg-green-500/10" style={{ borderColor: 'var(--dark-border)' }}>
+                                <Button variant="outline" size="sm" className="w-full text-green-400 hover:bg-[rgba(74,222,128,0.1)]0/10" style={{ borderColor: 'var(--dark-border)' }}>
                                     <LinkIcon className="w-4 h-4 ml-1" />
                                     קישור לפרויקט
                                 </Button>
@@ -326,7 +326,7 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                                                 <div className="flex gap-1 justify-center items-center">
                                                     {task.project_id && (
                                                         <Link to={createPageUrl(`ProjectDetails?id=${task.project_id}`)}>
-                                                            <Button variant="ghost" size="icon" className="text-green-400 hover:bg-green-500/10">
+                                                            <Button variant="ghost" size="icon" className="text-green-400 hover:bg-[rgba(74,222,128,0.1)]0/10">
                                                                 <LinkIcon className="w-4 h-4" />
                                                             </Button>
                                                         </Link>

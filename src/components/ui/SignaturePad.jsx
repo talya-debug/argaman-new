@@ -99,7 +99,7 @@ const SignaturePadComponent = ({ onSave }) => {
 
     return (
         <div className="w-full h-full flex flex-col" dir="ltr">
-            <div className="w-full border bg-white rounded-md flex-grow touch-none">
+            <div className="w-full border bg-[#1a1a2e] rounded-md flex-grow touch-none">
                 <canvas 
                     ref={canvasRef} 
                     className="w-full h-40"

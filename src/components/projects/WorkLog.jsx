@@ -34,7 +34,7 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
                                 הוסף דיווח חדש
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-4xl bg-white shadow-xl max-h-[90vh] flex flex-col" dir="rtl">
+                        <DialogContent className="max-w-4xl bg-[#1a1a2e] shadow-xl max-h-[90vh] flex flex-col" dir="rtl">
                             <div className="overflow-y-auto flex-1 min-h-0">
                                 <WorkLogForm 
                                     projectId={projectId} 
@@ -48,7 +48,7 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
             </CardHeader>
             <CardContent>
                 {workLogEntries.length === 0 ? (
-                    <div className="text-center py-12 text-slate-500">
+                    <div className="text-center py-12 text-[#a0a0b8]">
                         <BookUser className="w-16 h-16 mx-auto mb-4 text-slate-300" />
                         <p className="text-lg font-medium mb-2">אין דיווחי עבודה עדיין</p>
                         <p className="text-sm">לחץ על "הוסף דיווח חדש" כדי להתחיל לתעד את העבודה</p>
@@ -57,7 +57,7 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
                     <div className="overflow-x-auto">
                         <Table>
                             <TableHeader>
-                                <TableRow className="bg-slate-50">
+                                <TableRow className="bg-[#1a1a2e]">
                                     <TableHead className="text-right font-semibold">תיאור עבודה</TableHead>
                                     <TableHead className="text-right font-semibold">מדווח</TableHead>
                                     <TableHead className="text-right font-semibold">תאריך ושעה</TableHead>
@@ -90,24 +90,24 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
                                                     <p className="font-medium text-sm">
                                                         {format(new Date(entry.created_date), 'dd/MM/yyyy', { locale: he })}
                                                     </p>
-                                                    <p className="text-xs text-slate-500">
+                                                    <p className="text-xs text-[#a0a0b8]">
                                                         {format(new Date(entry.created_date), 'HH:mm', { locale: he })}
                                                     </p>
                                                 </div>
-                                                <Clock className="w-4 h-4 text-slate-400" />
+                                                <Clock className="w-4 h-4 text-[#6b6b80]" />
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex items-center justify-end gap-1">
                                                 <span className="font-medium">{entry.number_of_workers}</span>
-                                                <User className="w-4 h-4 text-slate-400" />
+                                                <User className="w-4 h-4 text-[#6b6b80]" />
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <span className="font-medium">{entry.working_hours}h</span>
                                         </TableCell>
                                         <TableCell className="text-right">
-                                            <div className="bg-blue-50 px-2 py-1 rounded-full w-fit ml-auto">
+                                            <div className="bg-[rgba(96,165,250,0.1)] px-2 py-1 rounded-full w-fit ml-auto">
                                                 <span className="font-bold text-blue-800">{entry.total_hours}h</span>
                                             </div>
                                         </TableCell>
@@ -147,40 +147,40 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
                                                            </div>
                                                        )}
                                                    </div>
-                                                   <span className="text-sm text-green-600 font-medium">{entry.image_urls.length}</span>
-                                                   <ImageIcon className="w-4 h-4 text-green-600" />
+                                                   <span className="text-sm text-[#4ade80] font-medium">{entry.image_urls.length}</span>
+                                                   <ImageIcon className="w-4 h-4 text-[#4ade80]" />
                                                </div>
                                            ) : (
-                                               <span className="text-slate-400 text-sm">-</span>
+                                               <span className="text-[#6b6b80] text-sm">-</span>
                                            )}
                                         </TableCell>
                                         <TableCell className="text-right">
                                            {entry.client_signature_url ? (
                                                <button 
                                                    onClick={() => setSelectedSignature({ url: entry.client_signature_url, name: entry.client_signer_name })}
-                                                   className="flex items-center justify-end gap-1 text-green-600 hover:text-green-700 w-full group"
+                                                   className="flex items-center justify-end gap-1 text-[#4ade80] hover:text-[#4ade80] w-full group"
                                                >
                                                    <div className="flex flex-col items-end">
                                                        <span className="text-xs font-medium">{entry.client_signer_name || 'צפה בחתימה'}</span>
                                                        <img 
                                                            src={entry.client_signature_url} 
-                                                           className="h-8 w-20 object-contain border rounded bg-white mt-1" 
+                                                           className="h-8 w-20 object-contain border rounded bg-[#1a1a2e] mt-1" 
                                                            alt="חתימה" 
                                                        />
                                                    </div>
                                                    <FileSignature className="w-4 h-4 group-hover:scale-110 transition-transform" />
                                                </button>
                                            ) : (
-                                               <span className="text-slate-400 text-sm">-</span>
+                                               <span className="text-[#6b6b80] text-sm">-</span>
                                            )}
                                         </TableCell>
                                         <TableCell className="text-right max-w-xs">
                                             {entry.issues_or_shortages ? (
-                                                <div className="bg-red-50 border border-red-200 rounded p-2">
+                                                <div className="bg-[rgba(248,113,113,0.1)] border border-red-200 rounded p-2">
                                                     <p className="text-sm text-red-800 line-clamp-2 whitespace-pre-wrap">{entry.issues_or_shortages}</p>
                                                 </div>
                                             ) : (
-                                                <span className="text-green-600 text-sm font-medium">ללא בעיות</span>
+                                                <span className="text-[#4ade80] text-sm font-medium">ללא בעיות</span>
                                             )}
                                         </TableCell>
                                     </TableRow>
@@ -193,7 +193,7 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
 
             {/* Media Preview Dialog */}
             <Dialog open={selectedImage !== null} onOpenChange={(open) => !open && setSelectedImage(null)}>
-                <DialogContent className="max-w-4xl bg-white" dir="rtl">
+                <DialogContent className="max-w-4xl bg-[#1a1a2e]" dir="rtl">
                     <DialogHeader className="relative">
                         <DialogTitle>תצוגת מדיה</DialogTitle>
                         <Button 
@@ -205,7 +205,7 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
                             <X className="w-4 h-4" />
                         </Button>
                     </DialogHeader>
-                    <div className="flex items-center justify-center p-4 bg-slate-50 rounded-lg">
+                    <div className="flex items-center justify-center p-4 bg-[#1a1a2e] rounded-lg">
                         {selectedImage && (() => {
                             const isVideo = selectedImage.includes('.mp4') || selectedImage.includes('.mov') || selectedImage.includes('.MP4') || selectedImage.includes('.MOV');
                             return isVideo ? (
@@ -236,7 +236,7 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
 
             {/* Signature Preview Dialog */}
             <Dialog open={selectedSignature !== null} onOpenChange={(open) => !open && setSelectedSignature(null)}>
-                <DialogContent className="max-w-2xl bg-white" dir="rtl">
+                <DialogContent className="max-w-2xl bg-[#1a1a2e]" dir="rtl">
                     <DialogHeader className="relative">
                         <DialogTitle>חתימת לקוח</DialogTitle>
                         <Button 
@@ -253,10 +253,10 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
                             <>
                                 {selectedSignature.name && (
                                     <div className="text-center">
-                                        <p className="text-sm text-slate-600">חותם: <span className="font-bold text-slate-800">{selectedSignature.name}</span></p>
+                                        <p className="text-sm text-[#a0a0b8]">חותם: <span className="font-bold text-slate-800">{selectedSignature.name}</span></p>
                                     </div>
                                 )}
-                                <div className="flex items-center justify-center p-6 bg-slate-50 rounded-lg border-2 border-slate-200">
+                                <div className="flex items-center justify-center p-6 bg-[#1a1a2e] rounded-lg border-2 border-[rgba(255,255,255,0.08)]">
                                     <img 
                                         src={selectedSignature.url} 
                                         alt="חתימה מוגדלת" 

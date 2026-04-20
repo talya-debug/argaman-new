@@ -115,14 +115,14 @@ export default function WorkLogForm() {
 
     if (showSuccessScreen) {
         return (
-            <div className="p-4 md:p-8 bg-slate-50 min-h-screen flex items-center justify-center">
-                <Card className="w-full max-w-3xl shadow-2xl bg-white border-4 border-green-500" dir="rtl">
-                    <CardHeader className="text-center bg-green-50 border-b-4 border-green-500">
-                        <div className="mx-auto mb-4 w-20 h-20 bg-green-500 rounded-full flex items-center justify-center">
+            <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen flex items-center justify-center">
+                <Card className="w-full max-w-3xl shadow-2xl bg-[#1a1a2e] border-4 border-green-500" dir="rtl">
+                    <CardHeader className="text-center bg-[rgba(74,222,128,0.1)] border-b-4 border-green-500">
+                        <div className="mx-auto mb-4 w-20 h-20 bg-[rgba(74,222,128,0.1)]0 rounded-full flex items-center justify-center">
                             <Save className="w-10 h-10 text-white" />
                         </div>
                         <CardTitle className="text-3xl font-bold text-green-800">תודה!</CardTitle>
-                        <CardDescription className="text-lg text-slate-700 mt-2">הפרטים נשמרו בהצלחה</CardDescription>
+                        <CardDescription className="text-lg text-[#e0e0e0] mt-2">הפרטים נשמרו בהצלחה</CardDescription>
                     </CardHeader>
                     <CardContent className="pt-8 space-y-6">
                         <div className="text-center space-y-4">
@@ -130,18 +130,18 @@ export default function WorkLogForm() {
                                 אנא דאג למלא יומן עבודה גם מחר
                             </p>
 
-                            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 space-y-3">
+                            <div className="bg-[rgba(96,165,250,0.1)] border-2 border-blue-200 rounded-lg p-6 space-y-3">
                                 <h3 className="font-bold text-lg text-blue-800">סיכום הדיווח:</h3>
                                 <div className="text-right space-y-2">
-                                    <p className="text-slate-700"><span className="font-semibold">פרויקט:</span> {savedProjectName}</p>
-                                    <p className="text-slate-700"><span className="font-semibold">תאריך:</span> {new Date().toLocaleDateString('he-IL')}</p>
-                                    <p className="text-slate-700"><span className="font-semibold">עובדים:</span> {numberOfWorkers}</p>
-                                    <p className="text-slate-700"><span className="font-semibold">סה"כ שעות:</span> {totalHours}</p>
+                                    <p className="text-[#e0e0e0]"><span className="font-semibold">פרויקט:</span> {savedProjectName}</p>
+                                    <p className="text-[#e0e0e0]"><span className="font-semibold">תאריך:</span> {new Date().toLocaleDateString('he-IL')}</p>
+                                    <p className="text-[#e0e0e0]"><span className="font-semibold">עובדים:</span> {numberOfWorkers}</p>
+                                    <p className="text-[#e0e0e0]"><span className="font-semibold">סה"כ שעות:</span> {totalHours}</p>
                                 </div>
                             </div>
 
                             {(imageFiles.length > 0 || signatureData) && (
-                                <div className="bg-slate-50 border-2 border-slate-200 rounded-lg p-6 space-y-4">
+                                <div className="bg-[#1a1a2e] border-2 border-[rgba(255,255,255,0.08)] rounded-lg p-6 space-y-4">
                                     {imageFiles.length > 0 && (
                                         <div>
                                             <p className="font-semibold text-slate-800 mb-3">תמונות שצורפו ({imageFiles.length}):</p>
@@ -151,11 +151,11 @@ export default function WorkLogForm() {
                                                         key={index}
                                                         src={URL.createObjectURL(file)}
                                                         alt={`תמונה ${index + 1}`}
-                                                        className="h-24 w-24 object-cover rounded-lg border-2 border-slate-300 shadow-md"
+                                                        className="h-24 w-24 object-cover rounded-lg border-2 border-[rgba(255,255,255,0.12)] shadow-md"
                                                     />
                                                 ))}
                                                 {imageFiles.length > 4 && (
-                                                    <div className="h-24 w-24 bg-slate-300 rounded-lg border-2 border-slate-300 flex items-center justify-center text-lg font-bold text-slate-600">
+                                                    <div className="h-24 w-24 bg-slate-300 rounded-lg border-2 border-[rgba(255,255,255,0.12)] flex items-center justify-center text-lg font-bold text-[#a0a0b8]">
                                                         +{imageFiles.length - 4}
                                                     </div>
                                                 )}
@@ -170,18 +170,18 @@ export default function WorkLogForm() {
                                                 <img
                                                     src={signatureData}
                                                     alt="חתימה"
-                                                    className="max-h-32 border-2 border-slate-300 rounded-lg shadow-md bg-white p-2"
+                                                    className="max-h-32 border-2 border-[rgba(255,255,255,0.12)] rounded-lg shadow-md bg-[#1a1a2e] p-2"
                                                 />
                                             </div>
                                             {signerName && (
-                                                <p className="text-sm text-slate-600 mt-2">חותם: {signerName}</p>
+                                                <p className="text-sm text-[#a0a0b8] mt-2">חותם: {signerName}</p>
                                             )}
                                         </div>
                                     )}
                                 </div>
                             )}
 
-                            <p className="text-sm text-slate-500 mt-6">
+                            <p className="text-sm text-[#a0a0b8] mt-6">
                                 חוזרים לטופס אוטומטית בעוד מספר שניות...
                             </p>
                         </div>
@@ -192,12 +192,12 @@ export default function WorkLogForm() {
     }
 
     return (
-        <div className="w-full bg-slate-50 py-6 px-4">
+        <div className="w-full bg-[#1a1a2e] py-6 px-4">
             <div className="max-w-3xl mx-auto">
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div className="border-b p-6 text-center bg-white">
+                <div className="bg-[#1a1a2e] rounded-lg shadow-lg overflow-hidden">
+                    <div className="border-b p-6 text-center bg-[#1a1a2e]">
                         <h1 className="text-2xl font-bold text-slate-800">דיווח יומן עבודה יומי</h1>
-                        <p className="text-slate-500 mt-1">מלא את פרטי העבודה שבוצעה היום בפרויקט.</p>
+                        <p className="text-[#a0a0b8] mt-1">מלא את פרטי העבודה שבוצעה היום בפרויקט.</p>
                     </div>
                     <div className="px-6 py-6">
                         <form id="worklog-form" onSubmit={handleSubmit} className="space-y-6">
@@ -220,7 +220,7 @@ export default function WorkLogForm() {
                             </div>
                             <div className="space-y-2">
                                 <Label className="font-semibold">סה"כ שעות</Label>
-                                <div className="h-10 flex items-center justify-center bg-slate-100 rounded-md border text-lg font-bold text-slate-700">{totalHours}</div>
+                                <div className="h-10 flex items-center justify-center bg-[#1e1e36] rounded-md border text-lg font-bold text-[#e0e0e0]">{totalHours}</div>
                             </div>
                         </div>
 
@@ -238,10 +238,10 @@ export default function WorkLogForm() {
                             <div className="space-y-2">
                                 <Label htmlFor="images" className="font-semibold">העלה תמונות</Label>
                                 <div className="flex items-center justify-center w-full">
-                                    <label htmlFor="images-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100">
+                                    <label htmlFor="images-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-[#1a1a2e] hover:bg-[#1e1e36]">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                            <Upload className="w-8 h-8 mb-4 text-slate-500"/>
-                                            <p className="mb-2 text-sm text-slate-500"><span className="font-semibold">לחץ להעלאה</span> או גרור לכאן</p>
+                                            <Upload className="w-8 h-8 mb-4 text-[#a0a0b8]"/>
+                                            <p className="mb-2 text-sm text-[#a0a0b8]"><span className="font-semibold">לחץ להעלאה</span> או גרור לכאן</p>
                                         </div>
                                         <input id="images-upload" type="file" multiple className="hidden" onChange={handleImageChange} />
                                     </label>
@@ -250,7 +250,7 @@ export default function WorkLogForm() {
                                     {imageFiles.map((file, index) => (
                                         <div key={index} className="relative">
                                             <img src={URL.createObjectURL(file)} alt="preview" className="h-16 w-16 object-cover rounded-md" />
-                                            <button type="button" onClick={() => removeImage(index)} className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-0.5"><X className="h-3 w-3" /></button>
+                                            <button type="button" onClick={() => removeImage(index)} className="absolute top-0 right-0 bg-[rgba(248,113,113,0.1)]0 text-white rounded-full p-0.5"><X className="h-3 w-3" /></button>
                                         </div>
                                     ))}
                                 </div>
@@ -274,8 +274,8 @@ export default function WorkLogForm() {
 
                         </form>
                     </div>
-                    <div className="border-t bg-white p-6">
-                        <Button type="submit" form="worklog-form" className="w-full bg-blue-600 hover:bg-blue-700 text-lg py-6" disabled={isSubmitting}>
+                    <div className="border-t bg-[#1a1a2e] p-6">
+                        <Button type="submit" form="worklog-form" className="w-full bg-[#c42b2b] hover:bg-[#991b1b] text-lg py-6" disabled={isSubmitting}>
                             <Save className="w-5 h-5 ml-2" />
                             {isSubmitting ? 'שולח דיווח...' : 'שלח דיווח יומן עבודה'}
                         </Button>

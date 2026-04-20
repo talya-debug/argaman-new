@@ -56,18 +56,18 @@ export default function LeadQuickActions({ lead, onStatusChange, onContactAction
   };
 
   return (
-    <Card className="shadow-sm border-slate-200">
+    <Card className="shadow-[0_4px_24px_rgba(0,0,0,0.3)] border-[rgba(255,255,255,0.08)]">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-700">פעולות מהירות</CardTitle>
+        <CardTitle className="text-sm font-semibold text-[#e0e0e0]">פעולות מהירות</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {/* Current Status */}
         <div className="text-right">
-          <p className="text-xs text-slate-500 mb-1">סטטוס נוכחי:</p>
+          <p className="text-xs text-[#a0a0b8] mb-1">סטטוס נוכחי:</p>
           <Badge variant="outline" className="text-xs">
             {lead.status}
           </Badge>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#6b6b80] mt-1">
             אחראי: {currentResponsible}
           </p>
         </div>
@@ -94,7 +94,7 @@ export default function LeadQuickActions({ lead, onStatusChange, onContactAction
             variant="ghost"
             size="sm"
             onClick={handleCall}
-            className="w-full text-xs justify-start hover:bg-green-50 hover:text-green-700"
+            className="w-full text-xs justify-start hover:bg-[rgba(74,222,128,0.1)] hover:text-[#4ade80]"
           >
             <Phone className="w-3 h-3 ml-2" />
             התקשר: {lead.phone}
@@ -105,7 +105,7 @@ export default function LeadQuickActions({ lead, onStatusChange, onContactAction
               variant="ghost"
               size="sm"
               onClick={handleEmail}
-              className="w-full text-xs justify-start hover:bg-blue-50 hover:text-blue-700"
+              className="w-full text-xs justify-start hover:bg-[rgba(96,165,250,0.1)] hover:text-[#60a5fa]"
             >
               <Mail className="w-3 h-3 ml-2" />
               שלח מייל: {lead.email}
@@ -116,7 +116,7 @@ export default function LeadQuickActions({ lead, onStatusChange, onContactAction
         {/* Follow-up Reminder */}
         {lead.followup_date && (
           <div className="border-t pt-3">
-            <div className="flex items-center justify-end gap-2 text-xs text-slate-500">
+            <div className="flex items-center justify-end gap-2 text-xs text-[#a0a0b8]">
               <Calendar className="w-3 h-3" />
               <span>פולואפ: {new Date(lead.followup_date).toLocaleDateString('he-IL')}</span>
             </div>

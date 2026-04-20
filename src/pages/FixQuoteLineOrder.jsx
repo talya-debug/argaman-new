@@ -81,21 +81,21 @@ export default function FixQuoteLineOrder() {
     };
 
     return (
-        <div className="p-4 md:p-8 bg-slate-50 min-h-screen" dir="rtl">
+        <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen" dir="rtl">
             <div className="max-w-3xl mx-auto">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-slate-900 mb-2">תיקון סדר השורות בפרויקטים</h1>
-                    <p className="text-slate-600">בדיקה ותיקון אוטומטי של סדר השורות בכתב הכמויות לכל הפרויקטים הפתוחים</p>
+                    <h1 className="text-3xl font-bold text-[#f0f0f0] mb-2">תיקון סדר השורות בפרויקטים</h1>
+                    <p className="text-[#a0a0b8]">בדיקה ותיקון אוטומטי של סדר השורות בכתב הכמויות לכל הפרויקטים הפתוחים</p>
                 </div>
 
                 <Card className="mb-6">
-                    <CardHeader className="bg-blue-50 border-b">
+                    <CardHeader className="bg-[rgba(96,165,250,0.1)] border-b">
                         <CardTitle className="flex items-center gap-2">
-                            <AlertCircle className="w-5 h-5 text-blue-600" />
+                            <AlertCircle className="w-5 h-5 text-[#60a5fa]" />
                             מידע חשוב
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="pt-6 space-y-3 text-sm text-slate-700">
+                    <CardContent className="pt-6 space-y-3 text-sm text-[#e0e0e0]">
                         <p>• כלי זה יבדוק את כל הפרויקטים הפתוחים (לא מוסרים או הושלמים)</p>
                         <p>• לכל פרויקט יתקן את סדר השורות לפי ההצעה המקורית</p>
                         <p>• <strong>לא ישנה</strong> שום נתונים כספיים או אחוזי ביצוע</p>
@@ -128,29 +128,29 @@ export default function FixQuoteLineOrder() {
                 )}
 
                 {error && (
-                    <Card className="border-red-200 bg-red-50">
+                    <Card className="border-red-200 bg-[rgba(248,113,113,0.1)]">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-red-700">
+                            <CardTitle className="flex items-center gap-2 text-[#f87171]">
                                 <AlertTriangle className="w-5 h-5" />
                                 שגיאה
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="text-red-700 text-sm">
+                        <CardContent className="text-[#f87171] text-sm">
                             {error}
                         </CardContent>
                     </Card>
                 )}
 
                 {result && (
-                    <Card className="border-green-200 bg-green-50">
+                    <Card className="border-green-200 bg-[rgba(74,222,128,0.1)]">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-green-700">
+                            <CardTitle className="flex items-center gap-2 text-[#4ade80]">
                                 <CheckCircle2 className="w-5 h-5" />
                                 התיקון הסתיים בהצלחה
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="text-sm space-y-4">
-                            <div className="space-y-2 text-slate-700">
+                            <div className="space-y-2 text-[#e0e0e0]">
                                 <p><strong>סך הפרויקטים שנבדקו:</strong> {result.total_projects_checked}</p>
                                 <p><strong>סך הפרויקטים שתוקנו:</strong> {result.details?.filter(d => d.status === 'fixed').length || 0}</p>
                                 <p><strong>סך השורות שתוקנו:</strong> {result.total_lines_fixed}</p>
@@ -164,8 +164,8 @@ export default function FixQuoteLineOrder() {
                                             key={detail.project_id}
                                             className={`p-2 rounded text-xs ${
                                                 detail.status === 'fixed'
-                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                    : 'bg-green-100 text-green-800'
+                                                    ? 'bg-[rgba(251,191,36,0.1)] text-yellow-800'
+                                                    : 'bg-[rgba(74,222,128,0.1)] text-green-800'
                                             }`}
                                         >
                                             <div className="font-semibold">{detail.project_name}</div>

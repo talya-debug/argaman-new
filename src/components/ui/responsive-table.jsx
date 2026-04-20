@@ -26,7 +26,7 @@ export default function ResponsiveTable({
   if (data.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-slate-400">{emptyMessage}</p>
+        <p className="text-[#6b6b80]">{emptyMessage}</p>
       </div>
     );
   }

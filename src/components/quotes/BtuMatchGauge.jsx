@@ -11,14 +11,14 @@ export default function BtuMatchGauge({ currentBtu, requiredBtu }) {
     const isMatch = Math.abs(currentBtu - requiredBtu) <= (requiredBtu * 0.1); // 10% tolerance
 
     let status = 'חסר';
-    let badgeColor = 'bg-red-100 text-red-800';
+    let badgeColor = 'bg-[rgba(248,113,113,0.1)] text-red-800';
 
     if (isMatch) {
         status = 'מתאים';
-        badgeColor = 'bg-green-100 text-green-800';
+        badgeColor = 'bg-[rgba(74,222,128,0.1)] text-green-800';
     } else if (isOver) {
         status = 'עודף';
-        badgeColor = 'bg-yellow-100 text-yellow-800';
+        badgeColor = 'bg-[rgba(251,191,36,0.1)] text-yellow-800';
     }
 
     return (
@@ -28,7 +28,7 @@ export default function BtuMatchGauge({ currentBtu, requiredBtu }) {
             </CardHeader>
             <CardContent>
                 <div className="text-center mb-4">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">
+                    <div className="text-3xl font-bold text-[#60a5fa] mb-2">
                         {percentage.toFixed(0)}%
                     </div>
                     <Badge className={badgeColor}>
@@ -42,7 +42,7 @@ export default function BtuMatchGauge({ currentBtu, requiredBtu }) {
                     <p className="font-medium">{currentBtu.toLocaleString()} BTU</p>
                     <p>מתוך {requiredBtu.toLocaleString()} נדרש</p>
                     {isOver && (
-                        <p className="text-yellow-600 font-medium mt-2">
+                        <p className="text-[#fbbf24] font-medium mt-2">
                             עודף: {(currentBtu - requiredBtu).toLocaleString()} BTU
                         </p>
                     )}

@@ -97,11 +97,11 @@ export default function TaskActivityLog({ taskId }) {
                         disabled={isSaving}
                     />
                     <div className="flex justify-between items-center">
-                        <p className="text-xs text-slate-500">Ctrl + Enter לשליחה מהירה</p>
+                        <p className="text-xs text-[#a0a0b8]">Ctrl + Enter לשליחה מהירה</p>
                         <Button 
                             onClick={handleSubmitComment}
                             disabled={!newComment.trim() || isSaving}
-                            className="bg-blue-600 hover:bg-blue-700"
+                            className="bg-[#c42b2b] hover:bg-[#991b1b]"
                         >
                             <Send className="w-4 h-4 ml-2" />
                             {isSaving ? 'שולח...' : 'הוסף עדכון'}
@@ -119,7 +119,7 @@ export default function TaskActivityLog({ taskId }) {
                             </div>
                         ))
                     ) : activities.length === 0 ? (
-                        <div className="text-center py-8 text-slate-500">
+                        <div className="text-center py-8 text-[#a0a0b8]">
                             <MessageCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
                             <p>אין עדכונים עדיין</p>
                             <p className="text-sm">הוסף את העדכון הראשון</p>
@@ -128,15 +128,15 @@ export default function TaskActivityLog({ taskId }) {
                         activities.map((activity) => (
                             <div key={activity.id} className="border-b border-slate-100 pb-4 last:border-b-0">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                        <span className="text-blue-600 font-semibold text-xs">
+                                    <div className="w-8 h-8 bg-[rgba(96,165,250,0.1)] rounded-full flex items-center justify-center">
+                                        <span className="text-[#60a5fa] font-semibold text-xs">
                                             {activity.user_name.charAt(0)}
                                         </span>
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-medium text-slate-900">{activity.user_name}</span>
-                                            <span className="text-xs text-slate-500 flex items-center gap-1">
+                                            <span className="font-medium text-[#f0f0f0]">{activity.user_name}</span>
+                                            <span className="text-xs text-[#a0a0b8] flex items-center gap-1">
                                                 <Clock className="w-3 h-3" />
                                                 {format(new Date(activity.created_date), 'dd/MM/yyyy HH:mm', { locale: he })}
                                             </span>
@@ -144,7 +144,7 @@ export default function TaskActivityLog({ taskId }) {
                                     </div>
                                 </div>
                                 <div className="mr-10">
-                                    <p className="text-slate-700 bg-slate-50 p-3 rounded-lg">
+                                    <p className="text-[#e0e0e0] bg-[#1a1a2e] p-3 rounded-lg">
                                         {activity.comment}
                                     </p>
                                 </div>

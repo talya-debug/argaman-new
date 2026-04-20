@@ -83,36 +83,36 @@ export default function SubContractorDialog({ projectId, onSubContractorAdded })
                     קבלן משנה
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
-                <div className="bg-white p-1 rounded-lg">
+            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
+                <div className="bg-[#1a1a2e] p-1 rounded-lg">
                     <DialogHeader className="bg-purple-50 p-4 rounded-t-lg border-b">
                         <DialogTitle className="text-slate-800 text-lg font-bold">הוספת קבלן משנה</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="p-6 bg-white">
+                    <div className="p-6 bg-[#1a1a2e]">
                         <form onSubmit={handleSubmit} className="space-y-6 text-slate-800">
                             <div>
-                                <Label htmlFor="contractor-name" className="text-slate-700 font-semibold">שם הקבלן *</Label>
+                                <Label htmlFor="contractor-name" className="text-[#e0e0e0] font-semibold">שם הקבלן *</Label>
                                 <Input
                                     id="contractor-name"
                                     value={formData.contractor_name}
                                     onChange={(e) => setFormData({...formData, contractor_name: e.target.value})}
                                     placeholder="הזן שם קבלן..."
-                                    className="text-right bg-white border-gray-300"
+                                    className="text-right bg-[#1a1a2e] border-gray-300"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="work-field" className="text-slate-700 font-semibold">תחום עבודה *</Label>
+                                <Label htmlFor="work-field" className="text-[#e0e0e0] font-semibold">תחום עבודה *</Label>
                                 <Select 
                                     value={formData.work_field} 
                                     onValueChange={(value) => setFormData({...formData, work_field: value})}
                                 >
-                                    <SelectTrigger className="bg-white border-gray-300">
+                                    <SelectTrigger className="bg-[#1a1a2e] border-gray-300">
                                         <SelectValue placeholder="בחר תחום עבודה" />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-white">
+                                    <SelectContent className="bg-[#1a1a2e]">
                                         {workFieldOptions.map(field => (
                                             <SelectItem key={field} value={field}>{field}</SelectItem>
                                         ))}
@@ -121,18 +121,18 @@ export default function SubContractorDialog({ projectId, onSubContractorAdded })
                             </div>
 
                             <div>
-                                <Label htmlFor="work-type" className="text-slate-700 font-semibold">סוג העבודה</Label>
+                                <Label htmlFor="work-type" className="text-[#e0e0e0] font-semibold">סוג העבודה</Label>
                                 <Input
                                     id="work-type"
                                     value={formData.work_type}
                                     onChange={(e) => setFormData({...formData, work_type: e.target.value})}
                                     placeholder="פירוט סוג העבודה..."
-                                    className="text-right bg-white border-gray-300"
+                                    className="text-right bg-[#1a1a2e] border-gray-300"
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="amount" className="text-slate-700 font-semibold">סכום לתשלום (₪) *</Label>
+                                <Label htmlFor="amount" className="text-[#e0e0e0] font-semibold">סכום לתשלום (₪) *</Label>
                                 <Input
                                     id="amount"
                                     type="number"
@@ -141,21 +141,21 @@ export default function SubContractorDialog({ projectId, onSubContractorAdded })
                                     value={formData.amount}
                                     onChange={(e) => setFormData({...formData, amount: e.target.value})}
                                     placeholder="0.00"
-                                    className="text-right bg-white border-gray-300"
+                                    className="text-right bg-[#1a1a2e] border-gray-300"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="payment-status" className="text-slate-700 font-semibold">סטטוס תשלום</Label>
+                                <Label htmlFor="payment-status" className="text-[#e0e0e0] font-semibold">סטטוס תשלום</Label>
                                 <Select 
                                     value={formData.payment_status} 
                                     onValueChange={(value) => setFormData({...formData, payment_status: value})}
                                 >
-                                    <SelectTrigger className="bg-white border-gray-300">
+                                    <SelectTrigger className="bg-[#1a1a2e] border-gray-300">
                                         <SelectValue />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-white">
+                                    <SelectContent className="bg-[#1a1a2e]">
                                         {paymentStatusOptions.map(status => (
                                             <SelectItem key={status} value={status}>{status}</SelectItem>
                                         ))}
@@ -164,14 +164,14 @@ export default function SubContractorDialog({ projectId, onSubContractorAdded })
                             </div>
 
                             <div>
-                                <Label htmlFor="notes" className="text-slate-700 font-semibold">הערות</Label>
+                                <Label htmlFor="notes" className="text-[#e0e0e0] font-semibold">הערות</Label>
                                 <Textarea
                                     id="notes"
                                     value={formData.notes}
                                     onChange={(e) => setFormData({...formData, notes: e.target.value})}
                                     placeholder="הערות נוספות..."
                                     rows={3}
-                                    className="bg-white border-gray-300"
+                                    className="bg-[#1a1a2e] border-gray-300"
                                 />
                             </div>
 

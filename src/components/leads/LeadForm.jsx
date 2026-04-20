@@ -74,7 +74,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg" dir="rtl">
+    <div className="bg-[#1a1a2e] p-6 rounded-lg" dir="rtl">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
               required
-              className="text-right bg-white border-gray-300"
+              className="text-right bg-[#1a1a2e] border-gray-300"
               placeholder="שם הלקוח"
             />
           </div>
@@ -96,7 +96,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
               value={formData.phone}
               onChange={(e) => handleChange('phone', e.target.value)}
               required
-              className="text-right bg-white border-gray-300"
+              className="text-right bg-[#1a1a2e] border-gray-300"
               placeholder="מספר טלפון"
             />
           </div>
@@ -108,7 +108,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
               type="email"
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
-              className="text-right bg-white border-gray-300"
+              className="text-right bg-[#1a1a2e] border-gray-300"
               placeholder="כתובת מייל"
             />
           </div>
@@ -120,7 +120,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
               type="number"
               value={formData.estimated_value}
               onChange={(e) => handleChange('estimated_value', e.target.value)}
-              className="text-right bg-white border-gray-300"
+              className="text-right bg-[#1a1a2e] border-gray-300"
               placeholder="ערך משוער"
             />
           </div>
@@ -128,10 +128,10 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
           <div className="space-y-2">
             <Label htmlFor="status" className="text-right font-medium">סטטוס</Label>
             <Select value={formData.status} onValueChange={(value) => handleChange('status', value)}>
-              <SelectTrigger className="text-right bg-white border-gray-300">
+              <SelectTrigger className="text-right bg-[#1a1a2e] border-gray-300">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-white">
+              <SelectContent className="bg-[#1a1a2e]">
                 {STATUSES.map((status) => (
                   <SelectItem key={status} value={status}>
                     {status}
@@ -144,10 +144,10 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
           <div className="space-y-2">
             <Label htmlFor="responsible" className="text-right font-medium">אחראי</Label>
             <Select value={formData.responsible} onValueChange={(value) => handleChange('responsible', value)}>
-              <SelectTrigger className="text-right bg-white border-gray-300">
+              <SelectTrigger className="text-right bg-[#1a1a2e] border-gray-300">
                 <SelectValue placeholder="בחר אחראי" />
               </SelectTrigger>
-              <SelectContent className="bg-white">
+              <SelectContent className="bg-[#1a1a2e]">
                 {RESPONSIBLES.map((responsible) => (
                   <SelectItem key={responsible} value={responsible}>
                     {responsible}
@@ -164,7 +164,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
               type="date"
               value={formData.followup_date}
               onChange={(e) => handleChange('followup_date', e.target.value)}
-              className="text-right bg-white border-gray-300"
+              className="text-right bg-[#1a1a2e] border-gray-300"
             />
           </div>
 
@@ -174,7 +174,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
               id="source"
               value={formData.source}
               onChange={(e) => handleChange('source', e.target.value)}
-              className="text-right bg-white border-gray-300"
+              className="text-right bg-[#1a1a2e] border-gray-300"
               placeholder="מקור הליד"
             />
           </div>
@@ -192,7 +192,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
                     </div>
                 ) : (
                     <Button type="button" variant="outline" className="h-20 w-20 border-dashed" onClick={() => fileInputRef.current?.click()}>
-                        <UploadCloud className="h-6 w-6 text-slate-400"/>
+                        <UploadCloud className="h-6 w-6 text-[#6b6b80]"/>
                     </Button>
                 )}
                 <Input
@@ -203,7 +203,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
                     onChange={handleFileChange}
                     accept="image/*"
                 />
-                 <div className="text-sm text-slate-500">
+                 <div className="text-sm text-[#a0a0b8]">
                     <p>ניתן להוסיף תמונה של המקום,</p>
                     <p>תוכניות או כל קובץ רלוונטי אחר.</p>
                 </div>
@@ -216,7 +216,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
             id="address"
             value={formData.address}
             onChange={(e) => handleChange('address', e.target.value)}
-            className="text-right bg-white border-gray-300"
+            className="text-right bg-[#1a1a2e] border-gray-300"
             placeholder="כתובת הלקוח"
           />
         </div>
@@ -228,7 +228,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
             type="url"
             value={formData.drive_folder_url}
             onChange={(e) => handleChange('drive_folder_url', e.target.value)}
-            className="text-right bg-white border-gray-300"
+            className="text-right bg-[#1a1a2e] border-gray-300"
             placeholder="https://drive.google.com/..."
           />
         </div>
@@ -240,7 +240,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
             value={formData.notes}
             onChange={(e) => handleChange('notes', e.target.value)}
             rows={3}
-            className="text-right bg-white border-gray-300"
+            className="text-right bg-[#1a1a2e] border-gray-300"
             placeholder="הערות נוספות"
           />
         </div>
@@ -249,7 +249,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
           <Button type="button" variant="ghost" onClick={onCancel}>
             ביטול
           </Button>
-          <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button type="submit" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">
             {lead ? 'עדכן' : 'צור'} ליד
           </Button>
         </div>

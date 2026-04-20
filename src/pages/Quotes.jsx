@@ -15,12 +15,12 @@ import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
 
 const statusColors = {
-  'טיוטה': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  'מוכנה': 'bg-blue-100 text-blue-800 border-blue-200',
-  'הצעה מוכנה ממתינה לאישור': 'bg-blue-100 text-blue-800 border-blue-200',
-  'נשלחה': 'bg-green-100 text-green-800 border-green-200',
+  'טיוטה': 'bg-[rgba(251,191,36,0.1)] text-yellow-800 border-yellow-200',
+  'מוכנה': 'bg-[rgba(96,165,250,0.1)] text-blue-800 border-blue-200',
+  'הצעה מוכנה ממתינה לאישור': 'bg-[rgba(96,165,250,0.1)] text-blue-800 border-blue-200',
+  'נשלחה': 'bg-[rgba(74,222,128,0.1)] text-green-800 border-green-200',
   'אושרה': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'נדחתה': 'bg-red-100 text-red-800 border-red-200'
+  'נדחתה': 'bg-[rgba(248,113,113,0.1)] text-red-800 border-red-200'
 };
 
 export default function Quotes() {
@@ -77,15 +77,15 @@ export default function Quotes() {
 
 
   return (
-    <div className="p-4 md:p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">הצעות מחיר</h1>
-            <p className="text-slate-500 mt-1">ניהול וטיפול בכל ההצעות במערכת</p>
+            <h1 className="text-3xl font-bold text-[#f0f0f0]">הצעות מחיר</h1>
+            <p className="text-[#a0a0b8] mt-1">ניהול וטיפול בכל ההצעות במערכת</p>
           </div>
           <Button
-            className="bg-blue-600 hover:bg-blue-700 shadow-lg"
+            className="bg-[#c42b2b] hover:bg-[#991b1b] shadow-lg"
             onClick={handleNewQuoteClick}
           >
             <Plus className="w-4 h-4 ml-2" />
@@ -96,7 +96,7 @@ export default function Quotes() {
         <Card className="shadow-lg border-0">
           <CardHeader>
              <div className="relative">
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b6b80] w-4 h-4" />
               <Input
                 placeholder="חיפוש לפי שם לקוח, מספר הצעה..."
                 value={searchTerm}
@@ -109,7 +109,7 @@ export default function Quotes() {
             <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-slate-50">
+                    <TableRow className="bg-[#1a1a2e]">
                       <TableHead className="text-right font-semibold">מספר הצעה</TableHead>
                       <TableHead className="text-right font-semibold">לקוח</TableHead>
                       <TableHead className="text-right font-semibold">סכום</TableHead>
@@ -130,11 +130,11 @@ export default function Quotes() {
                       ))
                     ) : (
                       filteredQuotes.map((quote) => (
-                        <TableRow key={quote.id} className="hover:bg-slate-50 cursor-pointer" onClick={() => handleRowClick(quote)}>
-                          <TableCell className="font-medium text-blue-700">{quote.quote_number}</TableCell>
-                          <TableCell className="text-slate-900">{quote.client_name}</TableCell>
-                          <TableCell className="text-slate-900">₪{quote.total?.toLocaleString()}</TableCell>
-                          <TableCell className="text-slate-600">{format(new Date(quote.created_date), 'dd/MM/yyyy', { locale: he })}</TableCell>
+                        <TableRow key={quote.id} className="hover:bg-[#1a1a2e] cursor-pointer" onClick={() => handleRowClick(quote)}>
+                          <TableCell className="font-medium text-[#60a5fa]">{quote.quote_number}</TableCell>
+                          <TableCell className="text-[#f0f0f0]">{quote.client_name}</TableCell>
+                          <TableCell className="text-[#f0f0f0]">₪{quote.total?.toLocaleString()}</TableCell>
+                          <TableCell className="text-[#a0a0b8]">{format(new Date(quote.created_date), 'dd/MM/yyyy', { locale: he })}</TableCell>
                           <TableCell className="text-center">
                             <Badge className={`${statusColors[quote.status] || 'bg-gray-200'} text-xs`}>
                               {quote.status}
@@ -146,7 +146,7 @@ export default function Quotes() {
                   </TableBody>
                 </Table>
                  { !isLoading && filteredQuotes.length === 0 && (
-                    <div className="text-center p-8 text-slate-500">
+                    <div className="text-center p-8 text-[#a0a0b8]">
                         <FileText className="w-12 h-12 mx-auto text-slate-300 mb-4" />
                         <p>לא נמצאו הצעות מחיר</p>
                     </div>

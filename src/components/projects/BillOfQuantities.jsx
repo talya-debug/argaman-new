@@ -98,46 +98,46 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button size="sm" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">
                     <Plus className="w-4 h-4 ml-1" />
                     חיוב {invoiceNumber}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
-                <div className="bg-white p-1 rounded-lg">
-                    <DialogHeader className="bg-blue-50 p-4 rounded-t-lg border-b">
+            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
+                <div className="bg-[#1a1a2e] p-1 rounded-lg">
+                    <DialogHeader className="bg-[rgba(96,165,250,0.1)] p-4 rounded-t-lg border-b">
                         <DialogTitle className="text-slate-800 text-lg font-bold">
                             הוספת חיוב {invoiceNumber} - {quoteLine?.name_snapshot}
                         </DialogTitle>
                     </DialogHeader>
 
-                    <div className="p-6 bg-white">
+                    <div className="p-6 bg-[#1a1a2e]">
                         <form onSubmit={handleSubmit} className="space-y-6 text-slate-800">
-                           <div className="grid grid-cols-2 gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                           <div className="grid grid-cols-2 gap-4 p-4 bg-[rgba(96,165,250,0.1)] rounded-lg border border-blue-200">
                                 <div>
-                                    <Label className="text-sm font-semibold text-slate-700">כמות כוללת</Label>
+                                    <Label className="text-sm font-semibold text-[#e0e0e0]">כמות כוללת</Label>
                                     <p className="text-lg font-bold text-slate-800">{totalQuantity}</p>
                                 </div>
                                 <div>
-                                    <Label className="text-sm font-semibold text-slate-700">סכום כולל</Label>
+                                    <Label className="text-sm font-semibold text-[#e0e0e0]">סכום כולל</Label>
                                     <p className="text-lg font-bold text-slate-800">₪{quoteLine?.line_total?.toLocaleString()}</p>
                                 </div>
                                 <div>
-                                    <Label className="text-sm font-semibold text-slate-700">נותר לביצוע</Label>
-                                    <p className="text-sm text-slate-600">{remainingPercentage.toFixed(1)}% ({remainingQuantity.toFixed(2)} יח')</p>
+                                    <Label className="text-sm font-semibold text-[#e0e0e0]">נותר לביצוע</Label>
+                                    <p className="text-sm text-[#a0a0b8]">{remainingPercentage.toFixed(1)}% ({remainingQuantity.toFixed(2)} יח')</p>
                                 </div>
                                 <div>
-                                    <Label className="text-sm font-semibold text-slate-700">חויב עד כה</Label>
-                                    <p className="text-sm text-slate-600">{totalInvoiced.toFixed(1)}%</p>
+                                    <Label className="text-sm font-semibold text-[#e0e0e0]">חויב עד כה</Label>
+                                    <p className="text-sm text-[#a0a0b8]">{totalInvoiced.toFixed(1)}%</p>
                                 </div>
                             </div>
                             <div>
-                                <Label htmlFor="entry-method" className="text-slate-700 font-semibold">שיטת הזנה</Label>
+                                <Label htmlFor="entry-method" className="text-[#e0e0e0] font-semibold">שיטת הזנה</Label>
                                 <Select value={entryMethod} onValueChange={setEntryMethod}>
-                                    <SelectTrigger className="bg-white border-gray-300">
+                                    <SelectTrigger className="bg-[#1a1a2e] border-gray-300">
                                         <SelectValue />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-white">
+                                    <SelectContent className="bg-[#1a1a2e]">
                                         <SelectItem value="percentage">לפי אחוז ביצוע</SelectItem>
                                         <SelectItem value="quantity">לפי כמות שבוצעה</SelectItem>
                                     </SelectContent>
@@ -146,7 +146,7 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
 
                             {entryMethod === 'percentage' ? (
                                 <div>
-                                    <Label htmlFor="percentage" className="text-slate-700 font-semibold">אחוז ביצוע (%)</Label>
+                                    <Label htmlFor="percentage" className="text-[#e0e0e0] font-semibold">אחוז ביצוע (%)</Label>
                                     <Input
                                         id="percentage"
                                         type="number"
@@ -155,15 +155,15 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
                                         step="0.1"
                                         value={percentage}
                                         onChange={(e) => setPercentage(parseFloat(e.target.value) || 0)}
-                                        className="text-right bg-white border-gray-300"
+                                        className="text-right bg-[#1a1a2e] border-gray-300"
                                     />
-                                    <p className="text-xs text-blue-600 mt-1 font-semibold">
+                                    <p className="text-xs text-[#60a5fa] mt-1 font-semibold">
                                         סכום לחיוב: ₪{calculateAmount().toLocaleString()}
                                     </p>
                                 </div>
                             ) : (
                                 <div>
-                                    <Label htmlFor="quantity" className="text-slate-700 font-semibold">כמות שבוצעה</Label>
+                                    <Label htmlFor="quantity" className="text-[#e0e0e0] font-semibold">כמות שבוצעה</Label>
                                     <Input
                                         id="quantity"
                                         type="number"
@@ -172,27 +172,27 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
                                         step="0.01"
                                         value={quantity}
                                         onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)}
-                                        className="text-right bg-white border-gray-300"
+                                        className="text-right bg-[#1a1a2e] border-gray-300"
                                     />
-                                    <p className="text-xs text-blue-600 mt-1 font-semibold">
+                                    <p className="text-xs text-[#60a5fa] mt-1 font-semibold">
                                         אחוז: {calculatePercentage().toFixed(1)}% | סכום: ₪{calculateAmount().toLocaleString()}
                                     </p>
                                 </div>
                             )}
 
                             <div>
-                                <Label htmlFor="entry-date" className="text-slate-700 font-semibold">תאריך</Label>
-                                <Input id="entry-date" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="bg-white border-gray-300" />
+                                <Label htmlFor="entry-date" className="text-[#e0e0e0] font-semibold">תאריך</Label>
+                                <Input id="entry-date" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="bg-[#1a1a2e] border-gray-300" />
                             </div>
 
                             <div>
-                                <Label htmlFor="notes" className="text-slate-700 font-semibold">הערות</Label>
-                                <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="הערות נוספות..." rows={3} className="bg-white border-gray-300" />
+                                <Label htmlFor="notes" className="text-[#e0e0e0] font-semibold">הערות</Label>
+                                <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="הערות נוספות..." rows={3} className="bg-[#1a1a2e] border-gray-300" />
                             </div>
 
                             <div className="flex justify-end gap-3 pt-4 border-t">
                                 <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>ביטול</Button>
-                                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">הוסף חיוב</Button>
+                                <Button type="submit" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">הוסף חיוב</Button>
                             </div>
                         </form>
                     </div>
@@ -248,20 +248,20 @@ const EditInvoiceEntryDialog = ({ entry, quoteLine, projectId, onInvoiceUpdated,
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button size="sm" variant="ghost" className="text-blue-600 hover:text-blue-700" onClick={() => setIsOpen(true)}><Edit className="w-4 h-4" /></Button>
+                <Button size="sm" variant="ghost" className="text-[#60a5fa] hover:text-[#60a5fa]" onClick={() => setIsOpen(true)}><Edit className="w-4 h-4" /></Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
-                <div className="bg-white p-1 rounded-lg">
-                    <DialogHeader className="bg-blue-50 p-4 rounded-t-lg border-b"><DialogTitle className="text-slate-800 text-lg font-bold">עריכת חיוב - {quoteLine?.name_snapshot}</DialogTitle></DialogHeader>
-                    <div className="p-6 bg-white">
+            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
+                <div className="bg-[#1a1a2e] p-1 rounded-lg">
+                    <DialogHeader className="bg-[rgba(96,165,250,0.1)] p-4 rounded-t-lg border-b"><DialogTitle className="text-slate-800 text-lg font-bold">עריכת חיוב - {quoteLine?.name_snapshot}</DialogTitle></DialogHeader>
+                    <div className="p-6 bg-[#1a1a2e]">
                         <form onSubmit={handleSubmit} className="space-y-6 text-slate-800">
-                            <div><Label htmlFor="entry-method" className="text-slate-700 font-semibold">שיטת הזנה</Label><Select value={entryMethod} onValueChange={setEntryMethod}><SelectTrigger className="bg-white border-gray-300"><SelectValue /></SelectTrigger><SelectContent className="bg-white"><SelectItem value="percentage">לפי אחוז ביצוע</SelectItem><SelectItem value="quantity">לפי כמות שבוצעה</SelectItem></SelectContent></Select></div>
-                            {entryMethod === 'percentage' ? (<div><Label htmlFor="percentage" className="text-slate-700 font-semibold">אחוז ביצוע (%) - 0 למחיקה</Label><Input id="percentage" type="number" min="0" max={remainingPercentageForOthers + (entry?.calculated_percentage || 0)} step="0.1" value={percentage} onChange={(e) => setPercentage(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" /></div>) : (<div><Label htmlFor="quantity" className="text-slate-700 font-semibold">כמות שבוצעה - 0 למחיקה</Label><Input id="quantity" type="number" min="0" max={remainingQuantityForOthers + (entry?.quantity_completed || 0)} step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" /></div>)}
-                            <div><Label htmlFor="entry-date" className="text-slate-700 font-semibold">תאריך</Label><Input id="entry-date" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="bg-white border-gray-300" /></div>
-                            <div><Label htmlFor="notes" className="text-slate-700 font-semibold">הערות</Label><Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="הערות נוספות..." rows={3} className="bg-white border-gray-300" /></div>
+                            <div><Label htmlFor="entry-method" className="text-[#e0e0e0] font-semibold">שיטת הזנה</Label><Select value={entryMethod} onValueChange={setEntryMethod}><SelectTrigger className="bg-[#1a1a2e] border-gray-300"><SelectValue /></SelectTrigger><SelectContent className="bg-[#1a1a2e]"><SelectItem value="percentage">לפי אחוז ביצוע</SelectItem><SelectItem value="quantity">לפי כמות שבוצעה</SelectItem></SelectContent></Select></div>
+                            {entryMethod === 'percentage' ? (<div><Label htmlFor="percentage" className="text-[#e0e0e0] font-semibold">אחוז ביצוע (%) - 0 למחיקה</Label><Input id="percentage" type="number" min="0" max={remainingPercentageForOthers + (entry?.calculated_percentage || 0)} step="0.1" value={percentage} onChange={(e) => setPercentage(parseFloat(e.target.value) || 0)} className="text-right bg-[#1a1a2e] border-gray-300" /></div>) : (<div><Label htmlFor="quantity" className="text-[#e0e0e0] font-semibold">כמות שבוצעה - 0 למחיקה</Label><Input id="quantity" type="number" min="0" max={remainingQuantityForOthers + (entry?.quantity_completed || 0)} step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)} className="text-right bg-[#1a1a2e] border-gray-300" /></div>)}
+                            <div><Label htmlFor="entry-date" className="text-[#e0e0e0] font-semibold">תאריך</Label><Input id="entry-date" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="bg-[#1a1a2e] border-gray-300" /></div>
+                            <div><Label htmlFor="notes" className="text-[#e0e0e0] font-semibold">הערות</Label><Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="הערות נוספות..." rows={3} className="bg-[#1a1a2e] border-gray-300" /></div>
                             <div className="flex justify-between pt-4 border-t">
                                 <Button type="button" variant="destructive" onClick={handleDelete} className="bg-red-600 hover:bg-red-700"><Trash2 className="w-4 h-4 ml-2" />מחק חיוב</Button>
-                                <div className="flex gap-3"><Button type="button" variant="outline" onClick={() => setIsOpen(false)}>ביטול</Button><Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">עדכן חיוב</Button></div>
+                                <div className="flex gap-3"><Button type="button" variant="outline" onClick={() => setIsOpen(false)}>ביטול</Button><Button type="submit" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">עדכן חיוב</Button></div>
                             </div>
                         </form>
                     </div>
@@ -298,23 +298,23 @@ const AddItemDialog = ({ projectId, quoteId, onItemAdded }) => {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild><Button className="bg-green-600 hover:bg-green-700 text-white"><Plus className="w-4 h-4 ml-2" />הוסף פריט ידני</Button></DialogTrigger>
-            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
-                <div className="bg-white p-1 rounded-lg">
-                    <DialogHeader className="bg-green-50 p-4 rounded-t-lg border-b"><DialogTitle className="text-slate-800 text-lg font-bold">הוספת פריט חדש ידני</DialogTitle></DialogHeader>
-                    <div className="p-6 bg-white">
+            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
+                <div className="bg-[#1a1a2e] p-1 rounded-lg">
+                    <DialogHeader className="bg-[rgba(74,222,128,0.1)] p-4 rounded-t-lg border-b"><DialogTitle className="text-slate-800 text-lg font-bold">הוספת פריט חדש ידני</DialogTitle></DialogHeader>
+                    <div className="p-6 bg-[#1a1a2e]">
                         <form onSubmit={handleSubmit} className="space-y-6 text-slate-800">
-                            <div><Label htmlFor="clause-number" className="text-slate-700 font-semibold">מספר סעיף</Label><Input id="clause-number" value={clauseNumber} onChange={(e) => setClauseNumber(e.target.value)} placeholder="לדוגמה: A1, 1.2.3..." className="text-right bg-white border-gray-300" /></div>
-                            <div><Label htmlFor="item-name" className="text-slate-700 font-semibold">שם הפריט *</Label><Input id="item-name" value={itemName} onChange={(e) => setItemName(e.target.value)} placeholder="שם הפריט החדש..." className="text-right bg-white border-gray-300" required /></div>
-                            <div><Label htmlFor="description" className="text-slate-700 font-semibold">תיאור</Label><Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="תיאור מפורט של הפריט..." rows={3} className="bg-white border-gray-300" /></div>
+                            <div><Label htmlFor="clause-number" className="text-[#e0e0e0] font-semibold">מספר סעיף</Label><Input id="clause-number" value={clauseNumber} onChange={(e) => setClauseNumber(e.target.value)} placeholder="לדוגמה: A1, 1.2.3..." className="text-right bg-[#1a1a2e] border-gray-300" /></div>
+                            <div><Label htmlFor="item-name" className="text-[#e0e0e0] font-semibold">שם הפריט *</Label><Input id="item-name" value={itemName} onChange={(e) => setItemName(e.target.value)} placeholder="שם הפריט החדש..." className="text-right bg-[#1a1a2e] border-gray-300" required /></div>
+                            <div><Label htmlFor="description" className="text-[#e0e0e0] font-semibold">תיאור</Label><Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="תיאור מפורט של הפריט..." rows={3} className="bg-[#1a1a2e] border-gray-300" /></div>
                             <div className="grid grid-cols-2 gap-4">
-                                <div><Label htmlFor="quantity" className="text-slate-700 font-semibold">כמות *</Label><Input id="quantity" type="number" min="0.01" step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value) || 1)} className="text-right bg-white border-gray-300" required /></div>
-                                <div><Label htmlFor="unit-price" className="text-slate-700 font-semibold">מחיר יחידה (₪) *</Label><Input id="unit-price" type="number" min="0" step="0.01" value={unitPrice} onChange={(e) => setUnitPrice(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" required /><p className="text-xs text-slate-500 mt-1">ניתן להזין 0 לפריטים ללא חיוב</p></div>
+                                <div><Label htmlFor="quantity" className="text-[#e0e0e0] font-semibold">כמות *</Label><Input id="quantity" type="number" min="0.01" step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value) || 1)} className="text-right bg-[#1a1a2e] border-gray-300" required /></div>
+                                <div><Label htmlFor="unit-price" className="text-[#e0e0e0] font-semibold">מחיר יחידה (₪) *</Label><Input id="unit-price" type="number" min="0" step="0.01" value={unitPrice} onChange={(e) => setUnitPrice(parseFloat(e.target.value) || 0)} className="text-right bg-[#1a1a2e] border-gray-300" required /><p className="text-xs text-[#a0a0b8] mt-1">ניתן להזין 0 לפריטים ללא חיוב</p></div>
                             </div>
-                            <div className={`p-3 rounded-lg border ${unitPrice === 0 ? 'bg-blue-50 border-blue-200' : 'bg-green-50 border-green-200'}`}>
-                                <div className="flex justify-between items-center"><Label className="text-sm font-semibold text-slate-700">סכום כולל</Label>{unitPrice === 0 && (<Badge className="bg-blue-100 text-blue-700 text-xs">ללא חיוב</Badge>)}</div>
+                            <div className={`p-3 rounded-lg border ${unitPrice === 0 ? 'bg-[rgba(96,165,250,0.1)] border-blue-200' : 'bg-[rgba(74,222,128,0.1)] border-green-200'}`}>
+                                <div className="flex justify-between items-center"><Label className="text-sm font-semibold text-[#e0e0e0]">סכום כולל</Label>{unitPrice === 0 && (<Badge className="bg-[rgba(96,165,250,0.1)] text-[#60a5fa] text-xs">ללא חיוב</Badge>)}</div>
                                 <p className="text-lg font-bold text-slate-800">₪{(quantity * unitPrice).toLocaleString()}</p>
                             </div>
-                            <div><Label htmlFor="reason" className="text-slate-700 font-semibold">סיבת ההוספה *</Label><Textarea id="reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="מדוע נוסף פריט זה לפרויקט..." rows={2} className="bg-white border-gray-300" required /></div>
+                            <div><Label htmlFor="reason" className="text-[#e0e0e0] font-semibold">סיבת ההוספה *</Label><Textarea id="reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="מדוע נוסף פריט זה לפרויקט..." rows={2} className="bg-[#1a1a2e] border-gray-300" required /></div>
                             <div className="flex justify-end gap-3 pt-4 border-t"><Button type="button" variant="outline" onClick={() => setIsOpen(false)}>ביטול</Button><Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">הוסף פריט</Button></div>
                         </form>
                     </div>
@@ -604,16 +604,16 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         const s = calcInvoiceSummary(invoiceNum);
         if (s.rawSubtotal === 0) return null;
         return (
-            <div className="mt-6 p-4 bg-slate-50 rounded-lg border flex justify-end" dir="rtl">
+            <div className="mt-6 p-4 bg-[#1a1a2e] rounded-lg border flex justify-end" dir="rtl">
                 <div className="w-full md:w-1/3 text-right">
                     <h3 className="text-lg font-semibold text-slate-800 mb-4">סיכום חשבון {invoiceNum}</h3>
                     <div className="space-y-2">
                         <div className="flex justify-between items-center"><span>סכום ביניים</span><span className="font-semibold">₪{s.rawSubtotal.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
-                        {s.discountAmt > 0 && (<><div className="flex justify-between items-center text-green-700"><span>הנחה ({s.discountType === 'percentage' ? `${s.discountPct}%` : 'קבועה'})</span><span>-₪{s.discountAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div><div className="flex justify-between items-center font-semibold pt-1 border-t"><span>סה"כ אחרי הנחה</span><span>₪{s.afterDiscount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div></>)}
-                        {s.totalDeductions > 0 && (<div className="pr-4 border-r-2 border-red-200 py-2 space-y-1 text-red-600">{s.insAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז ביטוח ({s.insPct}%)</span><span>-&nbsp;₪{s.insAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}{s.retAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז עיכבון ({s.retPct}%)</span><span>-&nbsp;₪{s.retAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}{s.labAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז מעבדה ({s.labPct}%)</span><span>-&nbsp;₪{s.labAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}</div>)}
+                        {s.discountAmt > 0 && (<><div className="flex justify-between items-center text-[#4ade80]"><span>הנחה ({s.discountType === 'percentage' ? `${s.discountPct}%` : 'קבועה'})</span><span>-₪{s.discountAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div><div className="flex justify-between items-center font-semibold pt-1 border-t"><span>סה"כ אחרי הנחה</span><span>₪{s.afterDiscount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div></>)}
+                        {s.totalDeductions > 0 && (<div className="pr-4 border-r-2 border-red-200 py-2 space-y-1 text-[#f87171]">{s.insAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז ביטוח ({s.insPct}%)</span><span>-&nbsp;₪{s.insAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}{s.retAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז עיכבון ({s.retPct}%)</span><span>-&nbsp;₪{s.retAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}{s.labAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז מעבדה ({s.labPct}%)</span><span>-&nbsp;₪{s.labAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}</div>)}
                         {s.totalDeductions > 0 && <div className="flex justify-between items-center font-semibold pt-2 border-t"><span>סה"כ לאחר קיזוז</span><span>₪{s.afterDeductions.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}
                         <div className="flex justify-between items-center"><span>מע״מ (18%)</span><span>₪{s.vatAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
-                        <div className="flex justify-between items-center text-lg font-bold text-blue-600 pt-2 border-t bg-blue-50 p-2 rounded"><span>סה״כ לתשלום</span><span>₪{s.finalTotal.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
+                        <div className="flex justify-between items-center text-lg font-bold text-[#60a5fa] pt-2 border-t bg-[rgba(96,165,250,0.1)] p-2 rounded"><span>סה״כ לתשלום</span><span>₪{s.finalTotal.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
                     </div>
                     <Button onClick={() => handleMarkAsSent(invoiceNum)} disabled={sentInvoices.has(invoiceNum)} className="mt-4 bg-teal-500 hover:bg-teal-600 text-white">{sentInvoices.has(invoiceNum) ? 'נשלח ✓' : 'חשבון אושר – צור משימת גבייה'}</Button>
                 </div>
@@ -629,7 +629,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                     <div className="flex justify-between items-start">
                         <CardTitle className="flex items-center gap-2"><FileSpreadsheet className="w-5 h-5" />כתב כמויות וניהול חיובים</CardTitle>
                         <div className="flex flex-wrap gap-2">
-                            <Button variant="outline" onClick={() => setShowDiscountDialog(true)} className="bg-green-50 hover:bg-green-100 border-green-200 text-green-700"><Settings className="w-4 h-4 ml-2" />הנחה כללית: {project?.boq_discount_type === 'fixed_amount' ? `₪${(project?.boq_discount_amount || 0).toLocaleString()}` : `${project?.boq_discount_percentage || 0}%`}</Button>
+                            <Button variant="outline" onClick={() => setShowDiscountDialog(true)} className="bg-[rgba(74,222,128,0.1)] hover:bg-[rgba(74,222,128,0.1)] border-green-200 text-[#4ade80]"><Settings className="w-4 h-4 ml-2" />הנחה כללית: {project?.boq_discount_type === 'fixed_amount' ? `₪${(project?.boq_discount_amount || 0).toLocaleString()}` : `${project?.boq_discount_percentage || 0}%`}</Button>
                             <Button variant="outline" onClick={() => setShowPaymentTermsDialog(true)} className="bg-teal-50 hover:bg-teal-100 border-teal-200 text-teal-700"><Settings className="w-4 h-4 ml-2" />תנאי תשלום: {project?.payment_terms || 'מיידי'}</Button>
                             <Button variant="outline" onClick={() => setShowDeductionsModal(true)} className="bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-700"><Settings className="w-4 h-4 ml-2" />ניהול קיזוזים</Button>
                             <AddItemDialog projectId={projectId} quoteId={quoteId} onItemAdded={refreshData} />
@@ -653,7 +653,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                                         <TableBody>
                                             {localQuoteLines && localQuoteLines.map((line) => {
                                                 if (line.is_header) {
-                                                    return (<TableRow key={line.id} className="bg-blue-50"><TableCell colSpan={7} className="text-right font-bold text-blue-900 text-lg py-3">{line.clause_number && <span className="text-slate-600 ml-2">{line.clause_number}</span>}{line.name_snapshot || line.model_snapshot}</TableCell></TableRow>);
+                                                    return (<TableRow key={line.id} className="bg-[rgba(96,165,250,0.1)]"><TableCell colSpan={7} className="text-right font-bold text-blue-900 text-lg py-3">{line.clause_number && <span className="text-[#a0a0b8] ml-2">{line.clause_number}</span>}{line.name_snapshot || line.model_snapshot}</TableCell></TableRow>);
                                                 }
                                                 const entries = invoicesData[line.id] || [];
                                                 const invoiceEntries = entries.filter(entry => entry.invoice_number === `חשבון ${invoiceNum}`);
@@ -662,14 +662,14 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                                                 const canAddMore = invoiceEntries.length < 1 && totalInvoiced < 100;
                                                 return (
                                                     <TableRow key={line.id}>
-                                                        <TableCell className="text-right"><Input type="text" value={line.clause_number || ''} onChange={(e) => handleClauseNumberChange(line.id, e.target.value)} onBlur={(e) => handleClauseNumberBlur(line.id, e.target.value)} className="w-20 text-center bg-white border-gray-300" /></TableCell>
-                                                        <TableCell className="text-right"><div><p className="font-medium text-slate-800">{line.name_snapshot}</p>{line.description_snapshot && (<p className="text-sm text-slate-500">{line.description_snapshot}</p>)}</div></TableCell>
-                                                        <TableCell className="text-right"><Input type="number" min="0" step="0.01" value={line.quantity || 0} onChange={(e) => { const newQuantity = parseFloat(e.target.value) || 0; const newLineTotal = newQuantity * (line.price_no_vat_snapshot || 0); setLocalQuoteLines(prev => prev.map(l => l.id === line.id ? { ...l, quantity: newQuantity, line_total: newLineTotal } : l)); }} onBlur={async () => { try { const newLineTotal = line.quantity * (line.price_no_vat_snapshot || 0); await QuoteLine.update(line.id, { quantity: line.quantity, line_total: newLineTotal }); toast.success("כמות עודכנה"); if (onUpdateQuoteLine) onUpdateQuoteLine(line.id, true); } catch (error) { console.error("Failed to update quantity:", error); toast.error("שגיאה בעדכון כמות"); } }} className="w-24 text-center bg-white border-gray-300" /></TableCell>
-                                                        <TableCell className="text-right"><Input type="number" min="0" step="0.01" value={line.price_no_vat_snapshot || 0} onChange={(e) => { const newPrice = parseFloat(e.target.value) || 0; const newLineTotal = (line.quantity || 0) * newPrice; setLocalQuoteLines(prev => prev.map(l => l.id === line.id ? { ...l, price_no_vat_snapshot: newPrice, line_total: newLineTotal } : l)); }} onBlur={async () => { try { const newLineTotal = (line.quantity || 0) * (line.price_no_vat_snapshot || 0); await QuoteLine.update(line.id, { price_no_vat_snapshot: line.price_no_vat_snapshot, line_total: newLineTotal }); toast.success("מחיר יחידה עודכן"); if (onUpdateQuoteLine) onUpdateQuoteLine(line.id, true); } catch (error) { console.error("Failed to update price:", error); toast.error("שגיאה בעדכון מחיר"); } }} className="w-28 text-center bg-white border-gray-300" /></TableCell>
+                                                        <TableCell className="text-right"><Input type="text" value={line.clause_number || ''} onChange={(e) => handleClauseNumberChange(line.id, e.target.value)} onBlur={(e) => handleClauseNumberBlur(line.id, e.target.value)} className="w-20 text-center bg-[#1a1a2e] border-gray-300" /></TableCell>
+                                                        <TableCell className="text-right"><div><p className="font-medium text-slate-800">{line.name_snapshot}</p>{line.description_snapshot && (<p className="text-sm text-[#a0a0b8]">{line.description_snapshot}</p>)}</div></TableCell>
+                                                        <TableCell className="text-right"><Input type="number" min="0" step="0.01" value={line.quantity || 0} onChange={(e) => { const newQuantity = parseFloat(e.target.value) || 0; const newLineTotal = newQuantity * (line.price_no_vat_snapshot || 0); setLocalQuoteLines(prev => prev.map(l => l.id === line.id ? { ...l, quantity: newQuantity, line_total: newLineTotal } : l)); }} onBlur={async () => { try { const newLineTotal = line.quantity * (line.price_no_vat_snapshot || 0); await QuoteLine.update(line.id, { quantity: line.quantity, line_total: newLineTotal }); toast.success("כמות עודכנה"); if (onUpdateQuoteLine) onUpdateQuoteLine(line.id, true); } catch (error) { console.error("Failed to update quantity:", error); toast.error("שגיאה בעדכון כמות"); } }} className="w-24 text-center bg-[#1a1a2e] border-gray-300" /></TableCell>
+                                                        <TableCell className="text-right"><Input type="number" min="0" step="0.01" value={line.price_no_vat_snapshot || 0} onChange={(e) => { const newPrice = parseFloat(e.target.value) || 0; const newLineTotal = (line.quantity || 0) * newPrice; setLocalQuoteLines(prev => prev.map(l => l.id === line.id ? { ...l, price_no_vat_snapshot: newPrice, line_total: newLineTotal } : l)); }} onBlur={async () => { try { const newLineTotal = (line.quantity || 0) * (line.price_no_vat_snapshot || 0); await QuoteLine.update(line.id, { price_no_vat_snapshot: line.price_no_vat_snapshot, line_total: newLineTotal }); toast.success("מחיר יחידה עודכן"); if (onUpdateQuoteLine) onUpdateQuoteLine(line.id, true); } catch (error) { console.error("Failed to update price:", error); toast.error("שגיאה בעדכון מחיר"); } }} className="w-28 text-center bg-[#1a1a2e] border-gray-300" /></TableCell>
                                                         <TableCell className="text-right font-semibold">₪{(line.line_total || 0).toLocaleString()}</TableCell>
-                                                        <TableCell className="text-right"><Badge className={`${totalInvoiced >= 100 ? "bg-green-100 text-green-800" : totalInvoiced >= 75 ? "bg-orange-100 text-orange-800" : totalInvoiced >= 50 ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"}`}>{totalInvoiced.toFixed(1)}%</Badge></TableCell>
+                                                        <TableCell className="text-right"><Badge className={`${totalInvoiced >= 100 ? "bg-[rgba(74,222,128,0.1)] text-green-800" : totalInvoiced >= 75 ? "bg-orange-100 text-orange-800" : totalInvoiced >= 50 ? "bg-[rgba(251,191,36,0.1)] text-yellow-800" : "bg-[rgba(248,113,113,0.1)] text-red-800"}`}>{totalInvoiced.toFixed(1)}%</Badge></TableCell>
                                                         <TableCell className="text-right space-x-1">
-                                                            {invoiceEntries.length > 0 ? (invoiceEntries.map(entry => (<div key={entry.id} className="flex items-center justify-end gap-2"><EditInvoiceEntryDialog entry={entry} quoteLine={line} projectId={projectId} onInvoiceUpdated={() => handleInvoiceAction(line.id)} onEntryDeleted={() => handleInvoiceAction(line.id)} existingEntries={entries} /><div className="text-right"><p className="font-medium">₪{invoiceAmount.toLocaleString()}</p><p className="text-xs text-slate-500">{entry.calculated_percentage?.toFixed(1)}% - {new Date(entry.entry_date).toLocaleDateString('he-IL')}</p></div></div>))) : canAddMore ? (<InvoiceEntryDialog quoteLine={line} projectId={projectId} invoiceNumber={invoiceNum} onInvoiceAdded={() => handleInvoiceAction(line.id)} existingEntries={entries} />) : (<span className="text-slate-400">-</span>)}
+                                                            {invoiceEntries.length > 0 ? (invoiceEntries.map(entry => (<div key={entry.id} className="flex items-center justify-end gap-2"><EditInvoiceEntryDialog entry={entry} quoteLine={line} projectId={projectId} onInvoiceUpdated={() => handleInvoiceAction(line.id)} onEntryDeleted={() => handleInvoiceAction(line.id)} existingEntries={entries} /><div className="text-right"><p className="font-medium">₪{invoiceAmount.toLocaleString()}</p><p className="text-xs text-[#a0a0b8]">{entry.calculated_percentage?.toFixed(1)}% - {new Date(entry.entry_date).toLocaleDateString('he-IL')}</p></div></div>))) : canAddMore ? (<InvoiceEntryDialog quoteLine={line} projectId={projectId} invoiceNumber={invoiceNum} onInvoiceAdded={() => handleInvoiceAction(line.id)} existingEntries={entries} />) : (<span className="text-[#6b6b80]">-</span>)}
                                                         </TableCell>
                                                     </TableRow>
                                                 );
@@ -681,7 +681,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                                                 const boqDiscPct = project?.boq_discount_percentage || 0; const boqDiscAmtFixed = project?.boq_discount_amount || 0;
                                                 const boqDiscAmt = discountType === 'fixed_amount' ? Math.min(boqDiscAmtFixed, rawSubtotal) : (rawSubtotal * (boqDiscPct / 100));
                                                 if (boqDiscAmt > 0 && rawSubtotal > 0) {
-                                                    return (<TableRow className="bg-green-50 border-t-2 border-green-200"><TableCell className="text-right"></TableCell><TableCell className="text-right"><p className="font-bold text-green-700">הנחה כללית</p><p className="text-sm text-slate-500">{discountType === 'percentage' ? `${boqDiscPct}% הנחה` : 'הנחה קבועה'}</p></TableCell><TableCell className="text-right text-center">1</TableCell><TableCell className="text-right text-center font-semibold text-red-600">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right font-bold text-red-600">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right"></TableCell><TableCell className="text-right"></TableCell></TableRow>);
+                                                    return (<TableRow className="bg-[rgba(74,222,128,0.1)] border-t-2 border-green-200"><TableCell className="text-right"></TableCell><TableCell className="text-right"><p className="font-bold text-[#4ade80]">הנחה כללית</p><p className="text-sm text-[#a0a0b8]">{discountType === 'percentage' ? `${boqDiscPct}% הנחה` : 'הנחה קבועה'}</p></TableCell><TableCell className="text-right text-center">1</TableCell><TableCell className="text-right text-center font-semibold text-[#f87171]">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right font-bold text-[#f87171]">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right"></TableCell><TableCell className="text-right"></TableCell></TableRow>);
                                                 }
                                                 return null;
                                             })()}
@@ -698,15 +698,15 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                                     const { deduction_insurance_percentage = 0, deduction_retention_percentage = 0, deduction_lab_tests_percentage = 0 } = project || {};
                                     const insuranceDeduction = subtotal * (deduction_insurance_percentage / 100); const retentionDeduction = subtotal * (deduction_retention_percentage / 100); const labTestsDeduction = subtotal * (deduction_lab_tests_percentage / 100);
                                     const totalDeductions = insuranceDeduction + retentionDeduction + labTestsDeduction; const totalAfterDeductions = subtotal - totalDeductions; const finalTotalForCard = totalAfterDeductions * (1 + vatPercentage / 100);
-                                    return (<Card key={num} className="p-4 bg-white shadow-sm"><h4 className="font-semibold mb-2 text-slate-700">חשבון {num}</h4><p className="text-2xl font-bold text-blue-600">₪{finalTotalForCard.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p><p className="text-sm text-slate-500">כולל מע״מ</p></Card>);
+                                    return (<Card key={num} className="p-4 bg-[#1a1a2e] shadow-[0_4px_24px_rgba(0,0,0,0.3)]"><h4 className="font-semibold mb-2 text-[#e0e0e0]">חשבון {num}</h4><p className="text-2xl font-bold text-[#60a5fa]">₪{finalTotalForCard.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p><p className="text-sm text-[#a0a0b8]">כולל מע״מ</p></Card>);
                                 })}
                             </div>
-                            <Card className="mt-6 p-6 bg-white shadow-md">
+                            <Card className="mt-6 p-6 bg-[#1a1a2e] shadow-md">
                                 <h3 className="text-xl font-bold mb-4 text-slate-800">סיכום כללי</h3>
                                 <div className="grid grid-cols-3 gap-6 text-center">
-                                    <div><p className="text-sm text-slate-500">סך הכל חויב</p><p className="text-3xl font-bold text-green-600">₪{invoiceNumbers.reduce((sum, num) => { const subtotal = calculateInvoiceTotals(num); const { deduction_insurance_percentage = 0, deduction_retention_percentage = 0, deduction_lab_tests_percentage = 0 } = project || {}; const ins = subtotal * (deduction_insurance_percentage / 100); const ret = subtotal * (deduction_retention_percentage / 100); const lab = subtotal * (deduction_lab_tests_percentage / 100); const td = ins + ret + lab; const tad = subtotal - td; return sum + (tad * 1.18); }, 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p></div>
-                                    <div><p className="text-sm text-slate-500">סך הכל פרויקט</p><p className="text-3xl font-bold text-slate-800">₪{(quote?.total || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p></div>
-                                    <div><p className="text-sm text-slate-500">נותר לחיוב</p><p className="text-3xl font-bold text-orange-600">₪{((quote?.total || 0) - invoiceNumbers.reduce((sum, num) => { const subtotal = calculateInvoiceTotals(num); const { deduction_insurance_percentage = 0, deduction_retention_percentage = 0, deduction_lab_tests_percentage = 0 } = project || {}; const ins = subtotal * (deduction_insurance_percentage / 100); const ret = subtotal * (deduction_retention_percentage / 100); const lab = subtotal * (deduction_lab_tests_percentage / 100); const td = ins + ret + lab; const tad = subtotal - td; return sum + (tad * 1.18); }, 0)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p></div>
+                                    <div><p className="text-sm text-[#a0a0b8]">סך הכל חויב</p><p className="text-3xl font-bold text-[#4ade80]">₪{invoiceNumbers.reduce((sum, num) => { const subtotal = calculateInvoiceTotals(num); const { deduction_insurance_percentage = 0, deduction_retention_percentage = 0, deduction_lab_tests_percentage = 0 } = project || {}; const ins = subtotal * (deduction_insurance_percentage / 100); const ret = subtotal * (deduction_retention_percentage / 100); const lab = subtotal * (deduction_lab_tests_percentage / 100); const td = ins + ret + lab; const tad = subtotal - td; return sum + (tad * 1.18); }, 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p></div>
+                                    <div><p className="text-sm text-[#a0a0b8]">סך הכל פרויקט</p><p className="text-3xl font-bold text-slate-800">₪{(quote?.total || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p></div>
+                                    <div><p className="text-sm text-[#a0a0b8]">נותר לחיוב</p><p className="text-3xl font-bold text-orange-600">₪{((quote?.total || 0) - invoiceNumbers.reduce((sum, num) => { const subtotal = calculateInvoiceTotals(num); const { deduction_insurance_percentage = 0, deduction_retention_percentage = 0, deduction_lab_tests_percentage = 0 } = project || {}; const ins = subtotal * (deduction_insurance_percentage / 100); const ret = subtotal * (deduction_retention_percentage / 100); const lab = subtotal * (deduction_lab_tests_percentage / 100); const td = ins + ret + lab; const tad = subtotal - td; return sum + (tad * 1.18); }, 0)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p></div>
                                 </div>
                             </Card>
                         </TabsContent>
@@ -715,21 +715,21 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             </Card>
             <DeductionsModal isOpen={showDeductionsModal} onClose={() => setShowDeductionsModal(false)} onSave={handleDeductionsUpdate} currentDeductions={project || {}} />
             <Dialog open={showDiscountDialog} onOpenChange={setShowDiscountDialog}>
-                <DialogContent className="max-w-md bg-white shadow-xl rounded-lg" dir="rtl">
-                    <DialogHeader className="bg-green-50 p-4 rounded-t-lg border-b"><DialogTitle className="text-slate-800 text-lg font-bold">הנחה כללית על כתב הכמויות</DialogTitle></DialogHeader>
-                    <div className="p-6 bg-white space-y-4">
-                        <div><Label className="text-slate-700 font-semibold mb-2 block">סוג הנחה</Label><Select value={boqDiscountType} onValueChange={setBoqDiscountType}><SelectTrigger className="bg-white border-gray-300"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="percentage">אחוז (%)</SelectItem><SelectItem value="fixed_amount">סכום קבוע (₪)</SelectItem></SelectContent></Select></div>
-                        <div><Label className="text-slate-700 font-semibold mb-2 block">{boqDiscountType === 'percentage' ? 'אחוז הנחה' : 'סכום הנחה'}</Label><Input type="number" min="0" max={boqDiscountType === 'percentage' ? 100 : undefined} step={boqDiscountType === 'percentage' ? '0.1' : '0.01'} value={boqDiscountType === 'percentage' ? boqDiscountPercentage : boqDiscountAmount} onChange={(e) => { const value = parseFloat(e.target.value) || 0; if (boqDiscountType === 'percentage') setBoqDiscountPercentage(Math.max(0, Math.min(100, value))); else setBoqDiscountAmount(Math.max(0, value)); }} className="text-center bg-white border-gray-300" /><p className="text-xs text-slate-500 mt-2">ההנחה תחושב על סה"כ כל החשבונות לפני קיזוזים ומע"מ{boqDiscountType === 'fixed_amount' && ' (אם הסכום גבוה מהחיוב, ההנחה תוגבל לסכום החיוב)'}</p></div>
+                <DialogContent className="max-w-md bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
+                    <DialogHeader className="bg-[rgba(74,222,128,0.1)] p-4 rounded-t-lg border-b"><DialogTitle className="text-slate-800 text-lg font-bold">הנחה כללית על כתב הכמויות</DialogTitle></DialogHeader>
+                    <div className="p-6 bg-[#1a1a2e] space-y-4">
+                        <div><Label className="text-[#e0e0e0] font-semibold mb-2 block">סוג הנחה</Label><Select value={boqDiscountType} onValueChange={setBoqDiscountType}><SelectTrigger className="bg-[#1a1a2e] border-gray-300"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="percentage">אחוז (%)</SelectItem><SelectItem value="fixed_amount">סכום קבוע (₪)</SelectItem></SelectContent></Select></div>
+                        <div><Label className="text-[#e0e0e0] font-semibold mb-2 block">{boqDiscountType === 'percentage' ? 'אחוז הנחה' : 'סכום הנחה'}</Label><Input type="number" min="0" max={boqDiscountType === 'percentage' ? 100 : undefined} step={boqDiscountType === 'percentage' ? '0.1' : '0.01'} value={boqDiscountType === 'percentage' ? boqDiscountPercentage : boqDiscountAmount} onChange={(e) => { const value = parseFloat(e.target.value) || 0; if (boqDiscountType === 'percentage') setBoqDiscountPercentage(Math.max(0, Math.min(100, value))); else setBoqDiscountAmount(Math.max(0, value)); }} className="text-center bg-[#1a1a2e] border-gray-300" /><p className="text-xs text-[#a0a0b8] mt-2">ההנחה תחושב על סה"כ כל החשבונות לפני קיזוזים ומע"מ{boqDiscountType === 'fixed_amount' && ' (אם הסכום גבוה מהחיוב, ההנחה תוגבל לסכום החיוב)'}</p></div>
                         <div className="flex justify-end gap-3 pt-4 border-t"><Button type="button" variant="outline" onClick={() => setShowDiscountDialog(false)}>ביטול</Button><Button onClick={async () => { try { await Project.update(projectId, { boq_discount_type: boqDiscountType, boq_discount_percentage: boqDiscountPercentage, boq_discount_amount: boqDiscountAmount }); toast.success("הנחה כללית עודכנה"); if (onUpdateQuoteLine) onUpdateQuoteLine(null, true); setShowDiscountDialog(false); } catch (error) { console.error('Error updating BOQ discount:', error); toast.error("שגיאה בעדכון הנחה"); } }} className="bg-green-600 hover:bg-green-700 text-white">שמור</Button></div>
                     </div>
                 </DialogContent>
             </Dialog>
             <Dialog open={showPaymentTermsDialog} onOpenChange={(open) => { setShowPaymentTermsDialog(open); if (!open) { setShowCustomDays(false); setCustomDays(''); } }}>
-                <DialogContent className="max-w-md bg-white shadow-xl rounded-lg" dir="rtl">
+                <DialogContent className="max-w-md bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
                     <DialogHeader className="bg-teal-50 p-4 rounded-t-lg border-b"><DialogTitle className="text-slate-800 text-lg font-bold">עריכת תנאי תשלום</DialogTitle></DialogHeader>
-                    <div className="p-6 bg-white space-y-4">
-                        <div><Label className="text-slate-700 font-semibold mb-2 block">בחר תנאי תשלום</Label><Select value={selectedPaymentTerms} onValueChange={(value) => { setSelectedPaymentTerms(value); setShowCustomDays(value === 'אחר'); }}><SelectTrigger className="bg-white border-gray-300"><SelectValue /></SelectTrigger><SelectContent className="bg-white"><SelectItem value="מיידי"><div className="text-right"><div className="font-semibold">מיידי</div><div className="text-xs text-slate-500">תשלום במועד החשבונית</div></div></SelectItem><SelectItem value="שוטף"><div className="text-right"><div className="font-semibold">שוטף</div><div className="text-xs text-slate-500">תשלום בסוף החודש</div></div></SelectItem><SelectItem value="שוטף 30"><div className="text-right"><div className="font-semibold">שוטף 30</div><div className="text-xs text-slate-500">סוף חודש + 30 יום</div></div></SelectItem><SelectItem value="שוטף 60"><div className="text-right"><div className="font-semibold">שוטף 60</div><div className="text-xs text-slate-500">סוף חודש + 60 יום</div></div></SelectItem><SelectItem value="שוטף 90"><div className="text-right"><div className="font-semibold">שוטף 90</div><div className="text-xs text-slate-500">סוף חודש + 90 יום</div></div></SelectItem><SelectItem value="אחר"><div className="text-right"><div className="font-semibold">אחר (הזנת ימים)</div><div className="text-xs text-slate-500">שוטף + מספר ימים לבחירתך</div></div></SelectItem></SelectContent></Select></div>
-                        {showCustomDays && (<div className="bg-teal-50 p-4 rounded-lg border border-teal-200"><Label htmlFor="custom-days" className="text-slate-700 font-semibold mb-2 block">מספר ימים (N)</Label><Input id="custom-days" type="number" min="0" max="365" step="1" value={customDays} onChange={(e) => setCustomDays(e.target.value)} placeholder="הזן מספר ימים (0-365)" className="bg-white border-gray-300 text-center" /><p className="text-xs text-slate-600 mt-2">תאריך היעד יחושב: סוף החודש + {customDays || 'N'} ימים</p></div>)}
+                    <div className="p-6 bg-[#1a1a2e] space-y-4">
+                        <div><Label className="text-[#e0e0e0] font-semibold mb-2 block">בחר תנאי תשלום</Label><Select value={selectedPaymentTerms} onValueChange={(value) => { setSelectedPaymentTerms(value); setShowCustomDays(value === 'אחר'); }}><SelectTrigger className="bg-[#1a1a2e] border-gray-300"><SelectValue /></SelectTrigger><SelectContent className="bg-[#1a1a2e]"><SelectItem value="מיידי"><div className="text-right"><div className="font-semibold">מיידי</div><div className="text-xs text-[#a0a0b8]">תשלום במועד החשבונית</div></div></SelectItem><SelectItem value="שוטף"><div className="text-right"><div className="font-semibold">שוטף</div><div className="text-xs text-[#a0a0b8]">תשלום בסוף החודש</div></div></SelectItem><SelectItem value="שוטף 30"><div className="text-right"><div className="font-semibold">שוטף 30</div><div className="text-xs text-[#a0a0b8]">סוף חודש + 30 יום</div></div></SelectItem><SelectItem value="שוטף 60"><div className="text-right"><div className="font-semibold">שוטף 60</div><div className="text-xs text-[#a0a0b8]">סוף חודש + 60 יום</div></div></SelectItem><SelectItem value="שוטף 90"><div className="text-right"><div className="font-semibold">שוטף 90</div><div className="text-xs text-[#a0a0b8]">סוף חודש + 90 יום</div></div></SelectItem><SelectItem value="אחר"><div className="text-right"><div className="font-semibold">אחר (הזנת ימים)</div><div className="text-xs text-[#a0a0b8]">שוטף + מספר ימים לבחירתך</div></div></SelectItem></SelectContent></Select></div>
+                        {showCustomDays && (<div className="bg-teal-50 p-4 rounded-lg border border-teal-200"><Label htmlFor="custom-days" className="text-[#e0e0e0] font-semibold mb-2 block">מספר ימים (N)</Label><Input id="custom-days" type="number" min="0" max="365" step="1" value={customDays} onChange={(e) => setCustomDays(e.target.value)} placeholder="הזן מספר ימים (0-365)" className="bg-[#1a1a2e] border-gray-300 text-center" /><p className="text-xs text-[#a0a0b8] mt-2">תאריך היעד יחושב: סוף החודש + {customDays || 'N'} ימים</p></div>)}
                         <div className="flex justify-end gap-3 pt-4 border-t"><Button type="button" variant="outline" onClick={() => { setShowPaymentTermsDialog(false); setShowCustomDays(false); setCustomDays(''); }}>ביטול</Button><Button onClick={handlePaymentTermsUpdate} className="bg-teal-600 hover:bg-teal-700 text-white">שמור</Button></div>
                     </div>
                 </DialogContent>

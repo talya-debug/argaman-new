@@ -65,7 +65,7 @@ export default function InvoicePDF({ project, quote, quoteLines, progressEntries
     const renderDeduction = (value) => `-₪${(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     return (
-        <div className="printable-content bg-white p-8" dir="rtl">
+        <div className="printable-content bg-[#1a1a2e] p-8" dir="rtl">
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap');
                 body { font-family: 'Assistant', sans-serif; }
@@ -89,11 +89,11 @@ export default function InvoicePDF({ project, quote, quoteLines, progressEntries
                     />
                 </div>
                 <h1 className="text-3xl font-bold text-gray-800">ארגמן מערכות מיזוג מתקדמות בע"מ</h1>
-                <p className="text-sm text-gray-500">מיזוג אויר | חימום תת רצפתי | אוורור ופיזור עשן</p>
-                <h2 className="text-2xl font-semibold text-gray-700 mt-6">כתב כמויות - חשבון {invoiceNumber}</h2>
+                <p className="text-sm text-[#a0a0b8]">מיזוג אויר | חימום תת רצפתי | אוורור ופיזור עשן</p>
+                <h2 className="text-2xl font-semibold text-[#e0e0e0] mt-6">כתב כמויות - חשבון {invoiceNumber}</h2>
             </header>
 
-            <section className="flex justify-between text-xs mb-8 p-3 bg-gray-50 rounded-lg">
+            <section className="flex justify-between text-xs mb-8 p-3 bg-[#141428] rounded-lg">
                 <div>
                     <p><strong>פרויקט:</strong> {project?.name}</p>
                     <p><strong>לקוח:</strong> {project?.client_name}</p>
@@ -108,7 +108,7 @@ export default function InvoicePDF({ project, quote, quoteLines, progressEntries
                 <thead>
                     <tr className="bg-gray-200">
                         {['סעיף', 'תיאור', 'כמות כוללת', 'מחיר יחידה', 'סה"כ פריט', 'אחוז בחשבון', 'סכום לחיוב'].map(header => (
-                            <th key={header} className="p-2 border border-gray-300 font-semibold text-gray-700 text-right">{header}</th>
+                            <th key={header} className="p-2 border border-gray-300 font-semibold text-[#e0e0e0] text-right">{header}</th>
                         ))}
                     </tr>
                 </thead>
@@ -134,19 +134,19 @@ export default function InvoicePDF({ project, quote, quoteLines, progressEntries
                         <strong>{renderValue(invoiceData.subtotal)}</strong>
                     </div>
                     {invoiceData.insuranceDeduction > 0 && 
-                        <div className="flex justify-between py-1 text-red-600">
+                        <div className="flex justify-between py-1 text-[#f87171]">
                             <span>קיזוז ביטוח ({invoiceData.deduction_insurance_percentage}%):</span>
                             <span>{renderDeduction(invoiceData.insuranceDeduction)}</span>
                         </div>
                     }
                     {invoiceData.retentionDeduction > 0 && 
-                        <div className="flex justify-between py-1 text-red-600">
+                        <div className="flex justify-between py-1 text-[#f87171]">
                             <span>קיזוז עיכבון ({invoiceData.deduction_retention_percentage}%):</span>
                             <span>{renderDeduction(invoiceData.retentionDeduction)}</span>
                         </div>
                     }
                     {invoiceData.labTestsDeduction > 0 && 
-                        <div className="flex justify-between py-1 text-red-600">
+                        <div className="flex justify-between py-1 text-[#f87171]">
                             <span>קיזוז מעבדה ({invoiceData.deduction_lab_tests_percentage}%):</span>
                             <span>{renderDeduction(invoiceData.labTestsDeduction)}</span>
                         </div>
@@ -164,7 +164,7 @@ export default function InvoicePDF({ project, quote, quoteLines, progressEntries
                         <span>{renderValue(invoiceData.finalTotal)}</span>
                     </div>
                 </div>
-                <div className="text-center text-xs text-gray-500 mt-12">
+                <div className="text-center text-xs text-[#a0a0b8] mt-12">
                     <p>חשבון זה כפוף לתנאי החוזה | תודה על שיתוף הפעולה</p>
                 </div>
             </footer>

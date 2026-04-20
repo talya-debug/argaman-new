@@ -72,7 +72,7 @@ function IndoorOutdoorBtuGauge({ quoteLines }) {
     } else if (utilization >= 0 && utilization <= 70) {
         colorClass = '[&>*]:bg-green-600';
         statusText = 'ניצול תקין';
-        statusColor = 'text-green-700';
+        statusColor = 'text-[#4ade80]';
         statusMessage = 'ניצול המעבה תקין, ניתן להוסיף מאיידים נוספים.';
     } else if (utilization > 70 && utilization <= 100) {
         colorClass = '[&>*]:bg-orange-500';
@@ -82,7 +82,7 @@ function IndoorOutdoorBtuGauge({ quoteLines }) {
     } else { // utilization > 100
         colorClass = '[&>*]:bg-red-600';
         statusText = 'חריגה (Overload)';
-        statusColor = 'text-red-700';
+        statusColor = 'text-[#f87171]';
         statusMessage = 'סך תפוקת המאיידים גבוה מתפוקת המעבה. יש להסיר מאיידים או להחליף מעבה.';
     }
     
@@ -104,11 +104,11 @@ function IndoorOutdoorBtuGauge({ quoteLines }) {
                         max={130}
                         className={`h-4 ${colorClass}`} 
                     />
-                    <div className="flex justify-between text-sm text-slate-600 pt-2">
+                    <div className="flex justify-between text-sm text-[#a0a0b8] pt-2">
                         <span>סה"כ מאיידים: {btuData.indoorBtu.toLocaleString()} BTU</span>
                         <span>תפוקת מעבה: {btuData.outdoorBtu.toLocaleString()} BTU</span>
                     </div>
-                    <div className="text-sm text-slate-700 mt-2 p-2 bg-slate-50 rounded">
+                    <div className="text-sm text-[#e0e0e0] mt-2 p-2 bg-[#1a1a2e] rounded">
                         {statusMessage}
                     </div>
                 </div>
@@ -175,40 +175,40 @@ function AddManualItemDialog({ onAddItem }) {
                     הוסף פריט ידני
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
-                <div className="bg-white p-1 rounded-lg">
+            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
+                <div className="bg-[#1a1a2e] p-1 rounded-lg">
                     <DialogHeader className="bg-purple-50 p-4 rounded-t-lg border-b">
                         <DialogTitle className="text-slate-800 text-lg font-bold">הוספת פריט ידני להצעה</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="p-6 bg-white">
+                    <div className="p-6 bg-[#1a1a2e]">
                         <form onSubmit={handleSubmit} className="space-y-6 text-slate-800">
                             <div>
-                                <Label htmlFor="clause-number" className="text-slate-700 font-semibold">מספר סעיף (אופציונלי)</Label>
+                                <Label htmlFor="clause-number" className="text-[#e0e0e0] font-semibold">מספר סעיף (אופציונלי)</Label>
                                 <Input
                                     id="clause-number"
                                     value={clauseNumber}
                                     onChange={(e) => setClauseNumber(e.target.value)}
                                     placeholder="לדוגמה: A1, 1.2.3..."
-                                    className="text-right bg-white border-gray-300 mt-2"
+                                    className="text-right bg-[#1a1a2e] border-gray-300 mt-2"
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="item-name" className="text-slate-700 font-semibold">שם הפריט *</Label>
+                                <Label htmlFor="item-name" className="text-[#e0e0e0] font-semibold">שם הפריט *</Label>
                                 <Input
                                     id="item-name"
                                     value={itemName}
                                     onChange={(e) => setItemName(e.target.value)}
                                     placeholder="לדוגמה: עבודת התקנה, הובלה, אביזר מיוחד..."
-                                    className="text-right bg-white border-gray-300 mt-2"
+                                    className="text-right bg-[#1a1a2e] border-gray-300 mt-2"
                                     required
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <Label htmlFor="quantity" className="text-slate-700 font-semibold">כמות *</Label>
+                                    <Label htmlFor="quantity" className="text-[#e0e0e0] font-semibold">כמות *</Label>
                                     <Input
                                         id="quantity"
                                         type="number"
@@ -216,12 +216,12 @@ function AddManualItemDialog({ onAddItem }) {
                                         step="0.01"
                                         value={quantity}
                                         onChange={(e) => setQuantity(parseFloat(e.target.value) || 1)}
-                                        className="text-right bg-white border-gray-300 mt-2"
+                                        className="text-right bg-[#1a1a2e] border-gray-300 mt-2"
                                         required
                                     />
                                 </div>
                                 <div>
-                                    <Label htmlFor="unit-price" className="text-slate-700 font-semibold">
+                                    <Label htmlFor="unit-price" className="text-[#e0e0e0] font-semibold">
                                         מחיר יחידה (₪) *
                                     </Label>
                                     <Input
@@ -231,18 +231,18 @@ function AddManualItemDialog({ onAddItem }) {
                                         step="0.01"
                                         value={unitPrice}
                                         onChange={(e) => setUnitPrice(parseFloat(e.target.value) || 0)}
-                                        className="text-right bg-white border-gray-300 mt-2"
+                                        className="text-right bg-[#1a1a2e] border-gray-300 mt-2"
                                         required
                                     />
-                                    <p className="text-xs text-slate-500 mt-1">ניתן להזין 0 לפריטים ללא חיוב</p>
+                                    <p className="text-xs text-[#a0a0b8] mt-1">ניתן להזין 0 לפריטים ללא חיוב</p>
                                 </div>
                             </div>
 
-                            <div className={`p-4 rounded-lg border ${unitPrice === 0 ? 'bg-blue-50 border-blue-200' : 'bg-purple-50 border-purple-200'}`}>
+                            <div className={`p-4 rounded-lg border ${unitPrice === 0 ? 'bg-[rgba(96,165,250,0.1)] border-blue-200' : 'bg-purple-50 border-purple-200'}`}>
                                 <div className="flex justify-between items-center">
-                                    <Label className="text-sm font-semibold text-slate-700">סכום כולל</Label>
+                                    <Label className="text-sm font-semibold text-[#e0e0e0]">סכום כולל</Label>
                                     {unitPrice === 0 && (
-                                        <Badge className="bg-blue-100 text-blue-700 text-xs">ללא חיוב</Badge>
+                                        <Badge className="bg-[rgba(96,165,250,0.1)] text-[#60a5fa] text-xs">ללא חיוב</Badge>
                                     )}
                                 </div>
                                 <p className="text-2xl font-bold text-purple-600">₪{(quantity * unitPrice).toLocaleString()}</p>
@@ -331,7 +331,7 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
             <CardContent>
                 <ScrollArea className="h-[400px] pr-3">
                     {!quoteLines || quoteLines.length === 0 ? (
-                        <div className="text-center py-8 text-slate-500">
+                        <div className="text-center py-8 text-[#a0a0b8]">
                             <p>הסל ריק</p>
                             <p className="text-sm">בחר פריטים מהמחירון או הוסף פריט ידני</p>
                         </div>
@@ -357,18 +357,18 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
                                                 <div 
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
-                                                    className={`p-4 border rounded-lg ${isManualItem ? 'bg-purple-50 border-purple-200' : 'bg-white'} ${snapshot.isDragging ? 'shadow-lg ring-2 ring-blue-400' : ''}`}
+                                                    className={`p-4 border rounded-lg ${isManualItem ? 'bg-purple-50 border-purple-200' : 'bg-[#1a1a2e]'} ${snapshot.isDragging ? 'shadow-lg ring-2 ring-blue-400' : ''}`}
                                                 >
                                     <div className="flex justify-between items-start mb-3">
                                         <div className="flex items-center gap-2">
-                                            <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-600">
+                                            <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing text-[#6b6b80] hover:text-[#a0a0b8]">
                                                 <GripVertical className="w-5 h-5" />
                                             </div>
                                             <div className="flex flex-col gap-1">
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="h-5 w-5 p-0 text-slate-400 hover:text-slate-600 disabled:opacity-30"
+                                                    className="h-5 w-5 p-0 text-[#6b6b80] hover:text-[#a0a0b8] disabled:opacity-30"
                                                     onClick={() => handleMoveUp(index)}
                                                     disabled={index === 0}
                                                 >
@@ -377,7 +377,7 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="h-5 w-5 p-0 text-slate-400 hover:text-slate-600 disabled:opacity-30"
+                                                    className="h-5 w-5 p-0 text-[#6b6b80] hover:text-[#a0a0b8] disabled:opacity-30"
                                                     onClick={() => handleMoveDown(index)}
                                                     disabled={index === quoteLines.length - 1}
                                                 >
@@ -392,10 +392,10 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
                                                     <Badge className="bg-purple-100 text-purple-700 text-xs">פריט ידני</Badge>
                                                 )}
                                                 {isZeroPrice && (
-                                                    <Badge className="bg-blue-100 text-blue-700 text-xs">ללא חיוב</Badge>
+                                                    <Badge className="bg-[rgba(96,165,250,0.1)] text-[#60a5fa] text-xs">ללא חיוב</Badge>
                                                 )}
                                             </div>
-                                            <p className="text-sm text-slate-600 mt-1">
+                                            <p className="text-sm text-[#a0a0b8] mt-1">
                                                 {line.sub_category_snapshot ? 
                                                     `${line.category_snapshot} - ${line.sub_category_snapshot}` : 
                                                     line.category_snapshot
@@ -406,7 +406,7 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
                                             variant="ghost" 
                                             size="sm" 
                                             onClick={() => onRemoveLine(lineIdentifier)} 
-                                            className="text-red-500 hover:bg-red-50"
+                                            className="text-red-500 hover:bg-[rgba(248,113,113,0.1)]"
                                         >
                                             <Trash2 className="w-4 h-4" />
                                         </Button>
@@ -414,7 +414,7 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
                                     
                                     {/* Clause Number Field */}
                                     <div className="mb-3">
-                                        <Label className="text-xs text-slate-600 mb-1 block">מספר סעיף</Label>
+                                        <Label className="text-xs text-[#a0a0b8] mb-1 block">מספר סעיף</Label>
                                         <Input
                                             type="text"
                                             value={line.clause_number || ''}
@@ -426,7 +426,7 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
 
                                     {/* Price Per Unit Field */}
                                     <div className="mb-3">
-                                        <Label className="text-xs text-slate-600 mb-1 block">מחיר ליחידה (ניתן לעריכה)</Label>
+                                        <Label className="text-xs text-[#a0a0b8] mb-1 block">מחיר ליחידה (ניתן לעריכה)</Label>
                                         <Input
                                             type="number"
                                             value={linePrice}
@@ -476,8 +476,8 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
                                             )}
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-sm text-slate-500">₪{linePrice.toLocaleString()} × {line.quantity || 1}</p>
-                                            <p className={`font-bold ${isZeroPrice ? 'text-slate-400' : 'text-blue-600'}`}>
+                                            <p className="text-sm text-[#a0a0b8]">₪{linePrice.toLocaleString()} × {line.quantity || 1}</p>
+                                            <p className={`font-bold ${isZeroPrice ? 'text-[#6b6b80]' : 'text-[#60a5fa]'}`}>
                                                 ₪{lineTotal.toLocaleString()}
                                             </p>
                                         </div>
@@ -502,7 +502,7 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
                         
                         {/* Discount Input */}
                         <div className="border-t pt-3">
-                            <Label className="text-sm text-slate-600 mb-2 block">הנחה כללית</Label>
+                            <Label className="text-sm text-[#a0a0b8] mb-2 block">הנחה כללית</Label>
                             <div className="flex items-center gap-2 mb-2">
                                 <Select 
                                     value={discountType} 
@@ -535,7 +535,7 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
                                     max={discountType === 'fixed_amount' ? subtotal : 100}
                                     step={discountType === 'fixed_amount' ? "0.01" : "0.1"}
                                 />
-                                <span className="text-sm text-slate-600 w-6">
+                                <span className="text-sm text-[#a0a0b8] w-6">
                                     {discountType === 'percentage' ? '%' : '₪'}
                                 </span>
                             </div>
@@ -552,7 +552,7 @@ function ShoppingCart({ quoteLines, onUpdateLine, onRemoveLine, onAddManualItem,
 
                         <div className="flex justify-between items-center text-lg font-bold border-t pt-3">
                             <span>סה"כ (לפני מע"מ):</span>
-                            <span className="text-blue-600">₪{total.toLocaleString()}</span>
+                            <span className="text-[#60a5fa]">₪{total.toLocaleString()}</span>
                         </div>
                     </div>
                 )}
@@ -714,8 +714,8 @@ export default function QuoteBuilder({
                                         variant={selectedSupplier === supplier ? "default" : "outline"}
                                         className={`h-24 text-lg font-semibold transition-all ${
                                             selectedSupplier === supplier 
-                                                ? 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-300' 
-                                                : 'bg-white hover:bg-blue-50 hover:border-blue-300'
+                                                ? 'bg-[#c42b2b] text-white shadow-lg ring-2 ring-blue-300' 
+                                                : 'bg-[#1a1a2e] hover:bg-[rgba(96,165,250,0.1)] hover:border-blue-300'
                                         }`}
                                         onClick={() => handleSupplierSelect(supplier)}
                                     >
@@ -747,7 +747,7 @@ export default function QuoteBuilder({
                                         <Button
                                             key={category}
                                             variant="outline"
-                                            className="h-16 text-base font-medium p-4 hover:bg-blue-50 hover:border-blue-300"
+                                            className="h-16 text-base font-medium p-4 hover:bg-[rgba(96,165,250,0.1)] hover:border-blue-300"
                                             onClick={() => handleCategorySelect(category)}
                                         >
                                             {category}
@@ -755,7 +755,7 @@ export default function QuoteBuilder({
                                     ))}
                                 </div>
                             ) : (
-                                <div className="text-center p-8 text-slate-500">
+                                <div className="text-center p-8 text-[#a0a0b8]">
                                     <p>אין קטגוריות זמינות עבור ספק זה</p>
                                 </div>
                             )}
@@ -779,7 +779,7 @@ export default function QuoteBuilder({
                                     <Button
                                         key={subCategory}
                                         variant="outline"
-                                        className="h-16 text-base font-medium p-4 hover:bg-blue-50 hover:border-blue-300"
+                                        className="h-16 text-base font-medium p-4 hover:bg-[rgba(96,165,250,0.1)] hover:border-blue-300"
                                         onClick={() => handleSubCategorySelect(subCategory)}
                                     >
                                         {subCategory}
@@ -811,8 +811,8 @@ export default function QuoteBuilder({
                                             key={item.id}
                                             className={`p-4 border rounded-lg cursor-pointer transition-all ${
                                                 selectedItemIds.has(item.id) 
-                                                    ? 'bg-blue-50 border-blue-500 shadow-sm' 
-                                                    : 'bg-white border-slate-200 hover:bg-slate-50'
+                                                    ? 'bg-[rgba(96,165,250,0.1)] border-blue-500 shadow-[0_4px_24px_rgba(0,0,0,0.3)]' 
+                                                    : 'bg-[#1a1a2e] border-[rgba(255,255,255,0.08)] hover:bg-[#1a1a2e]'
                                             }`}
                                             onClick={() => handleItemToggle(item)}
                                         >
@@ -824,7 +824,7 @@ export default function QuoteBuilder({
                                                         className="pointer-events-none"
                                                     />
                                                     <div>
-                                                        <h4 className="font-semibold text-slate-900">{item.model}</h4>
+                                                        <h4 className="font-semibold text-[#f0f0f0]">{item.model}</h4>
                                                         {item.btu && (
                                                             <Badge variant="outline" className="mt-1 text-xs">
                                                                 {item.btu.toLocaleString()} BTU
@@ -833,7 +833,7 @@ export default function QuoteBuilder({
                                                     </div>
                                                 </div>
                                                 <div className="text-left">
-                                                    <p className="font-bold text-blue-600">
+                                                    <p className="font-bold text-[#60a5fa]">
                                                         {(item.price_no_vat || item.price_no_vat === 0) ? // Correctly display 0 price
                                                             `₪${item.price_no_vat.toLocaleString()}` : 
                                                             'ללא מחיר'
@@ -842,14 +842,14 @@ export default function QuoteBuilder({
                                                     {selectedItemIds.has(item.id) && (
                                                         <div className="flex items-center gap-1 mt-1">
                                                             <Check className="w-4 h-4 text-green-500" />
-                                                            <span className="text-xs text-green-600">נבחר</span>
+                                                            <span className="text-xs text-[#4ade80]">נבחר</span>
                                                         </div>
                                                     )}
                                                 </div>
                                             </div>
                                         </div>
                                     )) : (
-                                        <div className="text-center p-8 text-slate-500">
+                                        <div className="text-center p-8 text-[#a0a0b8]">
                                             <p>לא נמצאו פריטים תחת בחירה זו.</p>
                                         </div>
                                     )}
@@ -896,7 +896,7 @@ export default function QuoteBuilder({
                             <Card className="shadow-lg border-0 mt-4">
                                 <CardHeader>
                                     <CardTitle className="text-base">תנאים והערות ללקוח</CardTitle>
-                                    <p className="text-xs text-slate-500 mt-1">יוצגו בהצעת המחיר ללקוח</p>
+                                    <p className="text-xs text-[#a0a0b8] mt-1">יוצגו בהצעת המחיר ללקוח</p>
                                 </CardHeader>
                                 <CardContent>
                                     <textarea
@@ -916,7 +916,7 @@ export default function QuoteBuilder({
                             <Card className="shadow-lg border-0 mt-4">
                                 <CardHeader>
                                     <CardTitle className="text-base">הערות פנימיות</CardTitle>
-                                    <p className="text-xs text-slate-500 mt-1">לא יוצגו ללקוח</p>
+                                    <p className="text-xs text-[#a0a0b8] mt-1">לא יוצגו ללקוח</p>
                                 </CardHeader>
                                 <CardContent>
                                     <textarea

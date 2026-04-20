@@ -40,17 +40,17 @@ import { toast } from 'sonner';
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const statusColors = {
-  "חדש": "bg-blue-500/15 text-blue-400 border-blue-500/20",
-  "איסוף מידע מלקוח": "bg-yellow-500/15 text-yellow-400 border-yellow-500/20",
+  "חדש": "bg-[rgba(96,165,250,0.1)]0/15 text-blue-400 border-blue-500/20",
+  "איסוף מידע מלקוח": "bg-[rgba(251,191,36,0.1)]0/15 text-yellow-400 border-yellow-500/20",
   "סיווג / הכנת הצעה": "bg-purple-500/15 text-purple-400 border-purple-500/20",
   "תיאום סיור": "bg-orange-500/15 text-orange-400 border-orange-500/20",
   "סיור בוצע": "bg-teal-500/15 text-teal-400 border-teal-500/20",
   "הכנת הצעה": "bg-indigo-500/15 text-indigo-400 border-indigo-500/20",
   "הצעה מוכנה ממתינה לאישור": "bg-pink-500/15 text-pink-400 border-pink-500/20",
-  "הצעה נשלחה": "bg-green-500/15 text-green-400 border-green-500/20",
+  "הצעה נשלחה": "bg-[rgba(74,222,128,0.1)]0/15 text-green-400 border-green-500/20",
   "המתנה לאישור / משא ומתן": "bg-cyan-500/15 text-cyan-400 border-cyan-500/20",
   "אושר": "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
-  "נדחה": "bg-red-500/15 text-red-400 border-red-500/20"
+  "נדחה": "bg-[rgba(248,113,113,0.1)]0/15 text-red-400 border-red-500/20"
 };
 
 const STATUSES = [
@@ -91,7 +91,7 @@ function LeadMobileCard({ lead, onEdit, onUpdate, onDelete, onQuoteAction, leadQ
               )}
             </div>
           </div>
-          <Badge className={`text-xs whitespace-nowrap ${statusColors[lead.status] || 'bg-gray-500/15 text-gray-400'}`}>
+          <Badge className={`text-xs whitespace-nowrap ${statusColors[lead.status] || 'bg-[#141428]0/15 text-gray-400'}`}>
             {lead.status}
           </Badge>
         </div>
@@ -130,7 +130,7 @@ function LeadMobileCard({ lead, onEdit, onUpdate, onDelete, onQuoteAction, leadQ
             variant="outline"
             size="sm"
             onClick={() => onQuoteAction(lead)}
-            className={`flex-1 text-xs h-9 ${leadQuotes[lead.id]?.length > 0 ? 'text-blue-400 hover:bg-blue-500/10' : ''}`}
+            className={`flex-1 text-xs h-9 ${leadQuotes[lead.id]?.length > 0 ? 'text-blue-400 hover:bg-[rgba(96,165,250,0.1)]0/10' : ''}`}
             style={{ borderColor: 'var(--dark-border)', color: leadQuotes[lead.id]?.length > 0 ? undefined : 'var(--text-secondary)' }}
           >
             <FileText className="w-3.5 h-3.5 ml-1" />
@@ -151,7 +151,7 @@ function LeadMobileCard({ lead, onEdit, onUpdate, onDelete, onQuoteAction, leadQ
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 text-red-400 hover:bg-red-500/10 px-2"
+                className="h-9 text-red-400 hover:bg-[rgba(248,113,113,0.1)]0/10 px-2"
                 style={{ borderColor: 'var(--dark-border)' }}
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -551,13 +551,13 @@ export default function LeadsTable({
                         value={lead.status}
                         onValueChange={(value) => saveEdit(lead.id, 'status', value)}
                       >
-                        <SelectTrigger className={`text-right text-xs h-8 border-0 shadow-none focus:ring-0 ${statusColors[lead.status] || 'bg-gray-500/15 text-gray-400'}`}>
+                        <SelectTrigger className={`text-right text-xs h-8 border-0 shadow-none focus:ring-0 ${statusColors[lead.status] || 'bg-[#141428]0/15 text-gray-400'}`}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           {STATUSES.map((status) => (
                             <SelectItem key={status} value={status} className="text-right">
-                              <Badge className={`text-xs w-full justify-start ${statusColors[status] || 'bg-gray-500/15 text-gray-400'} border`}>
+                              <Badge className={`text-xs w-full justify-start ${statusColors[status] || 'bg-[#141428]0/15 text-gray-400'} border`}>
                                 {status}
                               </Badge>
                             </SelectItem>
@@ -625,7 +625,7 @@ export default function LeadsTable({
                             variant="ghost"
                             size="sm"
                             onClick={() => onQuoteAction(lead)}
-                            className={`h-8 w-8 p-0 ${leadQuotes[lead.id] && leadQuotes[lead.id].length > 0 ? 'text-blue-400 hover:bg-blue-500/10' : 'hover:bg-[#252836]'}`}
+                            className={`h-8 w-8 p-0 ${leadQuotes[lead.id] && leadQuotes[lead.id].length > 0 ? 'text-blue-400 hover:bg-[rgba(96,165,250,0.1)]0/10' : 'hover:bg-[#252836]'}`}
                             style={{ color: leadQuotes[lead.id] && leadQuotes[lead.id].length > 0 ? undefined : 'var(--text-muted)' }}
                           >
                             <FileText className="w-4 h-4" />
@@ -658,7 +658,7 @@ export default function LeadsTable({
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="hover:bg-red-500/10 hover:text-red-400 text-red-400 h-8 w-8 p-0"
+                            className="hover:bg-[rgba(248,113,113,0.1)]0/10 hover:text-red-400 text-red-400 h-8 w-8 p-0"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>

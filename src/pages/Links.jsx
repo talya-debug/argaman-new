@@ -19,7 +19,7 @@ const quickLinks = [
     title: "טופס ליד חדש",
     description: "קליטת ליד חדש במערכת",
     icon: Users,
-    color: "bg-blue-500",
+    color: "bg-[rgba(96,165,250,0.1)]0",
     gradient: "from-blue-500 to-blue-600",
     url: createPageUrl("LeadForm")
   },
@@ -27,7 +27,7 @@ const quickLinks = [
     title: "יומן עבודה",
     description: "דיווח על התקדמות יומית בפרויקט",
     icon: BookUser,
-    color: "bg-green-500",
+    color: "bg-[rgba(74,222,128,0.1)]0",
     gradient: "from-green-500 to-green-600",
     url: createPageUrl("WorkLogForm")
   },
@@ -35,7 +35,7 @@ const quickLinks = [
     title: "משימה חדשה",
     description: "יצירת משימה חדשה במערכת",
     icon: CheckSquare,
-    color: "bg-yellow-500",
+    color: "bg-[rgba(251,191,36,0.1)]0",
     gradient: "from-yellow-500 to-yellow-600",
     url: createPageUrl("NewTask")
   },
@@ -60,11 +60,11 @@ export default function Links() {
   };
 
   return (
-    <div className="p-4 md:p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">קישורים מהירים</h1>
-          <p className="text-slate-500">
+          <h1 className="text-3xl font-bold text-[#f0f0f0] mb-2">קישורים מהירים</h1>
+          <p className="text-[#a0a0b8]">
             טפסים ופעולות מהירות שניתן לשתף עם חברי הצוות או לשמור כקיצורי דרך
           </p>
         </div>
@@ -80,10 +80,10 @@ export default function Links() {
                     <link.icon className={`w-6 h-6 ${link.color.replace('bg-', 'text-')}`} />
                   </div>
                   <div className="text-right flex-1">
-                    <CardTitle className="text-lg font-bold text-slate-900 mb-1">
+                    <CardTitle className="text-lg font-bold text-[#f0f0f0] mb-1">
                       {link.title}
                     </CardTitle>
-                    <p className="text-sm text-slate-500 leading-relaxed">
+                    <p className="text-sm text-[#a0a0b8] leading-relaxed">
                       {link.description}
                     </p>
                   </div>
@@ -118,54 +118,54 @@ export default function Links() {
         {/* Instructions Section */}
         <Card className="shadow-lg border-0">
           <CardHeader>
-            <CardTitle className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-600" />
+            <CardTitle className="text-xl font-bold text-[#f0f0f0] flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-[#4ade80]" />
               כיצד להשתמש בקישורים
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="text-right">
-                <h3 className="font-semibold text-slate-900 mb-2">לשיתוף עם הצוות:</h3>
-                <ol className="space-y-2 text-slate-600 text-sm">
+                <h3 className="font-semibold text-[#f0f0f0] mb-2">לשיתוף עם הצוות:</h3>
+                <ol className="space-y-2 text-[#a0a0b8] text-sm">
                   <li className="flex items-start gap-2">
-                    <span className="bg-blue-100 text-blue-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">1</span>
+                    <span className="bg-[rgba(96,165,250,0.1)] text-blue-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">1</span>
                     <span>לחץ על "העתק קישור" של הטופס הרצוי</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="bg-blue-100 text-blue-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">2</span>
+                    <span className="bg-[rgba(96,165,250,0.1)] text-blue-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">2</span>
                     <span>שתף את הקישור עם חברי הצוות בווטסאפ, מייל או צ'אט</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="bg-blue-100 text-blue-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">3</span>
+                    <span className="bg-[rgba(96,165,250,0.1)] text-blue-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">3</span>
                     <span>הם יוכלו למלא את הטופס ישירות מהקישור</span>
                   </li>
                 </ol>
               </div>
 
               <div className="text-right">
-                <h3 className="font-semibold text-slate-900 mb-2">לשימוש אישי:</h3>
-                <ol className="space-y-2 text-slate-600 text-sm">
+                <h3 className="font-semibold text-[#f0f0f0] mb-2">לשימוש אישי:</h3>
+                <ol className="space-y-2 text-[#a0a0b8] text-sm">
                   <li className="flex items-start gap-2">
-                    <span className="bg-green-100 text-green-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">1</span>
+                    <span className="bg-[rgba(74,222,128,0.1)] text-green-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">1</span>
                     <span>שמור את הקישורים כמועדפים בדפדפן</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="bg-green-100 text-green-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">2</span>
+                    <span className="bg-[rgba(74,222,128,0.1)] text-green-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">2</span>
                     <span>השתמש בכפתור "פתח" לגישה מהירה</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="bg-green-100 text-green-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">3</span>
+                    <span className="bg-[rgba(74,222,128,0.1)] text-green-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">3</span>
                     <span>צור קיצורי דרך למסך הבית בנייד</span>
                   </li>
                 </ol>
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+            <div className="bg-[rgba(96,165,250,0.1)] border border-blue-200 rounded-lg p-4 mt-6">
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-blue-600 text-sm font-bold">💡</span>
+                <div className="w-6 h-6 bg-[rgba(96,165,250,0.1)] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-[#60a5fa] text-sm font-bold">💡</span>
                 </div>
                 <div className="text-right">
                   <h4 className="font-semibold text-blue-900 mb-1">טיפ:</h4>

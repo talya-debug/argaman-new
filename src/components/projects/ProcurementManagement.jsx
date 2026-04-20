@@ -16,10 +16,10 @@ import PurchaseOrderPDF from './PurchaseOrderPDF';
 import CreateOrderDialog from './CreateOrderDialog';
 
 const statusConfig = {
-    "יש להזמין": { color: "bg-yellow-100 text-yellow-800" },
-    "הוזמן": { color: "bg-blue-100 text-blue-800" },
+    "יש להזמין": { color: "bg-[rgba(251,191,36,0.1)] text-yellow-800" },
+    "הוזמן": { color: "bg-[rgba(96,165,250,0.1)] text-blue-800" },
     "סופק חלקית": { color: "bg-orange-100 text-orange-800" },
-    "סופק מלא": { color: "bg-green-100 text-green-800" },
+    "סופק מלא": { color: "bg-[rgba(74,222,128,0.1)] text-green-800" },
     "שולם": { color: "bg-purple-100 text-purple-800" },
 };
 
@@ -86,40 +86,40 @@ function AddManualPurchaseDialog({ projectId, onItemAdded }) {
                     פריט נוסף
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
-                 <div className="bg-white p-1 rounded-lg">
+            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
+                 <div className="bg-[#1a1a2e] p-1 rounded-lg">
                     <DialogHeader className="bg-purple-50 p-4 rounded-t-lg border-b">
                         <DialogTitle className="text-slate-800 text-lg font-bold">הוספת פריט רכש נוסף</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="p-6 bg-white">
+                    <div className="p-6 bg-[#1a1a2e]">
                         <form onSubmit={handleSubmit} className="space-y-4 text-slate-800">
                             <div>
-                                <Label htmlFor="item-name" className="text-slate-700 font-semibold">שם הפריט *</Label>
+                                <Label htmlFor="item-name" className="text-[#e0e0e0] font-semibold">שם הפריט *</Label>
                                 <Input
                                     id="item-name"
                                     value={itemName}
                                     onChange={(e) => setItemName(e.target.value)}
                                     placeholder="שם הפריט לרכישה..."
-                                    className="text-right bg-white border-gray-300"
+                                    className="text-right bg-[#1a1a2e] border-gray-300"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="description" className="text-slate-700 font-semibold">תיאור</Label>
+                                <Label htmlFor="description" className="text-[#e0e0e0] font-semibold">תיאור</Label>
                                 <Textarea
                                     id="description"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     placeholder="תיאור מפורט של הפריט..."
                                     rows={3}
-                                    className="bg-white border-gray-300"
+                                    className="bg-[#1a1a2e] border-gray-300"
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="quantity" className="text-slate-700 font-semibold">כמות מאושרת</Label>
+                                <Label htmlFor="quantity" className="text-[#e0e0e0] font-semibold">כמות מאושרת</Label>
                                 <Input
                                     id="quantity"
                                     type="number"
@@ -127,7 +127,7 @@ function AddManualPurchaseDialog({ projectId, onItemAdded }) {
                                     step="0.01"
                                     value={quantity}
                                     onChange={(e) => setQuantity(parseFloat(e.target.value) || 1)}
-                                    className="text-right bg-white border-gray-300"
+                                    className="text-right bg-[#1a1a2e] border-gray-300"
                                 />
                             </div>
 
@@ -425,12 +425,12 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
             }
             
             <Dialog open={isPoDialogOpen} onOpenChange={setIsPoDialogOpen}>
-                <DialogContent className="bg-white" dir="rtl">
+                <DialogContent className="bg-[#1a1a2e]" dir="rtl">
                     <DialogHeader>
                         <DialogTitle className="text-right text-xl font-bold">הפקת הזמנת רכש</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
-                        <p className="text-slate-700">נבחרו {selectedPoItems.size} פריטים. הזן שם ספק כדי להפיק עבורו הזמנת רכש.</p>
+                        <p className="text-[#e0e0e0]">נבחרו {selectedPoItems.size} פריטים. הזן שם ספק כדי להפיק עבורו הזמנת רכש.</p>
                         <div className="space-y-2">
                             <Label htmlFor="supplier-name" className="font-semibold">שם הספק</Label>
                             <Input 
@@ -472,7 +472,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                             </Button>
                         </div>
                     </div>
-                     <div className="bg-blue-50 border border-blue-200 text-blue-800 text-sm p-3 rounded-lg mt-4 flex items-center gap-2">
+                     <div className="bg-[rgba(96,165,250,0.1)] border border-blue-200 text-blue-800 text-sm p-3 rounded-lg mt-4 flex items-center gap-2">
                         <Info className="w-5 h-5" />
                         <span>שורה אחת לכל פריט. לחץ "בצע הזמנה" כדי ליצור הזמנה חדשה.</span>
                     </div>
@@ -499,7 +499,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
 
                                     return (
                                         <React.Fragment key={line.id}>
-                                            <TableRow className="border-b-2 border-slate-200 bg-slate-50 hover:bg-slate-100">
+                                            <TableRow className="border-b-2 border-[rgba(255,255,255,0.08)] bg-[#1a1a2e] hover:bg-[#1e1e36]">
                                                 <TableCell>
                                                      <Button variant="ghost" size="sm" onClick={() => toggleCollapsible(line.id)}>
                                                         {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
@@ -507,13 +507,13 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                 </TableCell>
                                                 <TableCell className="text-right font-bold text-slate-800">{line.name_snapshot}</TableCell>
                                                 <TableCell className="text-center font-bold text-lg">{line.approvedQuantity}</TableCell>
-                                                <TableCell className="text-center font-bold text-lg text-blue-700">{line.totalOrdered}</TableCell>
+                                                <TableCell className="text-center font-bold text-lg text-[#60a5fa]">{line.totalOrdered}</TableCell>
                                                 <TableCell className="text-center">
-                                                    <span className={line.remainingToOrder > 0 ? 'text-orange-600 font-bold text-lg' : 'text-green-600 font-bold'}>
+                                                    <span className={line.remainingToOrder > 0 ? 'text-orange-600 font-bold text-lg' : 'text-[#4ade80] font-bold'}>
                                                         {line.remainingToOrder}
                                                     </span>
                                                 </TableCell>
-                                                <TableCell className="text-center font-bold text-green-700 text-lg">
+                                                <TableCell className="text-center font-bold text-[#4ade80] text-lg">
                                                     ₪{(line.actualCostForLine || 0).toLocaleString()}
                                                 </TableCell>
                                                 <TableCell className="text-center">
@@ -527,16 +527,16 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                             </TableRow>
                                             {isOpen && (
                                                  <TableRow>
-                                                    <TableCell colSpan={7} className="p-0 bg-white">
+                                                    <TableCell colSpan={7} className="p-0 bg-[#1a1a2e]">
                                                         <div className="p-4 border-t border-slate-100">
-                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-slate-700 mb-3">
-                                                                <Package className="w-4 h-4 text-slate-600"/>
+                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-[#e0e0e0] mb-3">
+                                                                <Package className="w-4 h-4 text-[#a0a0b8]"/>
                                                                 הזמנות עבור: {line.name_snapshot} ({line.orders.length})
                                                             </h4>
                                                             {hasOrders ? (
-                                                                <Table className="bg-white">
+                                                                <Table className="bg-[#1a1a2e]">
                                                                     <TableHeader>
-                                                                        <TableRow className="bg-slate-50">
+                                                                        <TableRow className="bg-[#1a1a2e]">
                                                                             <TableHead className="w-10"></TableHead>
                                                                             <TableHead className="w-12">#</TableHead>
                                                                             <TableHead>כמות הוזמנה</TableHead>
@@ -550,21 +550,21 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                     </TableHeader>
                                                                     <TableBody>
                                                                         {line.orders.map((order, index) => (
-                                                                            <TableRow key={order.id} className="text-slate-700">
+                                                                            <TableRow key={order.id} className="text-[#e0e0e0]">
                                                                                 <TableCell>
                                                                                     <Checkbox
                                                                                         checked={selectedPoItems.has(order.id)}
                                                                                         onCheckedChange={() => handleSelectPoItem(order.id)}
                                                                                     />
                                                                                 </TableCell>
-                                                                                <TableCell className="text-center font-medium text-slate-600">
+                                                                                <TableCell className="text-center font-medium text-[#a0a0b8]">
                                                                                     {index + 1}
                                                                                 </TableCell>
                                                                                 <TableCell className="text-center font-semibold">
                                                                                     {order.quantity_to_order}
                                                                                 </TableCell>
                                                                                 <TableCell>
-                                                                                    <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-green-700" />
+                                                                                    <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-[#4ade80]" />
                                                                                 </TableCell>
                                                                                 <TableCell>
                                                                                     <EditableCell value={order.ordering_responsible} onUpdate={(val) => handleOrderUpdate(order.id, "ordering_responsible", val)} type="select" options={userOptions} />
@@ -588,7 +588,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                     </TableBody>
                                                                 </Table>
                                                             ) : (
-                                                                <div className="text-center text-slate-500 py-4 border rounded-lg bg-slate-50">
+                                                                <div className="text-center text-[#a0a0b8] py-4 border rounded-lg bg-[#1a1a2e]">
                                                                     <p className="font-medium">אין עדיין הזמנות עבור פריט זה.</p>
                                                                     <p className="text-sm">לחץ על "בצע הזמנה" כדי לפתוח הזמנה חדשה.</p>
                                                                 </div>
@@ -623,13 +623,13 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                 </TableCell>
                                                 <TableCell className="font-bold text-purple-900">{item.manual_item_name}</TableCell>
                                                 <TableCell className="text-center font-bold text-lg">{item.approvedQuantity}</TableCell>
-                                                <TableCell className="text-center font-bold text-lg text-blue-700">{item.totalOrdered}</TableCell>
+                                                <TableCell className="text-center font-bold text-lg text-[#60a5fa]">{item.totalOrdered}</TableCell>
                                                 <TableCell className="text-center">
-                                                    <span className={item.remainingToOrder > 0 ? 'text-orange-600 font-bold text-lg' : 'text-green-600 font-bold'}>
+                                                    <span className={item.remainingToOrder > 0 ? 'text-orange-600 font-bold text-lg' : 'text-[#4ade80] font-bold'}>
                                                         {item.remainingToOrder}
                                                     </span>
                                                 </TableCell>
-                                                <TableCell className="text-center font-bold text-green-700 text-lg">
+                                                <TableCell className="text-center font-bold text-[#4ade80] text-lg">
                                                     ₪{item.actualCostForLine.toLocaleString()}
                                                 </TableCell>
                                                 <TableCell className="text-center">
@@ -641,15 +641,15 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                             </TableRow>
                                             {isOpenManual && (
                                                 <TableRow>
-                                                    <TableCell colSpan={7} className="p-0 bg-white">
+                                                    <TableCell colSpan={7} className="p-0 bg-[#1a1a2e]">
                                                         <div className="p-4 border-t border-slate-100">
-                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-slate-700 mb-3">
-                                                                <Package className="w-4 h-4 text-slate-600"/>
+                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-[#e0e0e0] mb-3">
+                                                                <Package className="w-4 h-4 text-[#a0a0b8]"/>
                                                                 הזמנות עבור: {item.manual_item_name} ({item.orders.length})
                                                             </h4>
-                                                            <Table className="bg-white">
+                                                            <Table className="bg-[#1a1a2e]">
                                                                 <TableHeader>
-                                                                    <TableRow className="bg-slate-50">
+                                                                    <TableRow className="bg-[#1a1a2e]">
                                                                         <TableHead className="w-10"></TableHead>
                                                                         <TableHead className="w-12">#</TableHead>
                                                                         <TableHead>כמות הוזמנה</TableHead>
@@ -663,21 +663,21 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                 </TableHeader>
                                                                 <TableBody>
                                                                     {item.orders.map((order, index) => (
-                                                                        <TableRow key={order.id} className="text-slate-700">
+                                                                        <TableRow key={order.id} className="text-[#e0e0e0]">
                                                                             <TableCell>
                                                                                 <Checkbox
                                                                                     checked={selectedPoItems.has(order.id)}
                                                                                     onCheckedChange={() => handleSelectPoItem(order.id)}
                                                                                 />
                                                                             </TableCell>
-                                                                            <TableCell className="text-center font-medium text-slate-600">
+                                                                            <TableCell className="text-center font-medium text-[#a0a0b8]">
                                                                                 {index + 1}
                                                                             </TableCell>
                                                                             <TableCell className="text-center font-semibold">
                                                                                 {order.quantity_to_order}
                                                                             </TableCell>
                                                                             <TableCell>
-                                                                                <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-green-700" />
+                                                                                <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-[#4ade80]" />
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <EditableCell value={order.ordering_responsible} onUpdate={(val) => handleOrderUpdate(order.id, "ordering_responsible", val)} type="select" options={userOptions} />
@@ -710,7 +710,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
 
                                 {/* Grilles Items */}
                                 {procurementData.grillesItems.length > 0 && (
-                                    <TableRow className="border-t-4 border-green-300 bg-green-50">
+                                    <TableRow className="border-t-4 border-green-300 bg-[rgba(74,222,128,0.1)]">
                                         <TableCell colSpan={7} className="text-center font-bold text-green-800 py-4">
                                             גרילים
                                         </TableCell>
@@ -722,7 +722,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                     
                                     return (
                                         <React.Fragment key={item.id}>
-                                            <TableRow className="bg-green-50/50 hover:bg-green-100/50 border-b-2 border-green-200">
+                                            <TableRow className="bg-[rgba(74,222,128,0.1)]/50 hover:bg-[rgba(74,222,128,0.1)]/50 border-b-2 border-green-200">
                                                 <TableCell>
                                                     <Button variant="ghost" size="sm" onClick={() => toggleCollapsible(item.id)}>
                                                         {isOpenGrille ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
@@ -732,13 +732,13 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                     גריל - {item.grille_location}
                                                 </TableCell>
                                                 <TableCell className="text-center font-bold text-lg">{item.approvedQuantity}</TableCell>
-                                                <TableCell className="text-center font-bold text-lg text-blue-700">{item.totalOrdered}</TableCell>
+                                                <TableCell className="text-center font-bold text-lg text-[#60a5fa]">{item.totalOrdered}</TableCell>
                                                 <TableCell className="text-center">
-                                                    <span className={item.remainingToOrder > 0 ? 'text-orange-600 font-bold text-lg' : 'text-green-600 font-bold'}>
+                                                    <span className={item.remainingToOrder > 0 ? 'text-orange-600 font-bold text-lg' : 'text-[#4ade80] font-bold'}>
                                                         {item.remainingToOrder}
                                                     </span>
                                                 </TableCell>
-                                                <TableCell className="text-center font-bold text-green-700 text-lg">
+                                                <TableCell className="text-center font-bold text-[#4ade80] text-lg">
                                                     ₪{item.actualCostForLine.toLocaleString()}
                                                 </TableCell>
                                                 <TableCell className="text-center">
@@ -750,15 +750,15 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                             </TableRow>
                                             {isOpenGrille && (
                                                 <TableRow>
-                                                    <TableCell colSpan={7} className="p-0 bg-white">
+                                                    <TableCell colSpan={7} className="p-0 bg-[#1a1a2e]">
                                                         <div className="p-4 border-t border-slate-100">
-                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-slate-700 mb-3">
-                                                                <Package className="w-4 h-4 text-slate-600"/>
+                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-[#e0e0e0] mb-3">
+                                                                <Package className="w-4 h-4 text-[#a0a0b8]"/>
                                                                 הזמנות עבור: גריל {item.grille_location} ({item.orders.length})
                                                             </h4>
-                                                            <Table className="bg-white">
+                                                            <Table className="bg-[#1a1a2e]">
                                                                 <TableHeader>
-                                                                    <TableRow className="bg-slate-50">
+                                                                    <TableRow className="bg-[#1a1a2e]">
                                                                         <TableHead className="w-10"></TableHead>
                                                                         <TableHead className="w-12">#</TableHead>
                                                                         <TableHead>כמות הוזמנה</TableHead>
@@ -772,21 +772,21 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                 </TableHeader>
                                                                 <TableBody>
                                                                     {item.orders.map((order, index) => (
-                                                                        <TableRow key={order.id} className="text-slate-700">
+                                                                        <TableRow key={order.id} className="text-[#e0e0e0]">
                                                                             <TableCell>
                                                                                 <Checkbox
                                                                                     checked={selectedPoItems.has(order.id)}
                                                                                     onCheckedChange={() => handleSelectPoItem(order.id)}
                                                                                 />
                                                                             </TableCell>
-                                                                            <TableCell className="text-center font-medium text-slate-600">
+                                                                            <TableCell className="text-center font-medium text-[#a0a0b8]">
                                                                                 {index + 1}
                                                                             </TableCell>
                                                                             <TableCell className="text-center font-semibold">
                                                                                 {order.quantity_to_order}
                                                                             </TableCell>
                                                                             <TableCell>
-                                                                                <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-green-700" />
+                                                                                <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-[#4ade80]" />
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <EditableCell value={order.ordering_responsible} onUpdate={(val) => handleOrderUpdate(order.id, "ordering_responsible", val)} type="select" options={userOptions} />
@@ -819,7 +819,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
 
                                 {/* SubContractors Section */}
                                 {subContractors.length > 0 && (
-                                    <TableRow className="border-t-4 border-blue-300 bg-blue-50">
+                                    <TableRow className="border-t-4 border-blue-300 bg-[rgba(96,165,250,0.1)]">
                                         <TableCell colSpan={7} className="text-center font-bold text-blue-800 py-4">
                                             קבלני משנה
                                         </TableCell>
@@ -827,7 +827,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                 )}
                                 
                                 {subContractors.map((contractor) => (
-                                    <TableRow key={contractor.id} className="bg-blue-50/50 hover:bg-blue-100/50">
+                                    <TableRow key={contractor.id} className="bg-[rgba(96,165,250,0.1)]/50 hover:bg-[rgba(96,165,250,0.1)]/50">
                                         <TableCell></TableCell>
                                         <TableCell className="font-bold text-blue-900">
                                             {contractor.contractor_name}

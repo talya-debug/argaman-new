@@ -206,7 +206,7 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
         </Select>
       </div>
 
-      <div className="flex flex-col-reverse md:flex-row justify-end gap-3 pt-4 border-t sticky bottom-0 bg-white pb-2 md:pb-0">
+      <div className="flex flex-col-reverse md:flex-row justify-end gap-3 pt-4 border-t sticky bottom-0 bg-[#1a1a2e] pb-2 md:pb-0">
         <Button 
           type="button" 
           variant="outline" 
@@ -217,7 +217,7 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
         </Button>
         <Button 
           type="submit" 
-          className="bg-blue-600 hover:bg-blue-700 w-full md:w-auto h-10 md:h-auto text-sm md:text-base"
+          className="bg-[#c42b2b] hover:bg-[#991b1b] w-full md:w-auto h-10 md:h-auto text-sm md:text-base"
         >
           {task ? 'שמור שינויים' : 'צור משימה'}
         </Button>

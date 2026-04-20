@@ -109,7 +109,7 @@ export default function WorkLogForm({ projectId, onSubmit, onCancel }) {
                         </div>
                         <div className="space-y-2">
                             <Label className="font-semibold">סה"כ שעות</Label>
-                            <div className="h-10 flex items-center justify-center bg-slate-100 rounded-md border text-lg font-bold text-slate-700">{totalHours}</div>
+                            <div className="h-10 flex items-center justify-center bg-[#1e1e36] rounded-md border text-lg font-bold text-[#e0e0e0]">{totalHours}</div>
                         </div>
                     </div>
 
@@ -126,11 +126,11 @@ export default function WorkLogForm({ projectId, onSubmit, onCancel }) {
                     <div className="space-y-4">
                         <Label className="font-semibold">הוספת מדיה (תמונה או סרטון)</Label>
                         <div className="flex items-center justify-center w-full">
-                            <label htmlFor="media-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100">
+                            <label htmlFor="media-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-[#1a1a2e] hover:bg-[#1e1e36]">
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 mb-4 text-slate-500"/>
-                                    <p className="mb-2 text-sm text-slate-500"><span className="font-semibold">לחץ להעלאה</span> או גרור לכאן</p>
-                                    <p className="text-xs text-slate-400">תמונות (JPG, PNG, HEIC) או סרטונים (MP4, MOV)</p>
+                                    <Upload className="w-8 h-8 mb-4 text-[#a0a0b8]"/>
+                                    <p className="mb-2 text-sm text-[#a0a0b8]"><span className="font-semibold">לחץ להעלאה</span> או גרור לכאן</p>
+                                    <p className="text-xs text-[#6b6b80]">תמונות (JPG, PNG, HEIC) או סרטונים (MP4, MOV)</p>
                                 </div>
                                 <input id="media-upload" type="file" multiple className="hidden" onChange={handleMediaChange} accept="image/*,video/*,.heic"/>
                             </label>
@@ -145,7 +145,7 @@ export default function WorkLogForm({ projectId, onSubmit, onCancel }) {
                                         ) : (
                                             <img src={URL.createObjectURL(file)} alt="preview" className="h-20 w-20 object-cover rounded-md" />
                                         )}
-                                        <button type="button" onClick={() => removeMedia(index)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5"><X className="h-3 w-3" /></button>
+                                        <button type="button" onClick={() => removeMedia(index)} className="absolute -top-1 -right-1 bg-[rgba(248,113,113,0.1)]0 text-white rounded-full p-0.5"><X className="h-3 w-3" /></button>
                                     </div>
                                 );
                             })}
@@ -169,11 +169,11 @@ export default function WorkLogForm({ projectId, onSubmit, onCancel }) {
                     </form>
                 </CardContent>
             </Card>
-            <div className="flex justify-end gap-3 p-6 bg-white border-t flex-shrink-0">
+            <div className="flex justify-end gap-3 p-6 bg-[#1a1a2e] border-t flex-shrink-0">
                 <Button type="button" variant="outline" onClick={onCancel}>
                     ביטול
                 </Button>
-                <Button type="submit" form="worklog-form" className="bg-blue-600 hover:bg-blue-700" disabled={isSubmitting}>
+                <Button type="submit" form="worklog-form" className="bg-[#c42b2b] hover:bg-[#991b1b]" disabled={isSubmitting}>
                     <Save className="w-5 h-5 ml-2" />
                     {isSubmitting ? 'שולח...' : 'שמור דיווח'}
                 </Button>

@@ -167,15 +167,15 @@ export default function ProjectDetails() {
     const quoteId = quote ? quote.id : null;
 
     return (
-        <div className="p-4 md:p-8 bg-slate-50 min-h-screen" dir="rtl">
+        <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen" dir="rtl">
             <header className="mb-6 flex justify-between items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900">{project.name}</h1>
-                    <p className="text-slate-500 mt-1">ניהול מלא של הפרויקט עבור: {project.client_name}</p>
+                    <h1 className="text-3xl font-bold text-[#f0f0f0]">{project.name}</h1>
+                    <p className="text-[#a0a0b8] mt-1">ניהול מלא של הפרויקט עבור: {project.client_name}</p>
                 </div>
                 <div>
                     <Select value={project.status} onValueChange={(newStatus) => handleUpdateProjectDetails({ status: newStatus })}>
-                        <SelectTrigger className="w-[180px] bg-white">
+                        <SelectTrigger className="w-[180px] bg-[#1a1a2e]">
                             <SelectValue placeholder="שנה סטטוס" />
                         </SelectTrigger>
                         <SelectContent>

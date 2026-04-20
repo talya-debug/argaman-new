@@ -21,10 +21,10 @@ export default function NewTaskPage() {
     };
 
     return (
-        <div className="p-4 md:p-8 bg-slate-50 min-h-screen flex items-center justify-center">
+        <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen flex items-center justify-center">
             <Card className="w-full max-w-3xl shadow-2xl">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-slate-900 text-right">
+                    <CardTitle className="text-2xl font-bold text-[#f0f0f0] text-right">
                         יצירת משימה חדשה
                     </CardTitle>
                 </CardHeader>

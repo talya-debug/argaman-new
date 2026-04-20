@@ -9,10 +9,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const statusConfig = {
-  "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-blue-500", displayColor: "#3b82f6" },
+  "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-[rgba(96,165,250,0.1)]0", displayColor: "#3b82f6" },
   "נשלחה חשבונית – ממתין לתשלום": { color: "bg-orange-500", displayColor: "#f97316" },
-  "עיכוב בתשלום – לטיפול יניר": { color: "bg-yellow-500", displayColor: "#eab308" },
-  "שולם ונשלחה חשבונית מס": { color: "bg-green-500", displayColor: "#22c55e" },
+  "עיכוב בתשלום – לטיפול יניר": { color: "bg-[rgba(251,191,36,0.1)]0", displayColor: "#eab308" },
+  "שולם ונשלחה חשבונית מס": { color: "bg-[rgba(74,222,128,0.1)]0", displayColor: "#22c55e" },
   "בוטל / זיכוי": { color: "bg-gray-400", displayColor: "#9ca3af" }
 };
 
@@ -190,7 +190,7 @@ export default function CollectionDashboard() {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:p-8 bg-slate-50 min-h-screen">
+      <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen">
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">טוען נתונים...</div>
         </div>
@@ -199,16 +199,16 @@ export default function CollectionDashboard() {
   }
 
   return (
-    <div className="p-4 md:p-8 bg-slate-50 min-h-screen" dir="rtl">
+    <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen" dir="rtl">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">דאשבורד גבייה</h1>
-            <p className="text-slate-500 mt-1">סקירה כללית של מצב הגבייה בזמן אמת</p>
+            <h1 className="text-3xl font-bold text-[#f0f0f0]">דאשבורד גבייה</h1>
+            <p className="text-[#a0a0b8] mt-1">סקירה כללית של מצב הגבייה בזמן אמת</p>
           </div>
           <Link to={createPageUrl("CollectionTasks")}>
-            <Badge className="bg-blue-600 text-white px-4 py-2 text-sm cursor-pointer hover:bg-blue-700">
+            <Badge className="bg-[#c42b2b] text-white px-4 py-2 text-sm cursor-pointer hover:bg-[#991b1b]">
               <ClipboardList className="w-4 h-4 ml-2" />
               לוח משימות גבייה
             </Badge>
@@ -300,7 +300,7 @@ export default function CollectionDashboard() {
           {/* Overdue Tasks */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-lg text-red-600 flex items-center gap-2">
+              <CardTitle className="text-lg text-[#f87171] flex items-center gap-2">
                 <AlertCircle className="w-5 h-5" />
                 משימות באיחור ({overdueTasks.length})
               </CardTitle>
@@ -309,7 +309,7 @@ export default function CollectionDashboard() {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-red-50">
+                    <TableRow className="bg-[rgba(248,113,113,0.1)]">
                       <TableHead className="text-right w-[180px]">פרויקט</TableHead>
                       <TableHead className="text-right w-[120px]">סכום</TableHead>
                       <TableHead className="text-right w-[100px]">יעד תשלום</TableHead>
@@ -322,12 +322,12 @@ export default function CollectionDashboard() {
                     {overdueTasks.slice(0, 8).map((task) => {
                       const statusInfo = statusConfig[task.collection_status];
                       return (
-                        <TableRow key={task.id} className="h-12 bg-red-50/50">
+                        <TableRow key={task.id} className="h-12 bg-[rgba(248,113,113,0.1)]/50">
                           <TableCell className="text-right">
                             {task.project_id ? (
                               <Link
                                 to={createPageUrl(`ProjectDetails?id=${task.project_id}`)}
-                                className="flex items-center gap-1 text-blue-600 hover:underline text-sm"
+                                className="flex items-center gap-1 text-[#60a5fa] hover:underline text-sm"
                               >
                                 <span>{task.project_name}</span>
                                 <ExternalLink className="w-3 h-3" />
@@ -420,16 +420,16 @@ export default function CollectionDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-                  <span className="text-slate-700 font-medium">ממוצע</span>
-                  <span className="text-2xl font-bold text-blue-600">{avgCollectionTime.avg} ימים</span>
+                <div className="flex justify-between items-center p-4 bg-[rgba(96,165,250,0.1)] rounded-lg">
+                  <span className="text-[#e0e0e0] font-medium">ממוצע</span>
+                  <span className="text-2xl font-bold text-[#60a5fa]">{avgCollectionTime.avg} ימים</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-                  <span className="text-slate-700 font-medium">חציון</span>
-                  <span className="text-2xl font-bold text-green-600">{avgCollectionTime.median} ימים</span>
+                <div className="flex justify-between items-center p-4 bg-[rgba(74,222,128,0.1)] rounded-lg">
+                  <span className="text-[#e0e0e0] font-medium">חציון</span>
+                  <span className="text-2xl font-bold text-[#4ade80]">{avgCollectionTime.median} ימים</span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-orange-50 rounded-lg">
-                  <span className="text-slate-700 font-medium">מקסימום</span>
+                  <span className="text-[#e0e0e0] font-medium">מקסימום</span>
                   <span className="text-2xl font-bold text-orange-600">{avgCollectionTime.max} ימים</span>
                 </div>
               </div>

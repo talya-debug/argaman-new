@@ -106,27 +106,27 @@ export default function CreateOrderDialog({ quoteLine, project, remainingQuantit
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button size="sm" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">
                     <Plus className="w-4 h-4 ml-1" />
                     צור הזמנה
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
-                <div className="bg-white p-1 rounded-lg">
-                    <DialogHeader className="bg-blue-50 p-4 rounded-t-lg border-b">
+            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
+                <div className="bg-[#1a1a2e] p-1 rounded-lg">
+                    <DialogHeader className="bg-[rgba(96,165,250,0.1)] p-4 rounded-t-lg border-b">
                         <DialogTitle className="text-slate-800 text-lg font-bold">
                             הזמנה חדשה - {quoteLine.name_snapshot}
                         </DialogTitle>
                     </DialogHeader>
                     
-                    <div className="p-6 bg-white">
+                    <div className="p-6 bg-[#1a1a2e]">
                         <form onSubmit={handleSubmit} className="space-y-4 text-slate-800">
-                            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                                <p className="text-sm text-slate-700">כמות נותרת להזמנה: <span className="font-bold text-blue-700">{remainingQuantity}</span></p>
+                            <div className="bg-[rgba(96,165,250,0.1)] p-3 rounded-lg border border-blue-200">
+                                <p className="text-sm text-[#e0e0e0]">כמות נותרת להזמנה: <span className="font-bold text-[#60a5fa]">{remainingQuantity}</span></p>
                             </div>
 
                             <div>
-                                <Label htmlFor="quantity" className="text-slate-700 font-semibold">כמות להזמנה *</Label>
+                                <Label htmlFor="quantity" className="text-[#e0e0e0] font-semibold">כמות להזמנה *</Label>
                                 <Input
                                     id="quantity"
                                     type="number"
@@ -135,26 +135,26 @@ export default function CreateOrderDialog({ quoteLine, project, remainingQuantit
                                     step="0.01"
                                     value={quantityToOrder}
                                     onChange={(e) => setQuantityToOrder(parseFloat(e.target.value) || 0)}
-                                    className="text-right bg-white border-gray-300"
+                                    className="text-right bg-[#1a1a2e] border-gray-300"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="supplier" className="text-slate-700 font-semibold">ספק</Label>
+                                <Label htmlFor="supplier" className="text-[#e0e0e0] font-semibold">ספק</Label>
                                 <Input
                                     id="supplier"
                                     value={supplierName}
                                     onChange={(e) => setSupplierName(e.target.value)}
                                     placeholder="שם הספק..."
-                                    className="text-right bg-white border-gray-300"
+                                    className="text-right bg-[#1a1a2e] border-gray-300"
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="responsible" className="text-slate-700 font-semibold">אחראי הזמנה *</Label>
+                                <Label htmlFor="responsible" className="text-[#e0e0e0] font-semibold">אחראי הזמנה *</Label>
                                 <Select value={orderingResponsible} onValueChange={setOrderingResponsible}>
-                                    <SelectTrigger className="bg-white border-gray-300">
+                                    <SelectTrigger className="bg-[#1a1a2e] border-gray-300">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -166,25 +166,25 @@ export default function CreateOrderDialog({ quoteLine, project, remainingQuantit
                             </div>
 
                             <div>
-                                <Label htmlFor="due-date" className="text-slate-700 font-semibold">תאריך יעד</Label>
+                                <Label htmlFor="due-date" className="text-[#e0e0e0] font-semibold">תאריך יעד</Label>
                                 <Input
                                     id="due-date"
                                     type="date"
                                     value={dueDate}
                                     onChange={(e) => setDueDate(e.target.value)}
-                                    className="bg-white border-gray-300"
+                                    className="bg-[#1a1a2e] border-gray-300"
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="notes" className="text-slate-700 font-semibold">הערות</Label>
+                                <Label htmlFor="notes" className="text-[#e0e0e0] font-semibold">הערות</Label>
                                 <Textarea
                                     id="notes"
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
                                     placeholder="הערות נוספות..."
                                     rows={3}
-                                    className="bg-white border-gray-300"
+                                    className="bg-[#1a1a2e] border-gray-300"
                                 />
                             </div>
 
@@ -192,7 +192,7 @@ export default function CreateOrderDialog({ quoteLine, project, remainingQuantit
                                 <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
                                     ביטול
                                 </Button>
-                                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+                                <Button type="submit" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">
                                     צור הזמנה ומשימה
                                 </Button>
                             </div>

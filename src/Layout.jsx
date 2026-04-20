@@ -178,7 +178,7 @@ export default function Layout({ children, currentPageName }) {
                           </div>
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator style={{ background: 'var(--dark-border)' }} />
-                      <DropdownMenuItem onClick={handleLogout} className="text-right cursor-pointer text-red-400 focus:text-red-400 focus:bg-red-500/10 transition-all duration-200">
+                      <DropdownMenuItem onClick={handleLogout} className="text-right cursor-pointer text-red-400 focus:text-red-400 focus:bg-[rgba(248,113,113,0.1)]0/10 transition-all duration-200">
                           <LogOut className="ml-2 h-4 w-4" />
                           <span>התנתקות</span>
                       </DropdownMenuItem>

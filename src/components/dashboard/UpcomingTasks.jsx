@@ -7,10 +7,10 @@ import { he } from "date-fns/locale";
 import { Calendar, AlertCircle } from "lucide-react";
 
 const priorityColors = {
-  "נמוכה": "bg-blue-500/15 text-blue-400",
-  "בינונית": "bg-yellow-500/15 text-yellow-400",
+  "נמוכה": "bg-[rgba(96,165,250,0.1)]0/15 text-blue-400",
+  "בינונית": "bg-[rgba(251,191,36,0.1)]0/15 text-yellow-400",
   "גבוהה": "bg-orange-500/15 text-orange-400",
-  "דחוף": "bg-red-500/15 text-red-400"
+  "דחוף": "bg-[rgba(248,113,113,0.1)]0/15 text-red-400"
 };
 
 export default function UpcomingTasks({ tasks, isLoading }) {
@@ -50,7 +50,7 @@ export default function UpcomingTasks({ tasks, isLoading }) {
                     <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
                       יעד: {format(new Date(task.due_date), 'dd/MM/yyyy', { locale: he })}
                     </p>
-                    <Badge className={`text-xs ${priorityColors[task.priority] || 'bg-gray-500/15 text-gray-400'}`}>
+                    <Badge className={`text-xs ${priorityColors[task.priority] || 'bg-[#141428]0/15 text-gray-400'}`}>
                       {task.priority}
                     </Badge>
                   </div>
