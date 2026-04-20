@@ -14,15 +14,15 @@ export default function TaskFilters({ onFilterChange, users = [], creators = [] 
   };
 
   return (
-    <div className="p-4 mb-6 bg-white rounded-xl shadow-md border" dir="rtl">
+    <div className="p-4 mb-6 bg-[#1a1d27] rounded-xl shadow-md border border-[#2d3348]" dir="rtl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
+                <label className="text-sm font-medium text-slate-400 flex items-center gap-2">
                     <Filter className="w-4 h-4" />
                     סינון לפי אחראי
                 </label>
                 <Select onValueChange={(value) => handleFilter('assigned_to', value)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-[#252836] border-[#2d3348] text-slate-200">
                         <SelectValue placeholder="כל האחראים" />
                     </SelectTrigger>
                     <SelectContent>
@@ -32,12 +32,12 @@ export default function TaskFilters({ onFilterChange, users = [], creators = [] 
                 </Select>
             </div>
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
+                <label className="text-sm font-medium text-slate-400 flex items-center gap-2">
                     <Filter className="w-4 h-4" />
                     סינון לפי נותן המשימה
                 </label>
                 <Select onValueChange={(value) => handleFilter('creator', value)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-[#252836] border-[#2d3348] text-slate-200">
                         <SelectValue placeholder="כל היוצרים" />
                     </SelectTrigger>
                     <SelectContent>

@@ -7,9 +7,9 @@ const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'
 
 export default function StatusChart({ data, isLoading }) {
   return (
-    <Card className="shadow-lg border-0">
+    <Card className="shadow-lg border-0 bg-[#1a1d27]">
       <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-bold text-slate-900 flex items-center gap-2">
+        <CardTitle className="text-lg font-bold text-slate-100 flex items-center gap-2">
           <BarChart3 className="w-5 h-5" />
           לידים לפי סטטוס
         </CardTitle>
@@ -37,7 +37,9 @@ export default function StatusChart({ data, isLoading }) {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#1a1d27', border: '1px solid #2d3348', color: '#f1f5f9' }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>

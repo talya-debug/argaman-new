@@ -15,6 +15,7 @@ export const CollectionTask = createEntity('collectionTasks');
 export const ChangeLog = createEntity('changeLogs');
 export const TaskActivity = createEntity('taskActivities');
 export const PriceItem = createEntity('priceItems');
+export const Notification = createEntity('notifications');
 
 // User entity עם תמיכה ב-me() לתאימות עם הקוד הקיים
 const _UserEntity = createEntity('users');

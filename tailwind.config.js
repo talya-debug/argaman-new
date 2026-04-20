@@ -59,7 +59,14 @@ module.exports = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+  			'argaman-red': '#dc2626',
+  			'argaman-blue': '#3b82f6',
+  			surface: '#1a1d27',
+  			'surface-hover': '#232736',
+  			'dark-bg': '#0f1117',
+  			'dark-sidebar': '#141720',
+  			'dark-border': '#2d3348',
   		},
   		keyframes: {
   			'accordion-down': {

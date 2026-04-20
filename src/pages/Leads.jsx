@@ -328,26 +328,26 @@ export default function Leads() {
   };
 
   return (
-    <div className="p-4 md:p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 md:p-8 bg-[#0f1117] min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">ניהול לידים</h1>
-            <p className="text-slate-500 mt-1">מעקב וניהול כל הלידים במערכת</p>
+            <h1 className="text-3xl font-bold text-slate-100">ניהול לידים</h1>
+            <p className="text-slate-400 mt-1">מעקב וניהול כל הלידים במערכת</p>
           </div>
           <div className="flex gap-3">
             <Button
               variant="outline"
               onClick={refreshLeads}
               disabled={isRefreshing}
-              className="shadow-lg"
+              className="shadow-lg border-[#2d3348] text-slate-300 hover:bg-[#252836]"
             >
               <RefreshCw className={`w-4 h-4 ml-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               רענן
             </Button>
             <Button
               onClick={() => { setEditingLead(null); setShowForm(true); }}
-              className="bg-blue-600 hover:bg-blue-700 shadow-lg"
+              className="bg-red-600 hover:bg-red-700 shadow-lg"
             >
               <Plus className="w-4 h-4 ml-2" />
               ליד חדש
@@ -359,14 +359,14 @@ export default function Leads() {
           <Button
             variant={activeView === 'active' ? 'default' : 'outline'}
             onClick={() => setActiveView('active')}
-            className={activeView === 'active' ? 'bg-blue-600 hover:bg-blue-700' : ''}
+            className={activeView === 'active' ? 'bg-blue-600 hover:bg-blue-700' : 'border-[#2d3348] text-slate-300 hover:bg-[#252836]'}
           >
             לידים פעילים
           </Button>
           <Button
             variant={activeView === 'archive' ? 'default' : 'outline'}
             onClick={() => setActiveView('archive')}
-            className={activeView === 'archive' ? 'bg-slate-600 hover:bg-slate-700' : ''}
+            className={activeView === 'archive' ? 'bg-slate-600 hover:bg-slate-700' : 'border-[#2d3348] text-slate-300 hover:bg-[#252836]'}
           >
             ארכיון
           </Button>
@@ -386,9 +386,9 @@ export default function Leads() {
           setShowForm(open);
           if (!open) setEditingLead(null);
         }}>
-          <DialogContent className="max-w-xl bg-white">
+          <DialogContent className="max-w-xl bg-[#1a1d27] border-[#2d3348]">
             <DialogHeader>
-              <DialogTitle className="text-right">
+              <DialogTitle className="text-right text-slate-100">
                 {editingLead ? 'עריכת ליד' : 'ליד חדש'}
               </DialogTitle>
             </DialogHeader>
@@ -403,17 +403,17 @@ export default function Leads() {
           </DialogContent>
         </Dialog>
 
-        <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6">
+        <div className="mt-8 bg-[#1a1d27] border border-[#2d3348] rounded-lg p-6">
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-blue-600 text-lg font-bold">💡</span>
+            <div className="w-8 h-8 bg-blue-500/10 rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-blue-400 text-lg font-bold">💡</span>
             </div>
             <div className="text-right flex-1">
-              <h4 className="font-bold text-blue-900 mb-3 text-lg">מדריך מהיר לניהול לידים:</h4>
+              <h4 className="font-bold text-blue-300 mb-3 text-lg">מדריך מהיר לניהול לידים:</h4>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h5 className="font-semibold text-blue-800 mb-2">עריכה מהירה:</h5>
-                  <ul className="text-blue-700 text-sm space-y-1">
+                  <h5 className="font-semibold text-blue-200 mb-2">עריכה מהירה:</h5>
+                  <ul className="text-blue-300/80 text-sm space-y-1">
                     <li>• לחץ על כל שדה לעריכה ישירה</li>
                     <li>• Enter לשמירה, Escape לביטול</li>
                     <li>• <FileText className="w-3 h-3 inline ml-1" />כפתור ירוק ליצירת/צפייה בהצעת מחיר</li>
@@ -421,8 +421,8 @@ export default function Leads() {
                   </ul>
                 </div>
                 <div>
-                  <h5 className="font-semibold text-blue-800 mb-2">זרימה אוטומטית:</h5>
-                  <ul className="text-blue-700 text-sm space-y-1">
+                  <h5 className="font-semibold text-blue-200 mb-2">זרימה אוטומטית:</h5>
+                  <ul className="text-blue-300/80 text-sm space-y-1">
                     <li>• שינוי סטטוס ל"אושר" יוצר פרויקט אוטומטית</li>
                     <li>• המערכת בודקת אם כבר קיים פרויקט למניעת כפילויות</li>
                     <li>• פרויקטים חדשים יפתחו עם משימות מוגדרות מראש</li>

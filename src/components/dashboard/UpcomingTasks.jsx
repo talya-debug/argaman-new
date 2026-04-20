@@ -15,9 +15,9 @@ const priorityColors = {
 
 export default function UpcomingTasks({ tasks, isLoading }) {
   return (
-    <Card className="shadow-lg border-0">
+    <Card className="shadow-lg border-0 bg-[#1a1d27]">
       <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-bold text-slate-900 flex items-center gap-2">
+        <CardTitle className="text-lg font-bold text-slate-100 flex items-center gap-2">
           <Calendar className="w-5 h-5" />
           משימות קרובות
         </CardTitle>
@@ -26,9 +26,9 @@ export default function UpcomingTasks({ tasks, isLoading }) {
         <div className="space-y-4">
           {isLoading ? (
             Array(3).fill(0).map((_, i) => (
-              <div key={i} className="p-3 border rounded-lg">
-                <Skeleton className="h-4 w-32 mb-2" />
-                <Skeleton className="h-3 w-20" />
+              <div key={i} className="p-3 border border-[#2d3348] rounded-lg">
+                <Skeleton className="h-4 w-32 mb-2 bg-[#2d3348]" />
+                <Skeleton className="h-3 w-20 bg-[#2d3348]" />
               </div>
             ))
           ) : tasks.length === 0 ? (
@@ -37,11 +37,11 @@ export default function UpcomingTasks({ tasks, isLoading }) {
             </div>
           ) : (
             tasks.map((task) => (
-              <div key={task.id} className="p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
+              <div key={task.id} className="p-3 border border-[#2d3348] rounded-lg hover:bg-[#252836] transition-colors">
                 <div className="flex items-start justify-between gap-3">
                   <div className="text-right flex-1">
-                    <p className="font-medium text-slate-900 text-sm mb-1">{task.title}</p>
-                    <p className="text-xs text-slate-500 mb-2">
+                    <p className="font-medium text-slate-100 text-sm mb-1">{task.title}</p>
+                    <p className="text-xs text-slate-400 mb-2">
                       יעד: {format(new Date(task.due_date), 'dd/MM/yyyy', { locale: he })}
                     </p>
                     <Badge className={`text-xs ${priorityColors[task.priority] || 'bg-gray-100 text-gray-800'}`}>

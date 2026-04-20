@@ -118,26 +118,26 @@ export default function TasksPage() {
 
 
   return (
-    <div className="p-4 md:p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 md:p-8 bg-[#0f1117] min-h-screen">
       <div className="max-w-7xl mx-auto">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">מרכז המשימות</h1>
-            <p className="text-slate-500 mt-1">כל המשימות מכל המודולים במקום אחד</p>
+            <h1 className="text-3xl font-bold text-slate-100">מרכז המשימות</h1>
+            <p className="text-slate-400 mt-1">כל המשימות מכל המודולים במקום אחד</p>
           </div>
           <Dialog open={showForm} onOpenChange={(isOpen) => {
               setShowForm(isOpen);
               if (!isOpen) setEditingTask(null);
           }}>
             <DialogTrigger asChild>
-              <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg w-full md:w-auto" onClick={() => setEditingTask(null)}>
+              <Button className="bg-red-600 hover:bg-red-700 shadow-lg w-full md:w-auto" onClick={() => setEditingTask(null)}>
                 <Plus className="w-4 h-4 ml-2" />
                 משימה חדשה
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-3xl w-[95vw] md:w-full max-h-[90vh] overflow-y-auto bg-white">
+            <DialogContent className="max-w-3xl w-[95vw] md:w-full max-h-[90vh] overflow-y-auto bg-[#1a1d27] border-[#2d3348]">
               <DialogHeader>
-                <DialogTitle className="text-right text-lg md:text-xl">
+                <DialogTitle className="text-right text-lg md:text-xl text-slate-100">
                   {editingTask ? 'עריכת משימה' : 'יצירת משימה חדשה'}
                 </DialogTitle>
               </DialogHeader>
