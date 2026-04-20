@@ -5,6 +5,7 @@ import { createPageUrl } from "@/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import NotificationBell from "@/components/notifications/NotificationBell";
 import {
   LayoutDashboard,
   Users,
@@ -195,7 +196,10 @@ export default function Layout({ children, currentPageName }) {
                   <img src="/logo.jpg" alt="ארגמן" className="h-8" />
                   <h1 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>ארגמן מערכת ניהול</h1>
                 </div>
-                <SidebarTrigger className="p-2 rounded-lg transition-colors duration-200 -mr-2" style={{ color: 'var(--text-secondary)' }} />
+                <div className="flex items-center gap-1">
+                  <NotificationBell />
+                  <SidebarTrigger className="p-2 rounded-lg transition-colors duration-200 -mr-2" style={{ color: 'var(--text-secondary)' }} />
+                </div>
               </div>
             </header>
 
@@ -203,6 +207,7 @@ export default function Layout({ children, currentPageName }) {
             <header className="hidden md:flex border-b px-6 py-3 items-center justify-between" style={{ background: 'var(--dark-sidebar)', borderColor: 'var(--dark-border)' }}>
               <div className="flex items-center gap-4">
                 <SidebarTrigger className="p-2 rounded-lg transition-colors duration-200" style={{ color: 'var(--text-secondary)' }} />
+                <NotificationBell />
               </div>
             </header>
 

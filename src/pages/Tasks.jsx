@@ -7,6 +7,7 @@ import TaskForm from "../components/tasks/TaskForm";
 import TaskList from "../components/tasks/TaskList";
 import TaskFilters from "../components/tasks/TaskFilters";
 import { toast } from "sonner";
+import { createNotification } from "@/lib/notifications";
 import { differenceInDays } from 'date-fns';
 
 export default function TasksPage() {
@@ -56,6 +57,17 @@ export default function TasksPage() {
       } else {
         const creatorName = currentUser?.full_name || 'לא ידוע';
         await Task.create({ ...taskData, creator: taskData.creator || creatorName });
+
+        // התראה למשתמש שהוקצתה לו משימה
+        if (taskData.assigned_to) {
+          createNotification({
+            user_id: taskData.assigned_to,
+            title: 'משימה חדשה',
+            message: `הוקצתה לך משימה: ${taskData.title}`,
+            type: 'task_assigned',
+            link: '/Tasks',
+          });
+        }
       }
 
       await reloadTasks();

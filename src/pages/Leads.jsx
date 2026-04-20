@@ -10,6 +10,7 @@ import LeadFilters from "../components/leads/LeadFilters";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
+import { createNotification } from "@/lib/notifications";
 
 export default function Leads() {
   const navigate = useNavigate();
@@ -136,6 +137,15 @@ export default function Leads() {
           });
       }
 
+      // התראה על פרויקט חדש
+      createNotification({
+        user_id: 'all',
+        title: 'פרויקט חדש',
+        message: `פרויקט ${lead.name} נוצר`,
+        type: 'project_started',
+        link: `/ProjectDetails?id=${newProject.id}`,
+      });
+
       navigate(createPageUrl(`ProjectDetails?id=${newProject.id}`));
 
     } catch (error) {
@@ -188,6 +198,15 @@ export default function Leads() {
         const newLead = await Lead.create({
           ...finalData,
           last_interaction_date: new Date().toISOString().split('T')[0]
+        });
+
+        // התראה על ליד חדש ליניר
+        createNotification({
+          user_id: 'yanir',
+          title: 'ליד חדש',
+          message: `ליד חדש: ${newLead.name || finalData.name}`,
+          type: 'general',
+          link: '/Leads',
         });
 
         if (newLead.status === 'אושר') {
