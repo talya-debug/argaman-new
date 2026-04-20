@@ -1,223 +1,156 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/lib/AuthContext";
-import { createPageUrl } from "@/utils";
-import { Toaster } from "@/components/ui/sonner";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import { Link, useLocation } from 'react-router-dom'
+import { useState } from 'react'
 import {
-  LayoutDashboard,
-  Users,
-  FileText,
-  FolderOpen,
-  CheckSquare,
-  Link2,
-  Building2,
-  LogOut,
-  DollarSign
-} from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-
+  LayoutDashboard, Users, FileText, FolderOpen, CheckSquare,
+  Link2, DollarSign, Menu, X, LogOut
+} from 'lucide-react'
+import { useAuth } from '@/lib/AuthContext'
+import NotificationBell from '@/components/notifications/NotificationBell'
 
 const navigationItems = [
-  {
-    title: "לוח בקרה",
-    url: createPageUrl("Dashboard"),
-    icon: LayoutDashboard,
-  },
-  {
-    title: "לידים",
-    url: createPageUrl("Leads"),
-    icon: Users,
-  },
-  {
-    title: "הצעות מחיר",
-    url: createPageUrl("Quotes"),
-    icon: FileText,
-  },
-  {
-    title: "פרויקטים",
-    url: createPageUrl("Projects"),
-    icon: FolderOpen,
-  },
-  {
-    title: "משימות",
-    url: createPageUrl("Tasks"),
-    icon: CheckSquare,
-  },
-  {
-    title: "קישורים",
-    url: createPageUrl("Links"),
-    icon: Link2,
-  },
-  {
-    title: "גבייה",
-    url: createPageUrl("CollectionDashboard"),
-    icon: DollarSign,
-  }
-];
+  { to: '/', icon: LayoutDashboard, label: 'לוח בקרה' },
+  { to: '/Leads', icon: Users, label: 'לידים' },
+  { to: '/Quotes', icon: FileText, label: 'הצעות מחיר' },
+  { to: '/Projects', icon: FolderOpen, label: 'פרויקטים' },
+  { to: '/Tasks', icon: CheckSquare, label: 'משימות' },
+  { to: '/Links', icon: Link2, label: 'קישורים' },
+  { to: '/CollectionDashboard', icon: DollarSign, label: 'גבייה' },
+]
 
 export default function Layout({ children, currentPageName }) {
-  const location = useLocation();
-  const { user, logout } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const location = useLocation()
+  const { user, logout } = useAuth()
 
-  // Check if this is a minimal/public form view (WorkLogForm)
-  const isMinimalView = currentPageName === 'WorkLogForm';
+  const isMinimalView = currentPageName === 'WorkLogForm'
 
-  const handleLogout = () => {
-    logout();
-  };
-
-  const getInitials = (name) => {
-    if (!name) return '';
-    const names = name.split(' ');
-    if (names.length > 1) {
-      return `${names[0].charAt(0)}${names[names.length - 1].charAt(0)}`;
-    }
-    return name.charAt(0);
-  }
-
-  // Render minimal layout for public forms
   if (isMinimalView) {
     return (
-      <div dir="rtl" className="w-full min-h-screen" style={{ background: 'var(--dark)' }}>
-        <Toaster position="top-center" richColors />
+      <div dir="rtl" style={{ width: '100%', minHeight: '100vh', background: 'var(--dark)' }}>
         {children}
       </div>
-    );
+    )
   }
 
-  return (
-    <div dir="rtl" className="min-h-screen" style={{ background: 'var(--dark)' }}>
-      <Toaster position="top-center" richColors />
-      <SidebarProvider>
-        <div className="flex w-full">
-          <Sidebar side="right" className="border-l" style={{ borderColor: 'var(--dark-border)' }}>
-            <SidebarHeader className="border-b p-4" style={{ borderColor: 'var(--dark-border)', background: 'var(--dark-sidebar)' }}>
-              <div className="flex items-center gap-3">
-                <img src="/logo.jpg" alt="ארגמן" className="h-10" />
-                <div className="text-right">
-                  <h2 className="font-bold text-base md:text-lg" style={{ color: 'var(--text-primary)' }}>ארגמן מערכת ניהול</h2>
-                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>ניהול מכירות ופרויקטים</p>
-                </div>
-              </div>
-            </SidebarHeader>
+  const navLink = (item) => {
+    const isActive = location.pathname === item.to || (item.to === '/' && location.pathname === '/')
+    return (
+      <Link key={item.to} to={item.to}
+        onClick={() => setMobileOpen(false)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: '10px',
+          padding: '10px 14px', borderRadius: '8px', textDecoration: 'none',
+          fontSize: '14px', fontWeight: 500, marginBottom: '2px',
+          color: isActive ? 'var(--argaman)' : 'var(--text-secondary)',
+          background: isActive ? 'var(--argaman-bg)' : 'transparent',
+          transition: 'all 0.2s',
+        }}
+        onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = 'var(--argaman-bg)'; e.currentTarget.style.color = 'var(--argaman-light)' }}}
+        onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)' }}}
+      >
+        <item.icon size={18} />{item.label}
+      </Link>
+    )
+  }
 
-            <SidebarContent className="p-2" style={{ background: 'var(--dark-sidebar)' }}>
-              <SidebarGroup>
-                <SidebarGroupLabel className="text-xs font-medium uppercase tracking-wider px-2 py-2 text-right" style={{ color: 'var(--text-muted)' }}>
-                  ניווט
-                </SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {navigationItems.map((item) => {
-                      const isActive = location.pathname === item.url;
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton
-                            asChild
-                            className={`transition-all duration-200 rounded-lg mb-1`}
-                            style={isActive ? {
-                              background: 'var(--argaman-bg)',
-                              color: 'var(--argaman-light)',
-                              borderRight: '2px solid var(--argaman)',
-                            } : {
-                              color: 'var(--text-secondary)',
-                            }}
-                          >
-                            <Link to={item.url} className="flex items-center gap-3 px-3 py-3 text-right hover:opacity-80">
-                              <span className="font-medium text-sm">{item.title}</span>
-                              <item.icon className="w-4 h-4 mr-auto" />
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      );
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            </SidebarContent>
-
-            <SidebarFooter className="border-t p-2" style={{ borderColor: 'var(--dark-border)', background: 'var(--dark-sidebar)' }}>
-               <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="w-full justify-start text-right h-auto py-2 px-2 hover:opacity-80 transition-all duration-200">
-                          <div className="flex items-center gap-3 w-full">
-                              <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, var(--argaman), var(--argaman-light))' }}>
-                                  <span className="text-white font-medium text-sm">
-                                      {user ? getInitials(user.full_name || user.email) : '...'}
-                                  </span>
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                  <p className="font-medium text-sm truncate" style={{ color: 'var(--text-primary)' }}>{user ? (user.full_name || user.email) : 'טוען...'}</p>
-                                  <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{user ? user.email : '...'}</p>
-                              </div>
-                          </div>
-                      </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }} align="end" forceMount>
-                      <DropdownMenuLabel className="font-normal text-right">
-                          <div className="flex flex-col space-y-1">
-                              <p className="text-sm font-medium leading-none" style={{ color: 'var(--text-primary)' }}>{user ? (user.full_name || user.email) : ''}</p>
-                              <p className="text-xs leading-none" style={{ color: 'var(--text-muted)' }}>
-                                  {user ? user.email : ''}
-                              </p>
-                          </div>
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator style={{ background: 'var(--dark-border)' }} />
-                      <DropdownMenuItem onClick={handleLogout} className="text-right cursor-pointer text-red-400 focus:text-red-400 focus:bg-[rgba(248,113,113,0.1)]0/10 transition-all duration-200">
-                          <LogOut className="ml-2 h-4 w-4" />
-                          <span>התנתקות</span>
-                      </DropdownMenuItem>
-                  </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarFooter>
-          </Sidebar>
-
-          <main className="flex-1 flex flex-col min-h-screen">
-            {/* Mobile Header with hamburger menu */}
-            <header className="md:hidden border-b px-4 py-3 sticky top-0 z-10" style={{ background: 'var(--dark-sidebar)', borderColor: 'var(--dark-border)' }}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <img src="/logo.jpg" alt="ארגמן" className="h-8" />
-                  <h1 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>ארגמן מערכת ניהול</h1>
-                </div>
-                <div className="flex items-center gap-1">
-                  <NotificationBell />
-                  <SidebarTrigger className="p-2 rounded-lg transition-colors duration-200 -mr-2" style={{ color: 'var(--text-secondary)' }} />
-                </div>
-              </div>
-            </header>
-
-            {/* Desktop Header */}
-            <header className="hidden md:flex border-b px-6 py-3 items-center justify-between" style={{ background: 'var(--dark-sidebar)', borderColor: 'var(--dark-border)' }}>
-              <div className="flex items-center gap-4">
-                <SidebarTrigger className="p-2 rounded-lg transition-colors duration-200" style={{ color: 'var(--text-secondary)' }} />
-                <NotificationBell />
-              </div>
-            </header>
-
-            {/* Main content area */}
-            <div className="flex-1 overflow-auto" style={{ background: 'var(--dark)' }}>
-              {children}
-            </div>
-          </main>
+  const sidebarContent = (
+    <>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: '12px',
+        padding: '20px 24px', borderBottom: '1px solid var(--dark-border)'
+      }}>
+        <img src="/logo.jpg" alt="ארגמן" style={{ height: '44px', borderRadius: '10px' }} />
+        <div>
+          <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--argaman)' }}>ארגמן</div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)', letterSpacing: '1px' }}>מערכות מיזוג</div>
         </div>
-      </SidebarProvider>
+      </div>
+
+      <nav style={{ padding: '16px 12px', flex: 1 }}>
+        <div style={{ marginBottom: '8px' }}>{navigationItems.map(navLink)}</div>
+      </nav>
+
+      <div style={{
+        padding: '16px 24px', borderTop: '1px solid var(--dark-border)',
+        display: 'flex', alignItems: 'center', gap: '10px'
+      }}>
+        <div style={{
+          width: 32, height: 32, borderRadius: '50%',
+          background: 'linear-gradient(135deg, var(--argaman), var(--argaman-dark))',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '13px', fontWeight: 600, color: '#fff',
+        }}>
+          {user?.email?.[0]?.toUpperCase() || 'א'}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {user?.full_name || user?.email || 'ארגמן'}
+          </div>
+        </div>
+        {logout && (
+          <button onClick={logout} style={{
+            background: 'none', border: 'none', color: 'var(--text-muted)',
+            cursor: 'pointer', padding: '4px'
+          }}>
+            <LogOut size={16} />
+          </button>
+        )}
+      </div>
+    </>
+  )
+
+  return (
+    <div dir="rtl" style={{ display: 'flex', minHeight: '100vh' }}>
+      <aside style={{
+        width: 'var(--sidebar-width)', background: 'var(--dark-sidebar)',
+        borderLeft: '1px solid var(--dark-border)', position: 'fixed',
+        top: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column',
+        zIndex: 100, overflowY: 'auto',
+      }} className="desktop-sidebar">{sidebarContent}</aside>
+
+      {mobileOpen && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 998 }} onClick={() => setMobileOpen(false)} />}
+
+      <aside className="mobile-sidebar" style={{
+        position: 'fixed', top: 0, right: 0, bottom: 0, width: '280px',
+        background: 'var(--dark-sidebar)', borderLeft: '1px solid var(--dark-border)',
+        transform: mobileOpen ? 'translateX(0)' : 'translateX(100%)',
+        transition: 'transform 0.3s', zIndex: 999, display: 'flex', flexDirection: 'column', overflowY: 'auto',
+      }}>
+        <button onClick={() => setMobileOpen(false)} style={{
+          position: 'absolute', left: '12px', top: '20px',
+          background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer'
+        }}><X size={20} /></button>
+        {sidebarContent}
+      </aside>
+
+      <main style={{ flex: 1, marginRight: 'var(--sidebar-width)', minHeight: '100vh', background: 'var(--dark)' }}>
+        <div style={{
+          padding: '16px 32px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+          borderBottom: '1px solid var(--dark-border)',
+        }}>
+          <NotificationBell />
+        </div>
+
+        <button className="mobile-menu-btn" onClick={() => setMobileOpen(true)} style={{
+          position: 'fixed', top: '16px', right: '16px', zIndex: 99,
+          background: 'var(--dark-card)', border: '1px solid var(--dark-border)',
+          borderRadius: '8px', padding: '8px', cursor: 'pointer', color: 'var(--argaman)', display: 'none',
+        }}><Menu size={22} /></button>
+
+        <div style={{ padding: '28px 32px' }}>
+          {children}
+        </div>
+      </main>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .desktop-sidebar { display: none !important; }
+          .mobile-menu-btn { display: block !important; }
+          main { margin-right: 0 !important; }
+          main > div:last-child { padding: 20px 16px !important; padding-top: 20px !important; }
+        }
+        @media (min-width: 769px) { .mobile-sidebar { display: none !important; } }
+      `}</style>
     </div>
-  );
+  )
 }
