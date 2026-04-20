@@ -53,7 +53,7 @@ export default function QuotePreview({ quote, quoteLines, lead }) {
                 <h3 className="font-bold text-lg mb-4 text-blue-900">פירוט ההצעה</h3>
                 <div className="overflow-hidden border border-[rgba(255,255,255,0.12)] rounded-lg">
                     <table className="w-full" style={{ borderCollapse: 'collapse' }}>
-                        <thead className="bg-[#c42b2b] text-white" style={{ display: 'table-header-group' }}>
+                        <thead className="bg-[#D4A843] text-white" style={{ display: 'table-header-group' }}>
                             <tr>
                                 <th className="p-3 text-right font-semibold">סעיף</th>
                                 <th className="p-3 text-right font-semibold">קטגוריה</th>
@@ -160,7 +160,7 @@ export default function QuotePreview({ quote, quoteLines, lead }) {
             </div>
 
             {/* ── Section 6: Footer (never split) ── */}
-            <div id="pdf-sect-footer" className="p-6 border-t bg-[#c42b2b] text-white text-center"
+            <div id="pdf-sect-footer" className="p-6 border-t bg-[#D4A843] text-white text-center"
                 style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
                 <p className="font-medium">תודה על אמונכם בנו!</p>
                 <p className="text-sm mt-1">לשירות מקצועי ואמין - ארגמן מערכות מתקדמות</p>

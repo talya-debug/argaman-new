@@ -101,7 +101,7 @@ export default function TaskActivityLog({ taskId }) {
                         <Button 
                             onClick={handleSubmitComment}
                             disabled={!newComment.trim() || isSaving}
-                            className="bg-[#c42b2b] hover:bg-[#991b1b]"
+                            className="bg-[#D4A843] hover:bg-[#B8922E]"
                         >
                             <Send className="w-4 h-4 ml-2" />
                             {isSaving ? 'שולח...' : 'הוסף עדכון'}

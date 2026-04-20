@@ -208,7 +208,7 @@ export default function CollectionDashboard() {
             <p className="text-[#a0a0b8] mt-1">סקירה כללית של מצב הגבייה בזמן אמת</p>
           </div>
           <Link to={createPageUrl("CollectionTasks")}>
-            <Badge className="bg-[#c42b2b] text-white px-4 py-2 text-sm cursor-pointer hover:bg-[#991b1b]">
+            <Badge className="bg-[#D4A843] text-white px-4 py-2 text-sm cursor-pointer hover:bg-[#B8922E]">
               <ClipboardList className="w-4 h-4 ml-2" />
               לוח משימות גבייה
             </Badge>

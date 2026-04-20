@@ -578,7 +578,7 @@ export default function ExcelImportDialog({ isOpen, onClose, onImportSuccess }) 
 
                                 {/* Actions */}
                                 <div className="flex justify-end gap-3 pt-4 border-t">
-                                    <Button onClick={handleClose} className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">
+                                    <Button onClick={handleClose} className="bg-[#D4A843] hover:bg-[#B8922E] text-white">
                                         סיום
                                     </Button>
                                 </div>

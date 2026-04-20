@@ -106,7 +106,7 @@ export default function CreateOrderDialog({ quoteLine, project, remainingQuantit
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button size="sm" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">
+                <Button size="sm" className="bg-[#D4A843] hover:bg-[#B8922E] text-white">
                     <Plus className="w-4 h-4 ml-1" />
                     צור הזמנה
                 </Button>
@@ -192,7 +192,7 @@ export default function CreateOrderDialog({ quoteLine, project, remainingQuantit
                                 <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
                                     ביטול
                                 </Button>
-                                <Button type="submit" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">
+                                <Button type="submit" className="bg-[#D4A843] hover:bg-[#B8922E] text-white">
                                     צור הזמנה ומשימה
                                 </Button>
                             </div>

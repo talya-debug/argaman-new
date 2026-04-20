@@ -217,7 +217,7 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
         </Button>
         <Button 
           type="submit" 
-          className="bg-[#c42b2b] hover:bg-[#991b1b] w-full md:w-auto h-10 md:h-auto text-sm md:text-base"
+          className="bg-[#D4A843] hover:bg-[#B8922E] w-full md:w-auto h-10 md:h-auto text-sm md:text-base"
         >
           {task ? 'שמור שינויים' : 'צור משימה'}
         </Button>

@@ -275,7 +275,7 @@ export default function WorkLogForm() {
                         </form>
                     </div>
                     <div className="border-t bg-[#1a1a2e] p-6">
-                        <Button type="submit" form="worklog-form" className="w-full bg-[#c42b2b] hover:bg-[#991b1b] text-lg py-6" disabled={isSubmitting}>
+                        <Button type="submit" form="worklog-form" className="w-full bg-[#D4A843] hover:bg-[#B8922E] text-lg py-6" disabled={isSubmitting}>
                             <Save className="w-5 h-5 ml-2" />
                             {isSubmitting ? 'שולח דיווח...' : 'שלח דיווח יומן עבודה'}
                         </Button>

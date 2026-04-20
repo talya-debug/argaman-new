@@ -85,7 +85,7 @@ export default function Quotes() {
             <p className="text-[#a0a0b8] mt-1">ניהול וטיפול בכל ההצעות במערכת</p>
           </div>
           <Button
-            className="bg-[#c42b2b] hover:bg-[#991b1b] shadow-lg"
+            className="bg-[#D4A843] hover:bg-[#B8922E] shadow-lg"
             onClick={handleNewQuoteClick}
           >
             <Plus className="w-4 h-4 ml-2" />

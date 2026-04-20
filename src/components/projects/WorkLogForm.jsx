@@ -173,7 +173,7 @@ export default function WorkLogForm({ projectId, onSubmit, onCancel }) {
                 <Button type="button" variant="outline" onClick={onCancel}>
                     ביטול
                 </Button>
-                <Button type="submit" form="worklog-form" className="bg-[#c42b2b] hover:bg-[#991b1b]" disabled={isSubmitting}>
+                <Button type="submit" form="worklog-form" className="bg-[#D4A843] hover:bg-[#B8922E]" disabled={isSubmitting}>
                     <Save className="w-5 h-5 ml-2" />
                     {isSubmitting ? 'שולח...' : 'שמור דיווח'}
                 </Button>

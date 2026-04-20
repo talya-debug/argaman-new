@@ -447,7 +447,7 @@ export default function CollectionTasks() {
                 <Button
                   variant={!showClosed ? "default" : "outline"}
                   onClick={() => setShowClosed(false)}
-                  className={!showClosed ? "bg-[#c42b2b]" : ""}
+                  className={!showClosed ? "bg-[#D4A843]" : ""}
                 >
                   פעילות ({tasks.filter(t => !t.is_closed).length})
                 </Button>
@@ -697,7 +697,7 @@ export default function CollectionTasks() {
                 </Button>
                 <Button
                   onClick={handlePaymentConfirm}
-                  className="text-white bg-[#c42b2b] hover:bg-[#991b1b]"
+                  className="text-white bg-[#D4A843] hover:bg-[#B8922E]"
                 >
                   אישור וסגירה
                 </Button>

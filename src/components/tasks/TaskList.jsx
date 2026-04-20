@@ -281,7 +281,7 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                         <div className="hidden md:block overflow-x-auto">
                             <Table dir="rtl">
                                 <TableHeader>
-                                    <TableRow style={{ background: 'rgba(196, 43, 43, 0.05)', borderBottom: '1px solid var(--dark-border)' }}>
+                                    <TableRow style={{ background: 'rgba(212, 168, 67, 0.05)', borderBottom: '1px solid var(--dark-border)' }}>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>שם הלקוח</TableHead>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>פירוט המשימה</TableHead>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>נותן המשימה</TableHead>

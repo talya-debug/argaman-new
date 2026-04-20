@@ -12,7 +12,7 @@ const statCards = [
     key: "leads",
     accentColor: "var(--argaman)",
     iconColor: "var(--argaman-light)",
-    iconBg: "rgba(196, 43, 43, 0.1)",
+    iconBg: "rgba(212, 168, 67, 0.1)",
     navigateTo: "Leads"
   },
   {
@@ -61,7 +61,7 @@ export default function DashboardStats({ stats, isLoading }) {
           onClick={() => navigate(createPageUrl(stat.navigateTo))}
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = 'var(--argaman-border)';
-            e.currentTarget.style.boxShadow = '0 4px 16px rgba(196, 43, 43, 0.15)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(212, 168, 67, 0.15)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'var(--dark-border)';

@@ -249,7 +249,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
           <Button type="button" variant="ghost" onClick={onCancel}>
             ביטול
           </Button>
-          <Button type="submit" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">
+          <Button type="submit" className="bg-[#D4A843] hover:bg-[#B8922E] text-white">
             {lead ? 'עדכן' : 'צור'} ליד
           </Button>
         </div>

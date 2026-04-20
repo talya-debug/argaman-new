@@ -560,7 +560,7 @@ export default function QuoteDetails() {
                             <Button
                                 variant={viewMode === 'build' ? 'default' : 'outline'}
                                 onClick={() => setViewMode('build')}
-                                className={viewMode === 'build' ? "bg-[#c42b2b] text-white" : ""}
+                                className={viewMode === 'build' ? "bg-[#D4A843] text-white" : ""}
                             >
                                 <Settings className="w-4 h-4 ml-2"/>
                                 בניית הצעה
@@ -610,7 +610,7 @@ export default function QuoteDetails() {
 
                                 <Button
                                     onClick={handleGeneratePDF}
-                                    className="bg-[#c42b2b] hover:bg-[#991b1b] px-8 py-3"
+                                    className="bg-[#D4A843] hover:bg-[#B8922E] px-8 py-3"
                                     disabled={quoteLines.length === 0}
                                 >
                                     <FileDown className="w-5 h-5 ml-2" />

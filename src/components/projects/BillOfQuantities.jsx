@@ -98,7 +98,7 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button size="sm" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">
+                <Button size="sm" className="bg-[#D4A843] hover:bg-[#B8922E] text-white">
                     <Plus className="w-4 h-4 ml-1" />
                     חיוב {invoiceNumber}
                 </Button>
@@ -192,7 +192,7 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
 
                             <div className="flex justify-end gap-3 pt-4 border-t">
                                 <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>ביטול</Button>
-                                <Button type="submit" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">הוסף חיוב</Button>
+                                <Button type="submit" className="bg-[#D4A843] hover:bg-[#B8922E] text-white">הוסף חיוב</Button>
                             </div>
                         </form>
                     </div>
@@ -261,7 +261,7 @@ const EditInvoiceEntryDialog = ({ entry, quoteLine, projectId, onInvoiceUpdated,
                             <div><Label htmlFor="notes" className="text-[#e0e0e0] font-semibold">הערות</Label><Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="הערות נוספות..." rows={3} className="bg-[#1a1a2e] border-gray-300" /></div>
                             <div className="flex justify-between pt-4 border-t">
                                 <Button type="button" variant="destructive" onClick={handleDelete} className="bg-red-600 hover:bg-red-700"><Trash2 className="w-4 h-4 ml-2" />מחק חיוב</Button>
-                                <div className="flex gap-3"><Button type="button" variant="outline" onClick={() => setIsOpen(false)}>ביטול</Button><Button type="submit" className="bg-[#c42b2b] hover:bg-[#991b1b] text-white">עדכן חיוב</Button></div>
+                                <div className="flex gap-3"><Button type="button" variant="outline" onClick={() => setIsOpen(false)}>ביטול</Button><Button type="submit" className="bg-[#D4A843] hover:bg-[#B8922E] text-white">עדכן חיוב</Button></div>
                             </div>
                         </form>
                     </div>

@@ -325,7 +325,7 @@ export default function LeadsTable({
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow style={{ background: 'rgba(196, 43, 43, 0.05)', borderBottom: '1px solid var(--dark-border)' }}>
+              <TableRow style={{ background: 'rgba(212, 168, 67, 0.05)', borderBottom: '1px solid var(--dark-border)' }}>
                 <TableHead className="text-right font-semibold w-60" style={{ color: 'var(--argaman)' }}>שם ליד</TableHead>
                 <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>פרטי יצירת קשר</TableHead>
                 <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>קישור לתיקיית לקוח</TableHead>

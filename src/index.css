@@ -12,8 +12,8 @@
     --card-foreground: 210 40% 96%;
     --popover: 228 18% 13%;
     --popover-foreground: 210 40% 96%;
-    --primary: 0 72% 51%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 40 68% 50%;
+    --primary-foreground: 0 0% 10%;
     --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 100%;
     --muted: 228 18% 16%;
@@ -24,8 +24,8 @@
     --destructive-foreground: 0 0% 100%;
     --border: 228 20% 22%;
     --input: 228 20% 22%;
-    --ring: 0 72% 51%;
-    --chart-1: 0 72% 51%;
+    --ring: 40 68% 50%;
+    --chart-1: 40 68% 50%;
     --chart-2: 217 91% 60%;
     --chart-3: 160 84% 39%;
     --chart-4: 38 92% 50%;
@@ -33,12 +33,12 @@
     --radius: 0.5rem;
     --sidebar-background: 230 20% 10%;
     --sidebar-foreground: 210 40% 96%;
-    --sidebar-primary: 0 72% 51%;
+    --sidebar-primary: 40 68% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 228 18% 16%;
     --sidebar-accent-foreground: 210 40% 96%;
     --sidebar-border: 228 20% 22%;
-    --sidebar-ring: 0 72% 51%;
+    --sidebar-ring: 40 68% 50%;
   }
 }
 
@@ -54,12 +54,12 @@
 
 /* ========== Argaman Design System ========== */
 :root {
-  --argaman: #c42b2b;
-  --argaman-light: #ef4444;
-  --argaman-dark: #991b1b;
-  --argaman-bg: rgba(196, 43, 43, 0.08);
-  --argaman-bg-hover: rgba(196, 43, 43, 0.15);
-  --argaman-border: rgba(196, 43, 43, 0.3);
+  --argaman: #D4A843;
+  --argaman-light: #E8C975;
+  --argaman-dark: #B8922E;
+  --argaman-bg: rgba(212, 168, 67, 0.08);
+  --argaman-bg-hover: rgba(212, 168, 67, 0.15);
+  --argaman-border: rgba(212, 168, 67, 0.3);
 
   --dark: #1a1a2e;
   --dark-2: #16213e;
@@ -141,12 +141,12 @@ body {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--argaman), var(--argaman-dark));
-  color: white;
+  color: var(--dark);
 }
 .btn-primary:hover {
   background: linear-gradient(135deg, var(--argaman-light), var(--argaman));
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(196, 43, 43, 0.3);
+  box-shadow: 0 4px 16px rgba(212, 168, 67, 0.3);
 }
 
 .btn-secondary {

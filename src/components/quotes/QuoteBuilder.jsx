@@ -714,7 +714,7 @@ export default function QuoteBuilder({
                                         variant={selectedSupplier === supplier ? "default" : "outline"}
                                         className={`h-24 text-lg font-semibold transition-all ${
                                             selectedSupplier === supplier 
-                                                ? 'bg-[#c42b2b] text-white shadow-lg ring-2 ring-blue-300' 
+                                                ? 'bg-[#D4A843] text-white shadow-lg ring-2 ring-blue-300' 
                                                 : 'bg-[#1a1a2e] hover:bg-[rgba(96,165,250,0.1)] hover:border-blue-300'
                                         }`}
                                         onClick={() => handleSupplierSelect(supplier)}

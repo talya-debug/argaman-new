@@ -135,7 +135,7 @@ export default function DeductionsModal({ isOpen, onClose, onSave, currentDeduct
                         <Button variant="outline" onClick={onClose}>
                             ביטול
                         </Button>
-                        <Button onClick={handleSave} className="bg-[#c42b2b] hover:bg-[#991b1b]">
+                        <Button onClick={handleSave} className="bg-[#D4A843] hover:bg-[#B8922E]">
                             שמור הגדרות
                         </Button>
                     </div>

@@ -91,7 +91,7 @@ export default function LeadForm() {
   return (
     <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-4xl shadow-2xl bg-[#1a1a2e]" dir="rtl">
-        <CardHeader className="bg-[#c42b2b] text-white rounded-t-lg">
+        <CardHeader className="bg-[#D4A843] text-white rounded-t-lg">
           <CardTitle className="text-2xl font-bold text-center">הוספת ליד חדש</CardTitle>
           <p className="text-blue-100 text-center">מלא את פרטי הליד החדש במערכת</p>
         </CardHeader>
@@ -228,7 +228,7 @@ export default function LeadForm() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-[#c42b2b] hover:bg-[#991b1b] text-white px-12 py-3 text-lg font-semibold"
+                className="bg-[#D4A843] hover:bg-[#B8922E] text-white px-12 py-3 text-lg font-semibold"
               >
                 {isSubmitting ? "שומר..." : "צור ליד חדש"}
               </Button>

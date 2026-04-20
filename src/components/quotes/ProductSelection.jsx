@@ -267,7 +267,7 @@ export default function ProductSelection({ quote, quoteLines, priceItems, onQuot
                           <Button 
                             size="sm"
                             onClick={() => handleAddToQuote(item)}
-                            className="bg-[#c42b2b] hover:bg-[#991b1b]"
+                            className="bg-[#D4A843] hover:bg-[#B8922E]"
                           >
                             <Plus className="w-4 h-4 ml-1" />
                             הוסף
