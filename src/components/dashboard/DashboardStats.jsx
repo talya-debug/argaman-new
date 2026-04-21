@@ -1,7 +1,6 @@
+
 import React from 'react';
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, FileText, FolderOpen, CheckSquare, TrendingUp } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -48,48 +47,87 @@ export default function DashboardStats({ stats, isLoading }) {
   const navigate = useNavigate();
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+      gap: 16
+    }}>
       {statCards.map((stat) => (
         <div
           key={stat.key}
-          className="relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 hover:-translate-y-0.5"
           style={{
             background: 'var(--dark-card)',
             border: '1px solid var(--dark-border)',
-            borderLeft: `4px solid ${stat.accentColor}`,
+            borderRight: `4px solid ${stat.accentColor}`,
+            borderRadius: 12,
+            padding: 24,
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            overflow: 'hidden',
+            position: 'relative'
           }}
           onClick={() => navigate(createPageUrl(stat.navigateTo))}
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = 'var(--argaman-border)';
+            e.currentTarget.style.borderRight = `4px solid ${stat.accentColor}`;
             e.currentTarget.style.boxShadow = '0 4px 16px rgba(212, 168, 67, 0.15)';
+            e.currentTarget.style.transform = 'translateY(-2px)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'var(--dark-border)';
-            e.currentTarget.style.borderLeft = `4px solid ${stat.accentColor}`;
+            e.currentTarget.style.borderRight = `4px solid ${stat.accentColor}`;
             e.currentTarget.style.boxShadow = 'none';
+            e.currentTarget.style.transform = 'translateY(0)';
           }}
         >
-          <div className="p-4 md:p-6">
-            <div className="flex justify-between items-start">
-              <div className="text-right">
-                <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>{stat.title}</p>
-                {isLoading ? (
-                  <Skeleton className="h-8 w-16" style={{ background: 'var(--dark-border)' }} />
-                ) : (
-                  <p className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                    {stats[stat.key]}
-                  </p>
-                )}
-              </div>
-              <div className="p-3 rounded-xl" style={{ background: stat.iconBg }}>
-                <stat.icon className="w-6 h-6" style={{ color: stat.iconColor }} />
-              </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{
+                fontSize: 13,
+                fontWeight: 500,
+                color: 'var(--text-secondary)',
+                margin: 0,
+                marginBottom: 8
+              }}>{stat.title}</p>
+              {isLoading ? (
+                <div style={{
+                  width: 60,
+                  height: 32,
+                  borderRadius: 8,
+                  background: 'var(--dark-border)'
+                }} />
+              ) : (
+                <p style={{
+                  fontSize: 28,
+                  fontWeight: 700,
+                  color: 'var(--text-primary)',
+                  margin: 0
+                }}>
+                  {stats[stat.key]}
+                </p>
+              )}
             </div>
-            <div className="flex items-center mt-4 text-sm">
-              <TrendingUp className="w-4 h-4 ml-1" style={{ color: 'var(--success)' }} />
-              <span className="font-medium" style={{ color: 'var(--success)' }}>+12%</span>
-              <span className="mr-2" style={{ color: 'var(--text-muted)' }}>מהחודש הקודם</span>
+            <div style={{
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+              background: stat.iconBg,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <stat.icon style={{ width: 20, height: 20, color: stat.iconColor }} />
             </div>
+          </div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginTop: 16,
+            fontSize: 13
+          }}>
+            <TrendingUp style={{ width: 14, height: 14, marginLeft: 4, color: 'var(--success)' }} />
+            <span style={{ fontWeight: 500, color: 'var(--success)' }}>+12%</span>
+            <span style={{ marginRight: 8, color: 'var(--text-muted)' }}>מהחודש הקודם</span>
           </div>
         </div>
       ))}

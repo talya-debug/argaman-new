@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import {
   LayoutDashboard, Users, FileText, FolderOpen, CheckSquare,
-  Link2, DollarSign, Menu, X, LogOut
+  Link2, DollarSign, BarChart3, Menu, X, LogOut
 } from 'lucide-react'
 import { useAuth } from '@/lib/AuthContext'
 import NotificationBell from '@/components/notifications/NotificationBell'
@@ -15,6 +15,7 @@ const navigationItems = [
   { to: '/Tasks', icon: CheckSquare, label: 'משימות' },
   { to: '/Links', icon: Link2, label: 'קישורים' },
   { to: '/CollectionDashboard', icon: DollarSign, label: 'גבייה' },
+  { to: '/Reports', icon: BarChart3, label: 'דוחות' },
 ]
 
 export default function Layout({ children, currentPageName }) {

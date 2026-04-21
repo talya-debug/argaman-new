@@ -43,7 +43,7 @@ export default function Dashboard() {
       setRecentLeads(leads.slice(0, 5));
       setUpcomingTasks(tasks.filter(task => task.due_date && new Date(task.due_date) > new Date()).slice(0, 5));
 
-      // Calculate leads by status
+      // חישוב לידים לפי סטטוס
       const statusCounts = leads.reduce((acc, lead) => {
         acc[lead.status] = (acc[lead.status] || 0) + 1;
         return acc;
@@ -58,21 +58,37 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-4 md:p-8 min-h-screen animate-in" style={{ background: 'var(--dark)' }}>
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>לוח בקרה</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>סקירה כוללת של המכירות והפרויקטים</p>
+    <div style={{
+      padding: '32px',
+      minHeight: '100vh',
+      background: 'var(--dark)'
+    }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div style={{ marginBottom: 24 }}>
+          <h1 style={{
+            fontSize: 22,
+            fontWeight: 700,
+            color: 'var(--text-primary)',
+            margin: 0,
+            marginBottom: 4
+          }}>לוח בקרה</h1>
+          <p style={{
+            color: 'var(--text-secondary)',
+            margin: 0,
+            fontSize: 14
+          }}>סקירה כוללת של המכירות והפרויקטים</p>
         </div>
 
         <DashboardStats stats={stats} isLoading={isLoading} />
 
-        <div className="grid lg:grid-cols-3 gap-6 mt-8">
-          <div className="lg:col-span-2">
-            <StatusChart data={leadsByStatus} isLoading={isLoading} />
-          </div>
-
-          <div className="space-y-6">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
+          gap: 16,
+          marginTop: 24
+        }}>
+          <StatusChart data={leadsByStatus} isLoading={isLoading} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <RecentActivity leads={recentLeads} isLoading={isLoading} />
             <UpcomingTasks tasks={upcomingTasks} isLoading={isLoading} />
           </div>
