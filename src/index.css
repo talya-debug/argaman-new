@@ -6,24 +6,24 @@
 
 @layer base {
   :root {
-    --background: 232 25% 10%;
+    --background: 240 20% 13%;
     --foreground: 210 40% 96%;
-    --card: 232 22% 18%;
+    --card: 240 18% 20%;
     --card-foreground: 210 40% 96%;
-    --popover: 232 22% 18%;
+    --popover: 240 18% 20%;
     --popover-foreground: 210 40% 96%;
     --primary: 40 68% 50%;
     --primary-foreground: 0 0% 10%;
     --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 232 22% 18%;
+    --muted: 240 18% 20%;
     --muted-foreground: 215 20% 65%;
-    --accent: 232 22% 22%;
+    --accent: 240 18% 24%;
     --accent-foreground: 210 40% 96%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 232 20% 25%;
-    --input: 232 20% 25%;
+    --border: 240 18% 28%;
+    --input: 240 18% 28%;
     --ring: 40 68% 50%;
     --chart-1: 40 68% 50%;
     --chart-2: 217 91% 60%;
@@ -61,12 +61,12 @@
   --argaman-bg-hover: rgba(212, 168, 67, 0.15);
   --argaman-border: rgba(212, 168, 67, 0.3);
 
-  --dark: #121220;
+  --dark: #1a1a2e;
   --dark-2: #16213e;
   --dark-3: #0f3460;
-  --dark-card: #1e1e38;
-  --dark-sidebar: #0e0e1c;
-  --dark-border: rgba(255,255,255,0.15);
+  --dark-card: #2a2a4a;
+  --dark-sidebar: #141428;
+  --dark-border: rgba(255,255,255,0.18);
 
   --text-primary: #f0f0f0;
   --text-secondary: #a0a0b8;
