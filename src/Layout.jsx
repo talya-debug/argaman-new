@@ -104,7 +104,7 @@ export default function Layout({ children, currentPageName }) {
     <div dir="rtl" style={{ display: 'flex', minHeight: '100vh' }}>
       <aside style={{
         width: 'var(--sidebar-width)', background: 'var(--dark-sidebar)',
-        borderLeft: '1px solid var(--dark-border)', position: 'fixed',
+        borderLeft: '2px solid var(--dark-border)', position: 'fixed',
         top: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column',
         zIndex: 100, overflowY: 'auto',
       }} className="desktop-sidebar">{sidebarContent}</aside>
