@@ -9,11 +9,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const statusConfig = {
-  "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-[rgba(96,165,250,0.1)]0", displayColor: "#3b82f6" },
-  "נשלחה חשבונית – ממתין לתשלום": { color: "bg-orange-500", displayColor: "#f97316" },
-  "עיכוב בתשלום – לטיפול יניר": { color: "bg-[rgba(251,191,36,0.1)]0", displayColor: "#eab308" },
-  "שולם ונשלחה חשבונית מס": { color: "bg-[rgba(74,222,128,0.1)]0", displayColor: "#22c55e" },
-  "בוטל / זיכוי": { color: "bg-gray-400", displayColor: "#9ca3af" }
+  "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-[rgba(96,165,250,0.15)]", displayColor: "#60a5fa" },
+  "נשלחה חשבונית – ממתין לתשלום": { color: "bg-[rgba(249,115,22,0.15)]", displayColor: "#f97316" },
+  "עיכוב בתשלום – לטיפול יניר": { color: "bg-[rgba(251,191,36,0.15)]", displayColor: "#fbbf24" },
+  "שולם ונשלחה חשבונית מס": { color: "bg-[rgba(74,222,128,0.15)]", displayColor: "#4ade80" },
+  "בוטל / זיכוי": { color: "bg-[rgba(156,163,175,0.15)]", displayColor: "#9ca3af" }
 };
 
 const COLORS = ['#3b82f6', '#f97316', '#eab308', '#22c55e', '#9ca3af', '#8b5cf6', '#ec4899'];
@@ -190,22 +190,22 @@ export default function CollectionDashboard() {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen">
+      <div className="p-4 md:p-8 min-h-screen" style={{ background: 'var(--dark)' }}>
         <div className="max-w-7xl mx-auto">
-          <div className="text-center py-12">טוען נתונים...</div>
+          <div className="text-center py-12" style={{ color: 'var(--text-secondary)' }}>טוען נתונים...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen" dir="rtl">
+    <div className="p-4 md:p-8 min-h-screen" dir="rtl" style={{ background: 'var(--dark)' }}>
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-[#f0f0f0]">דאשבורד גבייה</h1>
-            <p className="text-[#a0a0b8] mt-1">סקירה כללית של מצב הגבייה בזמן אמת</p>
+            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>דאשבורד גבייה</h1>
+            <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>סקירה כללית של מצב הגבייה בזמן אמת</p>
           </div>
           <Link to={createPageUrl("CollectionTasks")}>
             <Badge className="bg-[#D4A843] text-white px-4 py-2 text-sm cursor-pointer hover:bg-[#B8922E]">
@@ -217,7 +217,7 @@ export default function CollectionDashboard() {
 
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+          <Card className="text-white" style={{ background: 'linear-gradient(135deg, var(--argaman), var(--argaman-dark))' }}>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium opacity-90">כספים בתהליך גבייה</CardTitle>
             </CardHeader>
@@ -327,7 +327,7 @@ export default function CollectionDashboard() {
                             {task.project_id ? (
                               <Link
                                 to={createPageUrl(`ProjectDetails?id=${task.project_id}`)}
-                                className="flex items-center gap-1 text-[#60a5fa] hover:underline text-sm"
+                                className="flex items-center gap-1 hover:underline text-sm" style={{ color: 'var(--argaman)' }}
                               >
                                 <span>{task.project_name}</span>
                                 <ExternalLink className="w-3 h-3" />
@@ -420,17 +420,17 @@ export default function CollectionDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-[rgba(96,165,250,0.1)] rounded-lg">
-                  <span className="text-[#e0e0e0] font-medium">ממוצע</span>
-                  <span className="text-2xl font-bold text-[#60a5fa]">{avgCollectionTime.avg} ימים</span>
+                <div className="flex justify-between items-center p-4 rounded-lg" style={{ background: 'var(--info-bg)' }}>
+                  <span className="font-medium" style={{ color: 'var(--text-primary)' }}>ממוצע</span>
+                  <span className="text-2xl font-bold" style={{ color: 'var(--info)' }}>{avgCollectionTime.avg} ימים</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-[rgba(74,222,128,0.1)] rounded-lg">
-                  <span className="text-[#e0e0e0] font-medium">חציון</span>
-                  <span className="text-2xl font-bold text-[#4ade80]">{avgCollectionTime.median} ימים</span>
+                <div className="flex justify-between items-center p-4 rounded-lg" style={{ background: 'var(--success-bg)' }}>
+                  <span className="font-medium" style={{ color: 'var(--text-primary)' }}>חציון</span>
+                  <span className="text-2xl font-bold" style={{ color: 'var(--success)' }}>{avgCollectionTime.median} ימים</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-orange-50 rounded-lg">
-                  <span className="text-[#e0e0e0] font-medium">מקסימום</span>
-                  <span className="text-2xl font-bold text-orange-600">{avgCollectionTime.max} ימים</span>
+                <div className="flex justify-between items-center p-4 rounded-lg" style={{ background: 'var(--warning-bg)' }}>
+                  <span className="font-medium" style={{ color: 'var(--text-primary)' }}>מקסימום</span>
+                  <span className="text-2xl font-bold" style={{ color: 'var(--warning)' }}>{avgCollectionTime.max} ימים</span>
                 </div>
               </div>
             </CardContent>

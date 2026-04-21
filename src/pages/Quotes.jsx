@@ -15,12 +15,12 @@ import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
 
 const statusColors = {
-  'טיוטה': 'bg-[rgba(251,191,36,0.1)] text-yellow-800 border-yellow-200',
-  'מוכנה': 'bg-[rgba(96,165,250,0.1)] text-blue-800 border-blue-200',
-  'הצעה מוכנה ממתינה לאישור': 'bg-[rgba(96,165,250,0.1)] text-blue-800 border-blue-200',
-  'נשלחה': 'bg-[rgba(74,222,128,0.1)] text-green-800 border-green-200',
-  'אושרה': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'נדחתה': 'bg-[rgba(248,113,113,0.1)] text-red-800 border-red-200'
+  'טיוטה': 'bg-[rgba(251,191,36,0.1)] text-[#fbbf24] border-[rgba(251,191,36,0.3)]',
+  'מוכנה': 'bg-[rgba(96,165,250,0.1)] text-[#60a5fa] border-[rgba(96,165,250,0.3)]',
+  'הצעה מוכנה ממתינה לאישור': 'bg-[rgba(96,165,250,0.1)] text-[#60a5fa] border-[rgba(96,165,250,0.3)]',
+  'נשלחה': 'bg-[rgba(74,222,128,0.1)] text-[#4ade80] border-[rgba(74,222,128,0.3)]',
+  'אושרה': 'bg-[rgba(74,222,128,0.15)] text-[#4ade80] border-[rgba(74,222,128,0.3)]',
+  'נדחתה': 'bg-[rgba(248,113,113,0.1)] text-[#f87171] border-[rgba(248,113,113,0.3)]'
 };
 
 export default function Quotes() {
@@ -77,44 +77,45 @@ export default function Quotes() {
 
 
   return (
-    <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen">
+    <div className="p-4 md:p-8 min-h-screen" style={{ background: 'var(--dark)' }}>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-[#f0f0f0]">הצעות מחיר</h1>
-            <p className="text-[#a0a0b8] mt-1">ניהול וטיפול בכל ההצעות במערכת</p>
+            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>הצעות מחיר</h1>
+            <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>ניהול וטיפול בכל ההצעות במערכת</p>
           </div>
-          <Button
-            className="bg-[#D4A843] hover:bg-[#B8922E] shadow-lg"
+          <button
+            className="btn btn-primary"
             onClick={handleNewQuoteClick}
           >
-            <Plus className="w-4 h-4 ml-2" />
+            <Plus className="w-4 h-4" />
             הצעת מחיר חדשה
-          </Button>
+          </button>
         </div>
 
-        <Card className="shadow-lg border-0">
-          <CardHeader>
+        <div className="rounded-xl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
+          <div className="p-4">
              <div className="relative">
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b6b80] w-4 h-4" />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-muted)' }} />
               <Input
                 placeholder="חיפוש לפי שם לקוח, מספר הצעה..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pr-10 text-right w-full md:w-1/3"
+                style={{ background: 'var(--dark)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }}
               />
             </div>
-          </CardHeader>
-          <CardContent className="p-0">
+          </div>
+          <div className="p-0">
             <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-[#1a1a2e]">
-                      <TableHead className="text-right font-semibold">מספר הצעה</TableHead>
-                      <TableHead className="text-right font-semibold">לקוח</TableHead>
-                      <TableHead className="text-right font-semibold">סכום</TableHead>
-                      <TableHead className="text-right font-semibold">תאריך</TableHead>
-                      <TableHead className="text-center font-semibold">סטטוס</TableHead>
+                    <TableRow style={{ background: 'var(--dark)' }}>
+                      <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>מספר הצעה</TableHead>
+                      <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>לקוח</TableHead>
+                      <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>סכום</TableHead>
+                      <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>תאריך</TableHead>
+                      <TableHead className="text-center font-semibold" style={{ color: 'var(--argaman)' }}>סטטוס</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -130,13 +131,13 @@ export default function Quotes() {
                       ))
                     ) : (
                       filteredQuotes.map((quote) => (
-                        <TableRow key={quote.id} className="hover:bg-[#1a1a2e] cursor-pointer" onClick={() => handleRowClick(quote)}>
-                          <TableCell className="font-medium text-[#60a5fa]">{quote.quote_number}</TableCell>
-                          <TableCell className="text-[#f0f0f0]">{quote.client_name}</TableCell>
-                          <TableCell className="text-[#f0f0f0]">₪{quote.total?.toLocaleString()}</TableCell>
-                          <TableCell className="text-[#a0a0b8]">{format(new Date(quote.created_date), 'dd/MM/yyyy', { locale: he })}</TableCell>
+                        <TableRow key={quote.id} className="cursor-pointer" style={{ '--hover-bg': 'var(--argaman-bg)' }} onClick={() => handleRowClick(quote)}>
+                          <TableCell className="font-medium" style={{ color: 'var(--argaman)' }}>{quote.quote_number}</TableCell>
+                          <TableCell style={{ color: 'var(--text-primary)' }}>{quote.client_name}</TableCell>
+                          <TableCell style={{ color: 'var(--text-primary)' }}>₪{quote.total?.toLocaleString()}</TableCell>
+                          <TableCell style={{ color: 'var(--text-secondary)' }}>{format(new Date(quote.created_date), 'dd/MM/yyyy', { locale: he })}</TableCell>
                           <TableCell className="text-center">
-                            <Badge className={`${statusColors[quote.status] || 'bg-gray-200'} text-xs`}>
+                            <Badge className={`${statusColors[quote.status] || 'bg-[rgba(255,255,255,0.05)]'} text-xs border`}>
                               {quote.status}
                             </Badge>
                           </TableCell>
@@ -146,14 +147,14 @@ export default function Quotes() {
                   </TableBody>
                 </Table>
                  { !isLoading && filteredQuotes.length === 0 && (
-                    <div className="text-center p-8 text-[#a0a0b8]">
-                        <FileText className="w-12 h-12 mx-auto text-slate-300 mb-4" />
+                    <div className="text-center p-8" style={{ color: 'var(--text-secondary)' }}>
+                        <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--text-muted)' }} />
                         <p>לא נמצאו הצעות מחיר</p>
                     </div>
                  )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

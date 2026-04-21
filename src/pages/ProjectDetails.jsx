@@ -167,15 +167,15 @@ export default function ProjectDetails() {
     const quoteId = quote ? quote.id : null;
 
     return (
-        <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen" dir="rtl">
+        <div className="p-4 md:p-8 min-h-screen" dir="rtl" style={{ background: 'var(--dark)' }}>
             <header className="mb-6 flex justify-between items-start">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#f0f0f0]">{project.name}</h1>
-                    <p className="text-[#a0a0b8] mt-1">ניהול מלא של הפרויקט עבור: {project.client_name}</p>
+                    <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>{project.name}</h1>
+                    <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>ניהול מלא של הפרויקט עבור: {project.client_name}</p>
                 </div>
                 <div>
                     <Select value={project.status} onValueChange={(newStatus) => handleUpdateProjectDetails({ status: newStatus })}>
-                        <SelectTrigger className="w-[180px] bg-[#1a1a2e]">
+                        <SelectTrigger className="w-[180px]" style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }}>
                             <SelectValue placeholder="שנה סטטוס" />
                         </SelectTrigger>
                         <SelectContent>
@@ -189,7 +189,7 @@ export default function ProjectDetails() {
             </header>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
-                <TabsList className="grid w-full grid-cols-4 bg-slate-200">
+                <TabsList className="grid w-full grid-cols-4" style={{ background: 'var(--dark-card)' }}>
                     <TabsTrigger value="dashboard"><LayoutDashboard className="ml-2 h-4 w-4" /> סקירה כללית</TabsTrigger>
                     <TabsTrigger value="boq"><FileSpreadsheet className="ml-2 h-4 w-4" /> כתב כמויות</TabsTrigger>
                     <TabsTrigger value="procurement"><ShoppingBasket className="ml-2 h-4 w-4" /> ניהול רכש</TabsTrigger>

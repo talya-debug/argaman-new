@@ -15,11 +15,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
 const statusConfig = {
-  "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-[rgba(96,165,250,0.1)]0 text-white", icon: "🔵" },
-  "נשלחה חשבונית – ממתין לתשלום": { color: "bg-orange-500 text-white", icon: "🟠", displayName: "נשלח חשבון – ממתין לתשלום" },
-  "עיכוב בתשלום – לטיפול יניר": { color: "bg-[rgba(251,191,36,0.1)]0 text-white", icon: "🟡" },
-  "שולם ונשלחה חשבונית מס": { color: "bg-[rgba(74,222,128,0.1)]0 text-white", icon: "🟢" },
-  "בוטל / זיכוי": { color: "bg-gray-400 text-white", icon: "⚪" }
+  "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-[rgba(96,165,250,0.15)] text-[#60a5fa]", icon: "🔵" },
+  "נשלחה חשבונית – ממתין לתשלום": { color: "bg-[rgba(249,115,22,0.15)] text-[#f97316]", icon: "🟠", displayName: "נשלח חשבון – ממתין לתשלום" },
+  "עיכוב בתשלום – לטיפול יניר": { color: "bg-[rgba(251,191,36,0.15)] text-[#fbbf24]", icon: "🟡" },
+  "שולם ונשלחה חשבונית מס": { color: "bg-[rgba(74,222,128,0.15)] text-[#4ade80]", icon: "🟢" },
+  "בוטל / זיכוי": { color: "bg-[rgba(156,163,175,0.15)] text-[#9ca3af]", icon: "⚪" }
 };
 
 const EditableCell = ({ value, onSave, type = "text", options = [], field }) => {
@@ -53,7 +53,7 @@ const EditableCell = ({ value, onSave, type = "text", options = [], field }) => 
   return (
     <div
       onClick={() => setIsEditing(true)}
-      className="cursor-pointer hover:bg-[rgba(96,165,250,0.1)] p-2 rounded transition-colors border border-transparent hover:border-blue-200"
+      className="cursor-pointer p-2 rounded transition-colors border border-transparent" style={{ ':hover': { background: 'var(--argaman-bg)' } }} onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--argaman-bg)'; e.currentTarget.style.borderColor = 'var(--argaman-border)'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'transparent'; }}
     >
       <span className="text-[#e0e0e0]">
         {type === "date" && value ? new Date(value).toLocaleDateString('he-IL') : (value || "לחץ להזנה")}
@@ -278,17 +278,17 @@ export default function CollectionTasks() {
   };
 
   return (
-    <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen">
+    <div className="p-4 md:p-8 min-h-screen" style={{ background: 'var(--dark)' }}>
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-[#f0f0f0]">לוח משימות גבייה</h1>
-            <p className="text-[#a0a0b8] mt-1">ניהול ומעקב גבייה</p>
+            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>לוח משימות גבייה</h1>
+            <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>ניהול ומעקב גבייה</p>
           </div>
           <div className="flex gap-3">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-green-600 hover:bg-green-700">
+                <Button className="text-white" style={{ background: 'linear-gradient(135deg, var(--argaman), var(--argaman-dark))' }}>
                   <Plus className="w-4 h-4 ml-2" />
                   הוספת משימת גבייה
                 </Button>
@@ -299,7 +299,7 @@ export default function CollectionTasks() {
                 style={{ boxShadow: '0px 8px 24px rgba(0,0,0,0.15)' }}
               >
                 <DialogHeader className="text-right pb-4 border-b border-[rgba(255,255,255,0.08)]">
-                  <DialogTitle className="text-xl font-semibold text-slate-800">משימת גבייה חדשה</DialogTitle>
+                  <DialogTitle className="text-xl font-semibold" style={{ color: 'var(--argaman)' }}>משימת גבייה חדשה</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-5 py-6">
                   <div>
@@ -440,7 +440,7 @@ export default function CollectionTasks() {
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle className="text-xl md:text-2xl flex items-center gap-3">
-                <Receipt className="w-6 h-6 text-[#60a5fa]" />
+                <Receipt className="w-6 h-6" style={{ color: 'var(--argaman)' }} />
                 {showClosed ? 'משימות גבייה סגורות' : 'משימות גבייה פעילות'}
               </CardTitle>
               <div className="flex gap-2">
@@ -454,7 +454,7 @@ export default function CollectionTasks() {
                 <Button
                   variant={showClosed ? "default" : "outline"}
                   onClick={() => setShowClosed(true)}
-                  className={showClosed ? "bg-slate-600" : ""}
+                  className={showClosed ? "" : ""} style={showClosed ? { background: 'var(--dark-card)' } : {}}
                 >
                   סגורות ({tasks.filter(t => t.is_closed).length})
                 </Button>
@@ -494,7 +494,7 @@ export default function CollectionTasks() {
                             {task.project_id ? (
                               <Link
                                 to={createPageUrl(`ProjectDetails?id=${task.project_id}`)}
-                                className="flex items-center gap-2 text-[#60a5fa] hover:text-blue-800 hover:underline font-medium"
+                                className="flex items-center gap-2 hover:underline font-medium" style={{ color: 'var(--argaman)' }}
                               >
                                 <span>{task.project_name}</span>
                                 <ExternalLink className="w-4 h-4" />
@@ -597,12 +597,12 @@ export default function CollectionTasks() {
           }}>
           <DialogContent className="max-w-md bg-[#1a1a2e] border-0 shadow-2xl" dir="rtl">
             <DialogHeader className="text-right pb-4 border-b border-[rgba(255,255,255,0.08)]">
-              <DialogTitle className="text-xl font-semibold text-slate-800">קליטת תשלום</DialogTitle>
+              <DialogTitle className="text-xl font-semibold" style={{ color: 'var(--argaman)' }}>קליטת תשלום</DialogTitle>
             </DialogHeader>
             <div className="space-y-5 py-6">
-              <div className="bg-[rgba(96,165,250,0.1)] p-4 rounded-lg border border-blue-200">
-                <p className="text-sm text-[#e0e0e0] mb-1">סכום לגבייה מקורי:</p>
-                <p className="text-2xl font-bold text-[#60a5fa]">
+              <div className="p-4 rounded-lg" style={{ background: 'var(--argaman-bg)', border: '1px solid var(--argaman-border)' }}>
+                <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>סכום לגבייה מקורי:</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--argaman)' }}>
                   ₪{(paymentDialog.task?.amount_to_collect || 0).toLocaleString('he-IL')}
                 </p>
               </div>
