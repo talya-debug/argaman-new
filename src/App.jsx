@@ -9,6 +9,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider } from '@/lib/AuthContext';
 import { initializeUsers } from '@/lib/initUsers';
 import { seedDemoData } from '@/lib/seedDemoData';
+import { importPriceList } from '@/lib/importPriceList';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -22,6 +23,11 @@ function App() {
   useEffect(() => {
     initializeUsers();
     seedDemoData();
+    // ייבוא מחירון
+    fetch('/pricelist.csv')
+      .then(r => r.text())
+      .then(csv => importPriceList(csv))
+      .catch(e => console.error('שגיאה בייבוא מחירון:', e));
   }, []);
 
   return (
