@@ -6,38 +6,38 @@
 
 @layer base {
   :root {
-    --background: 240 18% 17%;
-    --foreground: 210 40% 96%;
-    --card: 240 16% 24%;
-    --card-foreground: 210 40% 96%;
-    --popover: 240 16% 24%;
-    --popover-foreground: 210 40% 96%;
+    --background: 220 14% 96%;
+    --foreground: 224 20% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 20% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 20% 15%;
     --primary: 40 68% 50%;
-    --primary-foreground: 0 0% 10%;
-    --secondary: 217 91% 60%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 240 16% 24%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 240 16% 28%;
-    --accent-foreground: 210 40% 96%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 224 20% 15%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 46%;
+    --accent: 220 14% 93%;
+    --accent-foreground: 224 20% 15%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 16% 32%;
-    --input: 240 16% 28%;
+    --border: 220 13% 87%;
+    --input: 220 13% 87%;
     --ring: 40 68% 50%;
     --chart-1: 40 68% 50%;
     --chart-2: 217 91% 60%;
     --chart-3: 160 84% 39%;
     --chart-4: 38 92% 50%;
     --chart-5: 280 65% 60%;
-    --radius: 0.5rem;
-    --sidebar-background: 230 20% 10%;
+    --radius: 0.75rem;
+    --sidebar-background: 224 20% 15%;
     --sidebar-foreground: 210 40% 96%;
     --sidebar-primary: 40 68% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 228 18% 16%;
+    --sidebar-accent: 224 18% 20%;
     --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 228 20% 22%;
+    --sidebar-border: 224 18% 22%;
     --sidebar-ring: 40 68% 50%;
   }
 }
@@ -54,23 +54,23 @@
 
 /* ========== Argaman Design System ========== */
 :root {
-  --argaman: #D4A843;
-  --argaman-light: #E8C975;
-  --argaman-dark: #B8922E;
-  --argaman-bg: rgba(212, 168, 67, 0.08);
-  --argaman-bg-hover: rgba(212, 168, 67, 0.15);
-  --argaman-border: rgba(212, 168, 67, 0.3);
+  --argaman: #B8922E;
+  --argaman-light: #D4A843;
+  --argaman-dark: #96760F;
+  --argaman-bg: rgba(184, 146, 46, 0.08);
+  --argaman-bg-hover: rgba(184, 146, 46, 0.12);
+  --argaman-border: rgba(184, 146, 46, 0.3);
 
-  --dark: #22223a;
-  --dark-2: #16213e;
-  --dark-3: #0f3460;
-  --dark-card: #2e2e50;
-  --dark-sidebar: #181830;
-  --dark-border: rgba(255,255,255,0.22);
+  --dark: #f1f3f8;
+  --dark-2: #e8ebf0;
+  --dark-3: #dde1e8;
+  --dark-card: #ffffff;
+  --dark-sidebar: #1e2235;
+  --dark-border: rgba(0,0,0,0.1);
 
-  --text-primary: #f0f0f0;
-  --text-secondary: #a0a0b8;
-  --text-muted: #6b6b80;
+  --text-primary: #1a1d2e;
+  --text-secondary: #5a6078;
+  --text-muted: #8890a4;
 
   --success: #4ade80;
   --success-bg: rgba(74, 222, 128, 0.1);
@@ -84,8 +84,8 @@
   --gx-radius: 12px;
   --gx-radius-sm: 8px;
   --gx-radius-lg: 16px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.3);
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
 
   --sidebar-width: 260px;
   --header-height: 70px;
@@ -141,7 +141,7 @@ body {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--argaman), var(--argaman-dark));
-  color: var(--dark);
+  color: #fff;
 }
 .btn-primary:hover {
   background: linear-gradient(135deg, var(--argaman-light), var(--argaman));
@@ -177,9 +177,11 @@ body {
   border-radius: var(--gx-radius);
   padding: 24px;
   transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 .card:hover {
   border-color: var(--argaman-border);
+  box-shadow: var(--shadow);
 }
 
 /* טבלאות */
@@ -196,23 +198,23 @@ table {
 }
 
 thead {
-  background: rgba(196, 43, 43, 0.05);
+  background: rgba(184, 146, 46, 0.06);
 }
 
 th {
   padding: 14px 16px;
   text-align: right;
   font-weight: 600;
-  color: var(--argaman);
+  color: var(--argaman-dark);
   font-size: 13px;
-  border-bottom: 1px solid var(--dark-border);
+  border-bottom: 2px solid var(--dark-border);
   white-space: nowrap;
 }
 
 td {
   padding: 12px 16px;
   border-bottom: 1px solid var(--dark-border);
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 tr:last-child td {
