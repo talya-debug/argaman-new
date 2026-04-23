@@ -101,7 +101,9 @@ export function createEntity(collectionName) {
       const docData = {
         ...data,
         createdAt: now,
-        updatedAt: now
+        created_date: now,
+        updatedAt: now,
+        updated_date: now
       };
       const docRef = await addDoc(colRef, docData);
       return { id: docRef.id, ...docData };
@@ -114,9 +116,11 @@ export function createEntity(collectionName) {
      */
     async update(id, data) {
       const docRef = doc(db, collectionName, String(id));
+      const now = new Date().toISOString();
       const updateData = {
         ...data,
-        updatedAt: new Date().toISOString()
+        updatedAt: now,
+        updated_date: now
       };
       await updateDoc(docRef, updateData);
       return { id, ...updateData };

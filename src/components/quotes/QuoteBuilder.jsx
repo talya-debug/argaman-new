@@ -596,13 +596,11 @@ export default function QuoteBuilder({
     const activeSuppliers = useMemo(() => {
         if (!priceItems || priceItems.length === 0) {
             console.log('No price items available');
-            return ["טורנדו", "סמסונג", "הייסנס", "אלקטרה"];
+            return [];
         }
         const supplierNames = [...new Set(priceItems.map(item => item.supplier_name))].filter(name => name);
         console.log('Available suppliers:', supplierNames);
-        return ["טורנדו", "סמסונג", "הייסנס", "אלקטרה"].filter(s => 
-            supplierNames.includes(s) || supplierNames.length === 0
-        );
+        return supplierNames;
     }, [priceItems]);
     
     // Get categories for selected supplier

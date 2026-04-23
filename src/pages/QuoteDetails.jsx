@@ -32,7 +32,12 @@ export default function QuoteDetails() {
     const fetchAllPriceItems = async () => {
         try {
             const allItems = await PriceItem.list();
-            return allItems;
+            // מיפוי שדות מ-Firestore לפורמט שהקומפוננטות מצפות לו
+            return allItems.map(item => ({
+                ...item,
+                name: item.name || item.item_description || '',
+                price_no_vat: item.price_no_vat ?? item.unit_price ?? 0,
+            }));
         } catch (e) {
             console.error('שגיאה בטעינת מחירון:', e);
             return [];
@@ -81,7 +86,7 @@ export default function QuoteDetails() {
                 if (a.order_index !== undefined && b.order_index !== undefined) {
                     return a.order_index - b.order_index;
                 }
-                return new Date(a.created_date) - new Date(b.created_date);
+                return new Date(a.createdAt || a.created_date) - new Date(b.createdAt || b.created_date);
             });
 
             // Initialize order_index for existing lines that don't have it

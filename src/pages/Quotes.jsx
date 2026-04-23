@@ -135,7 +135,7 @@ export default function Quotes() {
                           <TableCell className="font-medium" style={{ color: 'var(--argaman)' }}>{quote.quote_number}</TableCell>
                           <TableCell style={{ color: 'var(--text-primary)' }}>{quote.client_name}</TableCell>
                           <TableCell style={{ color: 'var(--text-primary)' }}>₪{quote.total?.toLocaleString()}</TableCell>
-                          <TableCell style={{ color: 'var(--text-secondary)' }}>{format(new Date(quote.created_date), 'dd/MM/yyyy', { locale: he })}</TableCell>
+                          <TableCell style={{ color: 'var(--text-secondary)' }}>{format(new Date(quote.createdAt || quote.created_date || Date.now()), 'dd/MM/yyyy', { locale: he })}</TableCell>
                           <TableCell className="text-center">
                             <Badge className={`${statusColors[quote.status] || 'bg-[rgba(255,255,255,0.05)]'} text-xs border`}>
                               {quote.status}

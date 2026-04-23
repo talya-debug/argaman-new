@@ -83,7 +83,7 @@ export default function Leads() {
         return;
       }
 
-      const quoteToApprove = relevantQuotes.sort((a, b) => new Date(b.updated_date) - new Date(a.updated_date))[0];
+      const quoteToApprove = relevantQuotes.sort((a, b) => new Date(b.updatedAt || b.updated_date) - new Date(a.updatedAt || a.updated_date))[0];
 
       const quoteLines = await QuoteLine.filter({ quote_id: quoteToApprove.id }, 'order_index', 2000);
 
@@ -267,7 +267,7 @@ export default function Leads() {
     try {
       const quotes = await Quote.filter({ lead_id: lead.id });
       if (quotes && quotes.length > 0) {
-        const latestQuote = quotes.sort((a,b) => new Date(b.created_date) - new Date(a.created_date))[0];
+        const latestQuote = quotes.sort((a,b) => new Date(b.createdAt || b.created_date) - new Date(a.createdAt || a.created_date))[0];
         if (latestQuote && latestQuote.id) {
           console.log("Navigating to quote:", latestQuote.id);
           navigate(`/QuoteDetails?id=${latestQuote.id}`);
