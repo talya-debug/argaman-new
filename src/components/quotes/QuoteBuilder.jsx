@@ -631,7 +631,7 @@ export default function QuoteBuilder({
         return priceItems.filter(item => {
             const supplierMatch = item.supplier_name === selectedSupplier;
             const categoryMatch = item.category === selectedCategory;
-            const subCategoryMatch = selectedSubCategory ? item.sub_category === selectedSubCategory : !item.sub_category;
+            const subCategoryMatch = selectedSubCategory ? item.sub_category === selectedSubCategory : true;
             
             return supplierMatch && categoryMatch && subCategoryMatch;
         });

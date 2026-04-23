@@ -158,36 +158,36 @@ export default function ProductSelection({ quote, quoteLines, priceItems, onQuot
           <Card className="shadow-lg">
             <CardContent className="p-4">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Select value={selectedSupplier} onValueChange={setSelectedSupplier}>
+                <Select value={selectedSupplier || '__all__'} onValueChange={(v) => setSelectedSupplier(v === '__all__' ? '' : v)}>
                   <SelectTrigger>
                     <SelectValue placeholder="בחר ספק" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={null}>כל הספקים</SelectItem>
+                    <SelectItem value="__all__">כל הספקים</SelectItem>
                     {suppliers.map(supplier => (
                       <SelectItem key={supplier} value={supplier}>{supplier}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <Select value={selectedCategory || '__all__'} onValueChange={(v) => setSelectedCategory(v === '__all__' ? '' : v)}>
                   <SelectTrigger>
                     <SelectValue placeholder="בחר קטגוריה" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={null}>כל הקטגוריות</SelectItem>
+                    <SelectItem value="__all__">כל הקטגוריות</SelectItem>
                     {categories.map(category => (
                       <SelectItem key={category} value={category}>{category}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
-                <Select value={selectedSubCategory} onValueChange={setSelectedSubCategory} disabled={!selectedCategory}>
+                <Select value={selectedSubCategory || '__all__'} onValueChange={(v) => setSelectedSubCategory(v === '__all__' ? '' : v)} disabled={!selectedCategory}>
                   <SelectTrigger>
                     <SelectValue placeholder="תת-קטגוריה" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={null}>כל התת-קטגוריות</SelectItem>
+                    <SelectItem value="__all__">כל התת-קטגוריות</SelectItem>
                     {subCategories.map(subCat => (
                       <SelectItem key={subCat} value={subCat}>{subCat}</SelectItem>
                     ))}
