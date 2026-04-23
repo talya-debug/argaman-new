@@ -147,12 +147,12 @@ export function createEntity(collectionName) {
      */
     async filter(filters, orderField, limitCount, skip) {
       const constraints = [];
+      const hasWhereFilters = filters && typeof filters === 'object' && Object.keys(filters).length > 0;
 
       // בניית תנאי where
-      if (filters && typeof filters === 'object') {
+      if (hasWhereFilters) {
         for (const [field, condition] of Object.entries(filters)) {
           if (condition !== null && typeof condition === 'object' && !Array.isArray(condition)) {
-            // פורמט מתקדם: { $gt: 100 }
             for (const [op, value] of Object.entries(condition)) {
               const firestoreOp = operatorMap[op];
               if (firestoreOp) {
@@ -160,29 +160,47 @@ export function createEntity(collectionName) {
               }
             }
           } else {
-            // פורמט פשוט: שוויון
             constraints.push(where(field, '==', condition));
           }
         }
       }
 
-      // מיון
-      if (orderField) {
-        const desc = orderField.startsWith('-');
-        const field = desc ? orderField.slice(1) : orderField;
-        constraints.push(orderBy(field, desc ? 'desc' : 'asc'));
-      }
-
-      // הגבלת כמות (כולל דילוג - מביאים יותר ואז חותכים)
-      if (limitCount && skip) {
-        constraints.push(limit(limitCount + skip));
-      } else if (limitCount) {
+      // הגבלת כמות
+      if (limitCount) {
         constraints.push(limit(limitCount));
       }
 
-      const q = query(colRef, ...constraints);
-      const snapshot = await getDocs(q);
+      let q;
+      try {
+        q = query(colRef, ...constraints);
+      } catch (e) {
+        // fallback בלי constraints
+        console.error('Query build error:', e);
+        q = query(colRef);
+      }
+
+      let snapshot;
+      try {
+        snapshot = await getDocs(q);
+      } catch (e) {
+        // Firestore דורש אינדקס - ננסה בלי orderBy
+        console.warn('Query failed, retrying without order:', e.message);
+        const simpleConstraints = constraints.filter(c => c.type !== 'orderBy');
+        snapshot = await getDocs(query(colRef, ...simpleConstraints));
+      }
+
       let results = snapshot.docs.map(docToObject);
+
+      // מיון בצד הלקוח אם צריך
+      if (orderField) {
+        const desc = orderField.startsWith('-');
+        const field = desc ? orderField.slice(1) : orderField;
+        results.sort((a, b) => {
+          const va = a[field] || '';
+          const vb = b[field] || '';
+          return desc ? (vb > va ? 1 : -1) : (va > vb ? 1 : -1);
+        });
+      }
 
       // דילוג ידני (Firestore לא תומך ב-offset ישירות)
       if (skip) {

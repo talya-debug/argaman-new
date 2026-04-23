@@ -75,17 +75,28 @@ export default function Leads() {
         return;
       }
 
-      const relevantQuotes = await Quote.filter({ lead_id: lead.id });
-      if (relevantQuotes.length === 0) {
-        toast.error("לא נמצאה הצעת מחיר עבור הליד. לא ניתן ליצור פרויקט.");
-        await Lead.update(lead.id, { status: 'המתנה לאישור / משא ומתן' });
+      let relevantQuotes = [];
+      try {
+        relevantQuotes = await Quote.filter({ lead_id: lead.id });
+      } catch (e) {
+        console.error("Error filtering quotes:", e);
+      }
+
+      if (!relevantQuotes || relevantQuotes.length === 0) {
+        toast.error("לא נמצאה הצעת מחיר עבור הליד. צור הצעת מחיר קודם.");
+        await Lead.update(lead.id, { status: 'המתנה לאישור' });
         loadLeads();
         return;
       }
 
       const quoteToApprove = relevantQuotes.sort((a, b) => new Date(b.updatedAt || b.updated_date) - new Date(a.updatedAt || a.updated_date))[0];
 
-      const quoteLines = await QuoteLine.filter({ quote_id: quoteToApprove.id }, 'order_index', 2000);
+      let quoteLines = [];
+      try {
+        quoteLines = await QuoteLine.filter({ quote_id: quoteToApprove.id });
+      } catch (e) {
+        console.error("Error loading quote lines:", e);
+      }
 
       const newProject = await Project.create({
         name: `פרויקט - ${lead.name}`,
