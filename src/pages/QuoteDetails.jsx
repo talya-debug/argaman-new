@@ -30,18 +30,13 @@ export default function QuoteDetails() {
     const [showImportDialog, setShowImportDialog] = useState(false);
 
     const fetchAllPriceItems = async () => {
-        const BATCH_SIZE = 200;
-        let allItems = [];
-        let page = 0;
-
-        while (true) {
-            const items = await PriceItem.list('-created_date', BATCH_SIZE, page * BATCH_SIZE);
-            allItems = [...allItems, ...items];
-            if (items.length < BATCH_SIZE) break;
-            page++;
+        try {
+            const allItems = await PriceItem.list();
+            return allItems;
+        } catch (e) {
+            console.error('שגיאה בטעינת מחירון:', e);
+            return [];
         }
-
-        return allItems;
     };
 
     const loadData = useCallback(async (id) => {

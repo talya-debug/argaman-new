@@ -4,17 +4,17 @@ import { auth } from '../lib/firebase';
 // כל הישויות במערכת - מחליפות את base44.entities
 export const Lead = createEntity('leads');
 export const Quote = createEntity('quotes');
-export const QuoteLine = createEntity('quoteLines');
+export const QuoteLine = createEntity('quote_lines');
 export const Project = createEntity('projects');
 export const Task = createEntity('tasks');
-export const ProgressEntry = createEntity('progressEntries');
-export const WorkLogEntry = createEntity('workLogEntries');
-export const PurchaseRecord = createEntity('purchaseRecords');
-export const SubContractor = createEntity('subContractors');
-export const CollectionTask = createEntity('collectionTasks');
-export const ChangeLog = createEntity('changeLogs');
-export const TaskActivity = createEntity('taskActivities');
-export const PriceItem = createEntity('priceItems');
+export const ProgressEntry = createEntity('progress_entries');
+export const WorkLogEntry = createEntity('work_log_entries');
+export const PurchaseRecord = createEntity('purchase_records');
+export const SubContractor = createEntity('sub_contractors');
+export const CollectionTask = createEntity('collection_tasks');
+export const ChangeLog = createEntity('change_logs');
+export const TaskActivity = createEntity('task_activities');
+export const PriceItem = createEntity('price_items');
 export const Notification = createEntity('notifications');
 
 // User entity עם תמיכה ב-me() לתאימות עם הקוד הקיים
