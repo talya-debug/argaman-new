@@ -414,8 +414,8 @@ export default function ExcelImportDialog({ isOpen, onClose, onImportSuccess }) 
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="max-w-3xl bg-[#1a1a2e] shadow-xl rounded-lg max-h-[80vh] overflow-y-auto" dir="rtl">
-                <div className="bg-[#1a1a2e] p-1 rounded-lg">
+            <DialogContent className="max-w-3xl bg-white shadow-xl rounded-lg max-h-[80vh] overflow-y-auto" dir="rtl">
+                <div className="bg-white p-1 rounded-lg">
                     <DialogHeader className="bg-purple-50 p-4 rounded-t-lg border-b">
                         <DialogTitle className="text-slate-800 text-lg font-bold flex items-center gap-2">
                             <FileSpreadsheet className="w-5 h-5" />
@@ -423,11 +423,11 @@ export default function ExcelImportDialog({ isOpen, onClose, onImportSuccess }) 
                         </DialogTitle>
                     </DialogHeader>
                     
-                    <div className="p-6 bg-[#1a1a2e] space-y-6">
+                    <div className="p-6 bg-white space-y-6">
                         {/* Excel to CSV Instructions */}
                         <Alert className="bg-amber-50 border-amber-200">
                             <Info className="w-4 h-4 text-amber-600" />
-                            <AlertDescription className="text-sm text-[#e0e0e0] mt-2">
+                            <AlertDescription className="text-sm text-gray-700 mt-2">
                                 <strong>📊 כיצד להמיר Excel ל-CSV:</strong>
                                 <ol className="list-decimal list-inside mt-2 space-y-1 mr-2">
                                     <li>פתח את קובץ ה-Excel</li>
@@ -439,8 +439,8 @@ export default function ExcelImportDialog({ isOpen, onClose, onImportSuccess }) 
                         </Alert>
 
                         {/* Instructions */}
-                        <Alert className="bg-[rgba(96,165,250,0.1)] border-blue-200">
-                            <AlertDescription className="text-sm text-[#e0e0e0]">
+                        <Alert className="bg-blue-50 border-blue-200">
+                            <AlertDescription className="text-sm text-gray-700">
                                 <strong>דרישות הקובץ:</strong>
                                 <ul className="list-disc list-inside mt-2 space-y-1">
                                     <li><strong>שדות חובה:</strong> תיאור פריט + כמות בלבד</li>
@@ -458,7 +458,7 @@ export default function ExcelImportDialog({ isOpen, onClose, onImportSuccess }) 
                         {!importResult && (
                             <div className="space-y-4">
                                 <div>
-                                    <Label htmlFor="csv-file" className="text-[#e0e0e0] font-semibold">
+                                    <Label htmlFor="csv-file" className="text-gray-700 font-semibold">
                                         בחר קובץ CSV
                                     </Label>
                                     <Input
@@ -466,10 +466,10 @@ export default function ExcelImportDialog({ isOpen, onClose, onImportSuccess }) 
                                         type="file"
                                         accept=".csv"
                                         onChange={handleFileChange}
-                                        className="mt-2 bg-[#1a1a2e] border-gray-300"
+                                        className="mt-2 bg-white border-gray-300"
                                     />
                                     {file && (
-                                        <p className="text-sm text-[#4ade80] mt-2">
+                                        <p className="text-sm text-green-600 mt-2">
                                             ✓ נבחר: {file.name}
                                         </p>
                                     )}
@@ -505,8 +505,8 @@ export default function ExcelImportDialog({ isOpen, onClose, onImportSuccess }) 
                             <div className="space-y-4">
                                 {/* Success summary */}
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-[rgba(74,222,128,0.1)] border border-green-200 rounded-lg p-4">
-                                        <div className="flex items-center gap-2 text-[#4ade80]">
+                                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                        <div className="flex items-center gap-2 text-green-600">
                                             <CheckCircle2 className="w-5 h-5" />
                                             <span className="font-semibold">שורות שיובאו</span>
                                         </div>
@@ -515,8 +515,8 @@ export default function ExcelImportDialog({ isOpen, onClose, onImportSuccess }) 
                                         </p>
                                     </div>
 
-                                    <div className="bg-[rgba(248,113,113,0.1)] border border-red-200 rounded-lg p-4">
-                                        <div className="flex items-center gap-2 text-[#f87171]">
+                                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                        <div className="flex items-center gap-2 text-red-500">
                                             <XCircle className="w-5 h-5" />
                                             <span className="font-semibold">שורות שנדחו</span>
                                         </div>
@@ -528,13 +528,13 @@ export default function ExcelImportDialog({ isOpen, onClose, onImportSuccess }) 
 
                                 {/* Unmapped columns */}
                                 {importResult.unmappedColumns.length > 0 && (
-                                    <Alert className="bg-[rgba(251,191,36,0.1)] border-yellow-200">
-                                        <AlertTriangle className="w-4 h-4 text-[#fbbf24]" />
-                                        <AlertDescription className="text-sm text-[#e0e0e0] mt-2">
+                                    <Alert className="bg-yellow-50 border-yellow-200">
+                                        <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                                        <AlertDescription className="text-sm text-gray-700 mt-2">
                                             <strong>עמודות שנשמרו בהערות:</strong>
                                             <div className="flex flex-wrap gap-2 mt-2">
                                                 {importResult.unmappedColumns.map((col, index) => (
-                                                    <span key={index} className="bg-[rgba(251,191,36,0.1)] text-yellow-800 px-2 py-1 rounded text-xs">
+                                                    <span key={index} className="bg-yellow-50 text-yellow-800 px-2 py-1 rounded text-xs">
                                                         {col}
                                                     </span>
                                                 ))}
@@ -545,22 +545,22 @@ export default function ExcelImportDialog({ isOpen, onClose, onImportSuccess }) 
 
                                 {/* Failed lines */}
                                 {importResult.failedLines.length > 0 && (
-                                    <Alert className="bg-[rgba(248,113,113,0.1)] border-red-200">
-                                        <AlertDescription className="text-sm text-[#e0e0e0]">
+                                    <Alert className="bg-red-50 border-red-200">
+                                        <AlertDescription className="text-sm text-gray-700">
                                             <strong>שגיאות בייבוא ({importResult.totalFailed} שורות):</strong>
                                             <div className="mt-2 max-h-96 overflow-y-auto space-y-3 text-xs">
                                                 {importResult.failedLines.map((failed, index) => (
-                                                    <div key={index} className="border-r-4 border-red-400 pr-3 py-2 bg-[#1a1a2e] rounded">
+                                                    <div key={index} className="border-r-4 border-red-400 pr-3 py-2 bg-white rounded">
                                                         <div className="font-bold text-red-800 mb-1">
                                                             שורה {failed.rowNumber}:
                                                         </div>
-                                                        <div className="text-[#f87171] mb-2">
+                                                        <div className="text-red-500 mb-2">
                                                             {failed.errors.map((err, i) => (
                                                                 <div key={i}>• {err}</div>
                                                             ))}
                                                         </div>
                                                         {failed.originalRow && (
-                                                            <div className="text-[#a0a0b8] bg-[#1a1a2e] p-2 rounded mt-1">
+                                                            <div className="text-gray-500 bg-white p-2 rounded mt-1">
                                                                 <strong>נתונים מקוריים:</strong>
                                                                 {Object.entries(failed.originalRow).slice(0, 6).map(([key, val]) => (
                                                                     <div key={key} className="truncate">

@@ -62,13 +62,13 @@ export default function BtuMatchGauge({ quoteLines, currentBtu, requiredBtu }) {
         badgeColor = 'bg-gray-100 text-gray-800';
     } else if (utilization <= 70) {
         status = 'ניצול תקין';
-        badgeColor = 'bg-[rgba(74,222,128,0.1)] text-green-800';
+        badgeColor = 'bg-green-50 text-green-800';
     } else if (utilization <= 100) {
         status = 'ניצול גבוה';
-        badgeColor = 'bg-[rgba(251,191,36,0.1)] text-yellow-800';
+        badgeColor = 'bg-yellow-50 text-yellow-800';
     } else {
         status = 'חריגה';
-        badgeColor = 'bg-[rgba(248,113,113,0.1)] text-red-800';
+        badgeColor = 'bg-red-50 text-red-800';
     }
 
     const percentage = Math.min(utilization, 130);
@@ -80,7 +80,7 @@ export default function BtuMatchGauge({ quoteLines, currentBtu, requiredBtu }) {
             </CardHeader>
             <CardContent>
                 <div className="text-center mb-4">
-                    <div className="text-3xl font-bold text-[#60a5fa] mb-2">
+                    <div className="text-3xl font-bold text-[#B8922E] mb-2">
                         {utilization}%
                     </div>
                     <Badge className={badgeColor}>
@@ -90,11 +90,11 @@ export default function BtuMatchGauge({ quoteLines, currentBtu, requiredBtu }) {
 
                 <Progress value={percentage} max={130} className="w-full h-3 mb-4" />
 
-                <div className="text-center text-sm text-[#a0a0b8]">
+                <div className="text-center text-sm text-gray-500">
                     <p className="font-medium">מאיידים: {btuData.indoorBtu.toLocaleString()} BTU</p>
                     <p>מעבה: {btuData.outdoorBtu.toLocaleString()} BTU</p>
                     {utilization > 100 && (
-                        <p className="text-[#f87171] font-medium mt-2">
+                        <p className="text-red-500 font-medium mt-2">
                             חריגה: {(btuData.indoorBtu - btuData.outdoorBtu).toLocaleString()} BTU
                         </p>
                     )}

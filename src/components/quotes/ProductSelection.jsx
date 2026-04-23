@@ -100,8 +100,8 @@ export default function ProductSelection({ quote, quoteLines, priceItems, onQuot
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-[#f0f0f0]">בניית הצעת מחיר</h1>
-          <p className="text-[#a0a0b8] mt-1">בחר פריטים למחירון: {quote?.title}</p>
+          <h1 className="text-3xl font-bold text-gray-900">בניית הצעת מחיר</h1>
+          <p className="text-gray-500 mt-1">בחר פריטים למחירון: {quote?.title}</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={() => onComplete()}>
@@ -124,21 +124,21 @@ export default function ProductSelection({ quote, quoteLines, priceItems, onQuot
             </CardHeader>
             <CardContent className="space-y-3 max-h-64 overflow-y-auto">
               {!quoteLines || quoteLines.length === 0 ? (
-                <div className="text-center text-[#6b6b80] py-4">
+                <div className="text-center text-gray-400 py-4">
                   הסל ריק
                 </div>
               ) : (
                 quoteLines.map(line => (
-                  <div key={line.id} className="flex items-center gap-2 p-2 bg-[#1a1a2e] rounded-lg">
+                  <div key={line.id} className="flex items-center gap-2 p-2 bg-white border border-gray-200 rounded-lg">
                     <div className="flex-1">
                       <p className="text-sm font-medium text-slate-800">{line.name_snapshot}</p>
-                      <p className="text-xs text-[#a0a0b8]">כמות: {line.quantity}</p>
+                      <p className="text-xs text-gray-500">כמות: {line.quantity}</p>
                     </div>
                     <Button 
                       size="sm" 
                       variant="ghost" 
                       onClick={() => handleRemoveFromQuote(line.id)}
-                      className="text-[#f87171] hover:bg-[rgba(248,113,113,0.1)] h-8 w-8 p-0"
+                      className="text-red-500 hover:bg-red-50 h-8 w-8 p-0"
                     >
                       ×
                     </Button>
@@ -195,7 +195,7 @@ export default function ProductSelection({ quote, quoteLines, priceItems, onQuot
                 </Select>
 
                 <div className="relative">
-                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b6b80] w-4 h-4" />
+                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
                     placeholder="חיפוש..."
                     value={searchTerm}
@@ -220,16 +220,16 @@ export default function ProductSelection({ quote, quoteLines, priceItems, onQuot
                         className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
                       />
                     ) : (
-                      <div className="w-24 h-24 bg-[#1e1e36] rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-[#6b6b80]">אין תמונה</span>
+                      <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-gray-400">אין תמונה</span>
                       </div>
                     )}
                     
                     <div className="flex-1 space-y-2">
-                      <h3 className="font-bold text-[#f0f0f0]">{item.name}</h3>
-                      <p className="text-sm text-[#a0a0b8]">{item.model}</p>
+                      <h3 className="font-bold text-gray-900">{item.name}</h3>
+                      <p className="text-sm text-gray-500">{item.model}</p>
                       {item.description && (
-                        <p className="text-xs text-[#a0a0b8] line-clamp-2">{item.description}</p>
+                        <p className="text-xs text-gray-500 line-clamp-2">{item.description}</p>
                       )}
                       
                       <div className="flex flex-wrap gap-2">
@@ -242,7 +242,7 @@ export default function ProductSelection({ quote, quoteLines, priceItems, onQuot
                           </Badge>
                         )}
                         {item.btu > 0 && (
-                          <Badge className="text-xs bg-[rgba(96,165,250,0.1)] text-blue-800">
+                          <Badge className="text-xs bg-blue-50 text-blue-800">
                             <Zap className="w-3 h-3 ml-1" />
                             {item.btu.toLocaleString()} BTU
                           </Badge>
@@ -250,7 +250,7 @@ export default function ProductSelection({ quote, quoteLines, priceItems, onQuot
                       </div>
                       
                       <div className="flex justify-between items-center pt-2">
-                        <span className="font-bold text-lg text-[#f0f0f0]">
+                        <span className="font-bold text-lg text-gray-900">
                           ₪{item.price_no_vat?.toLocaleString()}
                         </span>
                         
@@ -259,7 +259,7 @@ export default function ProductSelection({ quote, quoteLines, priceItems, onQuot
                             size="sm" 
                             variant="outline"
                             onClick={() => handleRemoveFromQuote(getQuoteLineId(item.id))}
-                            className="text-[#f87171] border-red-200 hover:bg-[rgba(248,113,113,0.1)]"
+                            className="text-red-500 border-red-200 hover:bg-red-50"
                           >
                             הסר
                           </Button>
@@ -283,8 +283,8 @@ export default function ProductSelection({ quote, quoteLines, priceItems, onQuot
 
           {filteredItems.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-[#a0a0b8]">לא נמצאו פריטים בהתאם לסינון</p>
-              <p className="text-sm text-[#6b6b80] mt-2">נסה לשנות את הקריטריונים או לבטל חלק מהסינונים</p>
+              <p className="text-gray-500">לא נמצאו פריטים בהתאם לסינון</p>
+              <p className="text-sm text-gray-400 mt-2">נסה לשנות את הקריטריונים או לבטל חלק מהסינונים</p>
             </div>
           )}
         </div>

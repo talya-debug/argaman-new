@@ -538,12 +538,12 @@ export default function QuoteDetails() {
 
     return (
         <>
-            <div className={`min-h-screen p-4 md:p-8 ${showPreview ? 'hidden' : ''}`} dir="rtl" style={{ background: 'var(--dark)' }}>
+            <div className={`min-h-screen p-4 md:p-8 ${showPreview ? 'hidden' : ''}`} dir="rtl" style={{ background: '#f1f3f8' }}>
                 <div className="max-w-screen-2xl mx-auto">
                     <header className="flex justify-between items-center mb-6">
                         <div>
-                            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>{quote?.title || 'הצעת מחיר חדשה'}</h1>
-                            <p style={{ color: 'var(--text-secondary)' }}>עבור: {lead?.name || 'לקוח חדש'}</p>
+                            <h1 className="text-3xl font-bold" style={{ color: '#1a1d2e' }}>{quote?.title || 'הצעת מחיר חדשה'}</h1>
+                            <p style={{ color: '#5a6078' }}>עבור: {lead?.name || 'לקוח חדש'}</p>
                         </div>
                         <div className="flex items-center gap-4">
                             <Button
