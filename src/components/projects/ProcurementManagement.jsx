@@ -633,10 +633,16 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                     ₪{item.actualCostForLine.toLocaleString()}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white" disabled>
-                                                        <Plus className="w-4 h-4 ml-1" />
-                                                        בצע הזמנה
-                                                    </Button>
+                                                    <CreateOrderDialog
+                                                        quoteLine={{
+                                                          id: item.id,
+                                                          name_snapshot: item.manual_item_name || 'פריט ידני',
+                                                          price_no_vat_snapshot: item.orders[0]?.unit_price || 0,
+                                                        }}
+                                                        project={project}
+                                                        remainingQuantity={item.remainingToOrder}
+                                                        onOrderCreated={onUpdateQuoteLine}
+                                                    />
                                                 </TableCell>
                                             </TableRow>
                                             {isOpenManual && (
@@ -742,10 +748,16 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                     ₪{item.actualCostForLine.toLocaleString()}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" disabled>
-                                                        <Plus className="w-4 h-4 ml-1" />
-                                                        בצע הזמנה
-                                                    </Button>
+                                                    <CreateOrderDialog
+                                                        quoteLine={{
+                                                          id: item.id,
+                                                          name_snapshot: `גריל - ${item.grille_location}`,
+                                                          price_no_vat_snapshot: item.orders[0]?.unit_price || 0,
+                                                        }}
+                                                        project={project}
+                                                        remainingQuantity={item.remainingToOrder}
+                                                        onOrderCreated={onUpdateQuoteLine}
+                                                    />
                                                 </TableCell>
                                             </TableRow>
                                             {isOpenGrille && (
