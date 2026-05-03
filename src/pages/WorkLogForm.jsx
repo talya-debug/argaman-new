@@ -5,10 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Upload, X, Save } from 'lucide-react';
+import { Upload, X, Save, CheckCircle } from 'lucide-react';
 import SignaturePad from '../components/ui/SignaturePad';
 
 const dataURLtoFile = (dataurl, filename) => {
@@ -65,13 +64,13 @@ export default function WorkLogForm() {
         setIsSubmitting(true);
         try {
             const imageUrls = await Promise.all(
-                imageFiles.map(file => uploadFile(file, 'worklog').then(res => res.url))
+                imageFiles.map(file => uploadFile(file).then(res => res.url))
             );
 
             let signatureUrl = null;
             if (signatureData) {
                 const signatureFile = dataURLtoFile(signatureData, `signature-${Date.now()}.png`);
-                const sigResult = await uploadFile(signatureFile, 'signatures');
+                const sigResult = await uploadFile(signatureFile);
                 signatureUrl = sigResult.url;
             }
 
@@ -87,12 +86,10 @@ export default function WorkLogForm() {
                 client_signer_name: signerName
             });
 
-            // Save project name and show success screen
             const projectName = projects.find(p => p.id === selectedProject)?.name || 'הפרויקט';
             setSavedProjectName(projectName);
             setShowSuccessScreen(true);
 
-            // Reset form after a delay
             setTimeout(() => {
                 setSelectedProject('');
                 setWorkDescription('');
@@ -113,170 +110,125 @@ export default function WorkLogForm() {
         }
     };
 
+    const cardStyle = {
+        background: 'var(--dark-card)',
+        border: '1px solid var(--dark-border)',
+        borderRadius: 16,
+        overflow: 'hidden',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+    };
+
+    const labelStyle = { color: 'var(--text-primary)', fontWeight: 600, fontSize: 14, display: 'block', marginBottom: 6 };
+    const inputWrapStyle = { display: 'flex', flexDirection: 'column', gap: 4 };
+
     if (showSuccessScreen) {
         return (
-            <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen flex items-center justify-center">
-                <Card className="w-full max-w-3xl shadow-2xl bg-[#1a1a2e] border-4 border-green-500" dir="rtl">
-                    <CardHeader className="text-center bg-[rgba(74,222,128,0.1)] border-b-4 border-green-500">
-                        <div className="mx-auto mb-4 w-20 h-20 bg-[rgba(74,222,128,0.1)]0 rounded-full flex items-center justify-center">
-                            <Save className="w-10 h-10 text-white" />
-                        </div>
-                        <CardTitle className="text-3xl font-bold text-green-800">תודה!</CardTitle>
-                        <CardDescription className="text-lg text-[#e0e0e0] mt-2">הפרטים נשמרו בהצלחה</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-8 space-y-6">
-                        <div className="text-center space-y-4">
-                            <p className="text-2xl font-bold text-slate-800">
-                                אנא דאג למלא יומן עבודה גם מחר
-                            </p>
+            <div style={{ padding: 24, minHeight: '100vh', background: 'var(--dark)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ ...cardStyle, maxWidth: 600, width: '100%', textAlign: 'center', padding: 48 }} dir="rtl">
+                    <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#22c55e18', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                        <CheckCircle size={36} style={{ color: '#22c55e' }} />
+                    </div>
+                    <h2 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px' }}>תודה!</h2>
+                    <p style={{ fontSize: 16, color: 'var(--text-secondary)', margin: '0 0 24px' }}>הפרטים נשמרו בהצלחה</p>
 
-                            <div className="bg-[rgba(96,165,250,0.1)] border-2 border-blue-200 rounded-lg p-6 space-y-3">
-                                <h3 className="font-bold text-lg text-blue-800">סיכום הדיווח:</h3>
-                                <div className="text-right space-y-2">
-                                    <p className="text-[#e0e0e0]"><span className="font-semibold">פרויקט:</span> {savedProjectName}</p>
-                                    <p className="text-[#e0e0e0]"><span className="font-semibold">תאריך:</span> {new Date().toLocaleDateString('he-IL')}</p>
-                                    <p className="text-[#e0e0e0]"><span className="font-semibold">עובדים:</span> {numberOfWorkers}</p>
-                                    <p className="text-[#e0e0e0]"><span className="font-semibold">סה"כ שעות:</span> {totalHours}</p>
-                                </div>
-                            </div>
+                    <div style={{ background: 'var(--dark)', borderRadius: 12, padding: 20, textAlign: 'right' }}>
+                        <p style={{ margin: '0 0 8px', fontSize: 14, color: 'var(--text-secondary)' }}><strong style={{ color: 'var(--text-primary)' }}>פרויקט:</strong> {savedProjectName}</p>
+                        <p style={{ margin: '0 0 8px', fontSize: 14, color: 'var(--text-secondary)' }}><strong style={{ color: 'var(--text-primary)' }}>תאריך:</strong> {new Date().toLocaleDateString('he-IL')}</p>
+                        <p style={{ margin: '0 0 8px', fontSize: 14, color: 'var(--text-secondary)' }}><strong style={{ color: 'var(--text-primary)' }}>עובדים:</strong> {numberOfWorkers}</p>
+                        <p style={{ margin: 0, fontSize: 14, color: 'var(--text-secondary)' }}><strong style={{ color: 'var(--text-primary)' }}>סה"כ שעות:</strong> {totalHours}</p>
+                    </div>
 
-                            {(imageFiles.length > 0 || signatureData) && (
-                                <div className="bg-[#1a1a2e] border-2 border-[rgba(255,255,255,0.08)] rounded-lg p-6 space-y-4">
-                                    {imageFiles.length > 0 && (
-                                        <div>
-                                            <p className="font-semibold text-slate-800 mb-3">תמונות שצורפו ({imageFiles.length}):</p>
-                                            <div className="flex flex-wrap gap-3 justify-center">
-                                                {imageFiles.slice(0, 4).map((file, index) => (
-                                                    <img
-                                                        key={index}
-                                                        src={URL.createObjectURL(file)}
-                                                        alt={`תמונה ${index + 1}`}
-                                                        className="h-24 w-24 object-cover rounded-lg border-2 border-[rgba(255,255,255,0.12)] shadow-md"
-                                                    />
-                                                ))}
-                                                {imageFiles.length > 4 && (
-                                                    <div className="h-24 w-24 bg-slate-300 rounded-lg border-2 border-[rgba(255,255,255,0.12)] flex items-center justify-center text-lg font-bold text-[#a0a0b8]">
-                                                        +{imageFiles.length - 4}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {signatureData && (
-                                        <div>
-                                            <p className="font-semibold text-slate-800 mb-3">חתימת לקוח:</p>
-                                            <div className="flex justify-center">
-                                                <img
-                                                    src={signatureData}
-                                                    alt="חתימה"
-                                                    className="max-h-32 border-2 border-[rgba(255,255,255,0.12)] rounded-lg shadow-md bg-[#1a1a2e] p-2"
-                                                />
-                                            </div>
-                                            {signerName && (
-                                                <p className="text-sm text-[#a0a0b8] mt-2">חותם: {signerName}</p>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            <p className="text-sm text-[#a0a0b8] mt-6">
-                                חוזרים לטופס אוטומטית בעוד מספר שניות...
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
+                    <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 24 }}>חוזרים לטופס אוטומטית בעוד מספר שניות...</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="w-full bg-[#1a1a2e] py-6 px-4">
-            <div className="max-w-3xl mx-auto">
-                <div className="bg-[#1a1a2e] rounded-lg shadow-lg overflow-hidden">
-                    <div className="border-b p-6 text-center bg-[#1a1a2e]">
-                        <h1 className="text-2xl font-bold text-slate-800">דיווח יומן עבודה יומי</h1>
-                        <p className="text-[#a0a0b8] mt-1">מלא את פרטי העבודה שבוצעה היום בפרויקט.</p>
+        <div style={{ padding: '24px 16px', minHeight: '100vh', background: 'var(--dark)' }}>
+            <div style={{ maxWidth: 700, margin: '0 auto' }}>
+                <div style={cardStyle} dir="rtl">
+                    {/* כותרת */}
+                    <div style={{ background: 'var(--argaman)', padding: '24px 32px', textAlign: 'center' }}>
+                        <h1 style={{ fontSize: 22, fontWeight: 700, color: '#fff', margin: 0 }}>דיווח יומן עבודה יומי</h1>
+                        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', margin: '4px 0 0' }}>מלא את פרטי העבודה שבוצעה היום בפרויקט</p>
                     </div>
-                    <div className="px-6 py-6">
-                        <form id="worklog-form" onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-2">
-                            <Label htmlFor="project" className="font-semibold">שייך לפרויקט *</Label>
-                            <Select value={selectedProject} onValueChange={setSelectedProject} required>
-                                <SelectTrigger id="project"><SelectValue placeholder="בחר פרויקט מהרשימה..." /></SelectTrigger>
-                                <SelectContent>{projects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
-                            </Select>
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="space-y-2">
-                                <Label htmlFor="workers" className="font-semibold">מספר עובדים</Label>
-                                <Input id="workers" type="number" value={numberOfWorkers} onChange={(e) => setNumberOfWorkers(Number(e.target.value))} min="1" />
+                    {/* טופס */}
+                    <div style={{ padding: '32px 32px 16px' }}>
+                        <form id="worklog-form" onSubmit={handleSubmit}>
+                            <div style={inputWrapStyle}>
+                                <label style={labelStyle}>שייך לפרויקט *</label>
+                                <Select value={selectedProject} onValueChange={setSelectedProject}>
+                                    <SelectTrigger><SelectValue placeholder="בחר פרויקט מהרשימה..." /></SelectTrigger>
+                                    <SelectContent>{projects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
+                                </Select>
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="hours" className="font-semibold">שעות עבודה</Label>
-                                <Input id="hours" type="number" value={workingHours} onChange={(e) => setWorkingHours(Number(e.target.value))} min="1" />
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 20 }}>
+                                <div style={inputWrapStyle}>
+                                    <label style={labelStyle}>מספר עובדים</label>
+                                    <Input type="number" value={numberOfWorkers} onChange={(e) => setNumberOfWorkers(Number(e.target.value))} min="1" />
+                                </div>
+                                <div style={inputWrapStyle}>
+                                    <label style={labelStyle}>שעות עבודה</label>
+                                    <Input type="number" value={workingHours} onChange={(e) => setWorkingHours(Number(e.target.value))} min="1" />
+                                </div>
+                                <div style={inputWrapStyle}>
+                                    <label style={labelStyle}>סה"כ שעות</label>
+                                    <div style={{ height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--dark)', borderRadius: 8, border: '1px solid var(--dark-border)', fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>{totalHours}</div>
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                <Label className="font-semibold">סה"כ שעות</Label>
-                                <div className="h-10 flex items-center justify-center bg-[#1e1e36] rounded-md border text-lg font-bold text-[#e0e0e0]">{totalHours}</div>
+
+                            <div style={{ ...inputWrapStyle, marginTop: 20 }}>
+                                <label style={labelStyle}>מה בוצע היום? *</label>
+                                <Textarea value={workDescription} onChange={(e) => setWorkDescription(e.target.value)} placeholder="פרט את העבודות שבוצעו, כולל מיקומים..." required rows={5} />
                             </div>
-                        </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="description" className="font-semibold">מה בוצע היום? *</Label>
-                            <Textarea id="description" value={workDescription} onChange={(e) => setWorkDescription(e.target.value)} placeholder="פרט את העבודות שבוצעו, כולל מיקומים..." required rows={5} />
-                        </div>
+                            <div style={{ ...inputWrapStyle, marginTop: 20 }}>
+                                <label style={labelStyle}>תקלות / חוסרים</label>
+                                <Textarea value={issuesOrShortages} onChange={(e) => setIssuesOrShortages(e.target.value)} placeholder="פרט כל בעיה, עיכוב או נושא שדורש התייחסות..." rows={3} />
+                            </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="issues" className="font-semibold">תקלות / חוסרים</Label>
-                            <Textarea id="issues" value={issuesOrShortages} onChange={(e) => setIssuesOrShortages(e.target.value)} placeholder="פרט כל בעיה, עיכוב או נושא שדורש התייחסות..." rows={3} />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <Label htmlFor="images" className="font-semibold">העלה תמונות</Label>
-                                <div className="flex items-center justify-center w-full">
-                                    <label htmlFor="images-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-[#1a1a2e] hover:bg-[#1e1e36]">
-                                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                            <Upload className="w-8 h-8 mb-4 text-[#a0a0b8]"/>
-                                            <p className="mb-2 text-sm text-[#a0a0b8]"><span className="font-semibold">לחץ להעלאה</span> או גרור לכאן</p>
-                                        </div>
-                                        <input id="images-upload" type="file" multiple className="hidden" onChange={handleImageChange} />
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginTop: 20 }}>
+                                <div style={inputWrapStyle}>
+                                    <label style={labelStyle}>העלה תמונות</label>
+                                    <label htmlFor="images-upload" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 120, border: '2px dashed var(--dark-border)', borderRadius: 10, cursor: 'pointer', background: 'var(--dark)', transition: 'border-color 0.15s' }}>
+                                        <Upload size={28} style={{ color: 'var(--text-muted)', marginBottom: 8 }} />
+                                        <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>לחץ להעלאה</span>
+                                        <input id="images-upload" type="file" multiple style={{ display: 'none' }} onChange={handleImageChange} />
                                     </label>
-                                </div>
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                    {imageFiles.map((file, index) => (
-                                        <div key={index} className="relative">
-                                            <img src={URL.createObjectURL(file)} alt="preview" className="h-16 w-16 object-cover rounded-md" />
-                                            <button type="button" onClick={() => removeImage(index)} className="absolute top-0 right-0 bg-[rgba(248,113,113,0.1)]0 text-white rounded-full p-0.5"><X className="h-3 w-3" /></button>
+                                    {imageFiles.length > 0 && (
+                                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
+                                            {imageFiles.map((file, index) => (
+                                                <div key={index} style={{ position: 'relative' }}>
+                                                    <img src={URL.createObjectURL(file)} alt="preview" style={{ height: 56, width: 56, objectFit: 'cover', borderRadius: 8 }} />
+                                                    <button type="button" onClick={() => removeImage(index)} style={{ position: 'absolute', top: -6, right: -6, background: '#dc2626', color: '#fff', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <X size={12} />
+                                                    </button>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
+                                    )}
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                    <div style={inputWrapStyle}>
+                                        <label style={labelStyle}>שם החותם</label>
+                                        <Input value={signerName} onChange={(e) => setSignerName(e.target.value)} placeholder="שם מלא של החותם..." />
+                                    </div>
+                                    <div style={inputWrapStyle}>
+                                        <label style={labelStyle}>חתימת לקוח</label>
+                                        <SignaturePad onSave={setSignatureData} />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="signerName" className="font-semibold">שם החותם</Label>
-                                    <Input
-                                        id="signerName"
-                                        value={signerName}
-                                        onChange={(e) => setSignerName(e.target.value)}
-                                        placeholder="שם מלא של החותם..."
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="signature" className="font-semibold">חתימת לקוח</Label>
-                                    <SignaturePad onSave={setSignatureData} />
-                                </div>
-                            </div>
-                        </div>
-
                         </form>
                     </div>
-                    <div className="border-t bg-[#1a1a2e] p-6">
-                        <Button type="submit" form="worklog-form" className="w-full bg-[#D4A843] hover:bg-[#B8922E] text-lg py-6" disabled={isSubmitting}>
-                            <Save className="w-5 h-5 ml-2" />
+
+                    {/* כפתור שליחה */}
+                    <div style={{ padding: '16px 32px 32px' }}>
+                        <Button type="submit" form="worklog-form" disabled={isSubmitting} style={{ width: '100%', height: 48, fontSize: 16, background: 'var(--argaman)', color: '#fff' }}>
+                            <Save size={18} style={{ marginLeft: 8 }} />
                             {isSubmitting ? 'שולח דיווח...' : 'שלח דיווח יומן עבודה'}
                         </Button>
                     </div>

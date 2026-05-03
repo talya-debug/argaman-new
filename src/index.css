@@ -265,7 +265,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--argaman) !important;
-  box-shadow: 0 0 0 3px rgba(196, 43, 43, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(184, 146, 46, 0.15) !important;
 }
 
 /* מודל */

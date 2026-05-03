@@ -4,39 +4,21 @@ import { Lead } from '@/entities';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 
 const STATUSES = [
-  "חדש",
-  "איסוף מידע מלקוח",
-  "סיווג / הכנת הצעה",
-  "תיאום סיור",
-  "סיור בוצע",
-  "הכנת הצעה",
-  "הצעה מוכנה ממתינה לאישור",
-  "הצעה נשלחה",
-  "המתנה לאישור / משא ומתן",
-  "אושר",
-  "נדחה"
+  "חדש", "איסוף מידע מלקוח", "סיווג / הכנת הצעה", "תיאום סיור",
+  "סיור בוצע", "הכנת הצעה", "הצעה מוכנה ממתינה לאישור", "הצעה נשלחה",
+  "המתנה לאישור / משא ומתן", "אושר", "נדחה"
 ];
 
 const RESPONSIBLES = ["חיה", "יניר", "דבורה"];
 
 export default function LeadForm() {
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
-    status: 'חדש',
-    followup_date: '',
-    responsible: '',
-    notes: '',
-    source: '',
-    estimated_value: ''
+    name: '', phone: '', email: '', address: '', status: 'חדש',
+    followup_date: '', responsible: '', notes: '', source: '', estimated_value: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -46,36 +28,17 @@ export default function LeadForm() {
       toast.error("נא למלא שם וטלפון.");
       return;
     }
-
     setIsSubmitting(true);
     try {
       const submitData = { ...formData };
-
-      // Fix estimated_value handling
       if (submitData.estimated_value === '' || submitData.estimated_value === null || submitData.estimated_value === undefined) {
         delete submitData.estimated_value;
       } else {
         submitData.estimated_value = parseFloat(submitData.estimated_value);
       }
-
-      await Lead.create({
-        ...submitData,
-        last_interaction_date: new Date().toISOString().split('T')[0]
-      });
-
+      await Lead.create({ ...submitData, last_interaction_date: new Date().toISOString().split('T')[0] });
       toast.success('הליד נוצר בהצלחה!');
-      setFormData({
-        name: '',
-        phone: '',
-        email: '',
-        address: '',
-        status: 'חדש',
-        followup_date: '',
-        responsible: '',
-        notes: '',
-        source: '',
-        estimated_value: ''
-      });
+      setFormData({ name: '', phone: '', email: '', address: '', status: 'חדש', followup_date: '', responsible: '', notes: '', source: '', estimated_value: '' });
     } catch (error) {
       console.error("Failed to create lead:", error);
       toast.error("שגיאה ביצירת הליד.");
@@ -84,158 +47,73 @@ export default function LeadForm() {
     }
   };
 
-  const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  const handleChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
+
+  const labelStyle = { color: 'var(--text-primary)', fontWeight: 600, fontSize: 14, display: 'block', marginBottom: 6 };
+
+  const fields = [
+    { id: 'name', label: 'שם *', required: true, placeholder: 'שם הלקוח' },
+    { id: 'phone', label: 'טלפון *', required: true, placeholder: 'מספר טלפון' },
+    { id: 'email', label: 'מייל', type: 'email', placeholder: 'כתובת מייל' },
+    { id: 'estimated_value', label: 'ערך משוער (₪)', type: 'number', placeholder: 'ערך משוער' },
+    { id: 'followup_date', label: 'תאריך פולואפ', type: 'date' },
+    { id: 'source', label: 'מקור', placeholder: 'מקור הליד' },
+  ];
 
   return (
-    <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen flex items-center justify-center">
-      <Card className="w-full max-w-4xl shadow-2xl bg-[#1a1a2e]" dir="rtl">
-        <CardHeader className="bg-[#D4A843] text-white rounded-t-lg">
-          <CardTitle className="text-2xl font-bold text-center">הוספת ליד חדש</CardTitle>
-          <p className="text-blue-100 text-center">מלא את פרטי הליד החדש במערכת</p>
-        </CardHeader>
-        <CardContent className="p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-right font-medium text-[#e0e0e0]">שם *</Label>
+    <div style={{ padding: '24px 16px', minHeight: '100vh', background: 'var(--dark)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ maxWidth: 800, width: '100%', background: 'var(--dark-card)', border: '1px solid var(--dark-border)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }} dir="rtl">
+
+        <div style={{ background: 'var(--argaman)', padding: '24px 32px', textAlign: 'center' }}>
+          <h1 style={{ fontSize: 22, fontWeight: 700, color: '#fff', margin: 0 }}>הוספת ליד חדש</h1>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', margin: '4px 0 0' }}>מלא את פרטי הליד החדש במערכת</p>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{ padding: 32 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+            {fields.map(f => (
+              <div key={f.id}>
+                <label style={labelStyle}>{f.label}</label>
                 <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  required
-                  className="text-right bg-[#1a1a2e] border-2 border-gray-300 focus:border-blue-500 h-12"
-                  placeholder="שם הלקוח"
+                  id={f.id} type={f.type || 'text'} value={formData[f.id]}
+                  onChange={(e) => handleChange(f.id, e.target.value)}
+                  required={f.required} placeholder={f.placeholder} style={{ height: 44 }}
                 />
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-right font-medium text-[#e0e0e0]">טלפון *</Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => handleChange('phone', e.target.value)}
-                  required
-                  className="text-right bg-[#1a1a2e] border-2 border-gray-300 focus:border-blue-500 h-12"
-                  placeholder="מספר טלפון"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-right font-medium text-[#e0e0e0]">מייל</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleChange('email', e.target.value)}
-                  className="text-right bg-[#1a1a2e] border-2 border-gray-300 focus:border-blue-500 h-12"
-                  placeholder="כתובת מייל"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="estimated_value" className="text-right font-medium text-[#e0e0e0]">ערך משוער (₪)</Label>
-                <Input
-                  id="estimated_value"
-                  type="number"
-                  value={formData.estimated_value}
-                  onChange={(e) => handleChange('estimated_value', e.target.value)}
-                  className="text-right bg-[#1a1a2e] border-2 border-gray-300 focus:border-blue-500 h-12"
-                  placeholder="ערך משוער"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="status" className="text-right font-medium text-[#e0e0e0]">סטטוס</Label>
-                <Select value={formData.status} onValueChange={(value) => handleChange('status', value)}>
-                  <SelectTrigger className="text-right bg-[#1a1a2e] border-2 border-gray-300 focus:border-blue-500 h-12">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#1a1a2e]">
-                    {STATUSES.map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {status}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="responsible" className="text-right font-medium text-[#e0e0e0]">אחראי</Label>
-                <Select value={formData.responsible} onValueChange={(value) => handleChange('responsible', value)}>
-                  <SelectTrigger className="text-right bg-[#1a1a2e] border-2 border-gray-300 focus:border-blue-500 h-12">
-                    <SelectValue placeholder="בחר אחראי" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#1a1a2e]">
-                    {RESPONSIBLES.map((responsible) => (
-                      <SelectItem key={responsible} value={responsible}>
-                        {responsible}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="followup_date" className="text-right font-medium text-[#e0e0e0]">תאריך פולואפ</Label>
-                <Input
-                  id="followup_date"
-                  type="date"
-                  value={formData.followup_date}
-                  onChange={(e) => handleChange('followup_date', e.target.value)}
-                  className="text-right bg-[#1a1a2e] border-2 border-gray-300 focus:border-blue-500 h-12"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="source" className="text-right font-medium text-[#e0e0e0]">מקור</Label>
-                <Input
-                  id="source"
-                  value={formData.source}
-                  onChange={(e) => handleChange('source', e.target.value)}
-                  className="text-right bg-[#1a1a2e] border-2 border-gray-300 focus:border-blue-500 h-12"
-                  placeholder="מקור הליד"
-                />
-              </div>
+            ))}
+            <div>
+              <label style={labelStyle}>סטטוס</label>
+              <Select value={formData.status} onValueChange={(v) => handleChange('status', v)}>
+                <SelectTrigger style={{ height: 44 }}><SelectValue /></SelectTrigger>
+                <SelectContent>{STATUSES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+              </Select>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="address" className="text-right font-medium text-[#e0e0e0]">כתובת</Label>
-              <Input
-                id="address"
-                value={formData.address}
-                onChange={(e) => handleChange('address', e.target.value)}
-                className="text-right bg-[#1a1a2e] border-2 border-gray-300 focus:border-blue-500 h-12"
-                placeholder="כתובת הלקוח"
-              />
+            <div>
+              <label style={labelStyle}>אחראי</label>
+              <Select value={formData.responsible} onValueChange={(v) => handleChange('responsible', v)}>
+                <SelectTrigger style={{ height: 44 }}><SelectValue placeholder="בחר אחראי" /></SelectTrigger>
+                <SelectContent>{RESPONSIBLES.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}</SelectContent>
+              </Select>
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="notes" className="text-right font-medium text-[#e0e0e0]">הערות</Label>
-              <Textarea
-                id="notes"
-                value={formData.notes}
-                onChange={(e) => handleChange('notes', e.target.value)}
-                rows={4}
-                className="text-right bg-[#1a1a2e] border-2 border-gray-300 focus:border-blue-500"
-                placeholder="הערות נוספות"
-              />
-            </div>
+          <div style={{ marginTop: 20 }}>
+            <label style={labelStyle}>כתובת</label>
+            <Input value={formData.address} onChange={(e) => handleChange('address', e.target.value)} placeholder="כתובת הלקוח" style={{ height: 44 }} />
+          </div>
 
-            <div className="flex justify-center pt-6">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-[#D4A843] hover:bg-[#B8922E] text-white px-12 py-3 text-lg font-semibold"
-              >
-                {isSubmitting ? "שומר..." : "צור ליד חדש"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+          <div style={{ marginTop: 20 }}>
+            <label style={labelStyle}>הערות</label>
+            <Textarea value={formData.notes} onChange={(e) => handleChange('notes', e.target.value)} rows={4} placeholder="הערות נוספות" />
+          </div>
+
+          <div style={{ marginTop: 28, textAlign: 'center' }}>
+            <Button type="submit" disabled={isSubmitting} style={{ height: 48, paddingInline: 48, fontSize: 16, background: 'var(--argaman)', color: '#fff' }}>
+              {isSubmitting ? "שומר..." : "צור ליד חדש"}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

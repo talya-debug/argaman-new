@@ -1,7 +1,6 @@
 
 import React from 'react';
 import TaskForm from '../components/tasks/TaskForm';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Task } from '@/entities';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -21,20 +20,18 @@ export default function NewTaskPage() {
     };
 
     return (
-        <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen flex items-center justify-center">
-            <Card className="w-full max-w-3xl shadow-2xl">
-                <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-[#f0f0f0] text-right">
-                        יצירת משימה חדשה
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
+        <div style={{ padding: 32, minHeight: '100vh', background: 'var(--dark)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ maxWidth: 700, width: '100%', background: 'var(--dark-card)', border: '1px solid var(--dark-border)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }} dir="rtl">
+                <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--dark-border)' }}>
+                    <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>יצירת משימה חדשה</h1>
+                </div>
+                <div style={{ padding: 32 }}>
                     <TaskForm
                         onSubmit={handleCreateTask}
                         onCancel={() => navigate(createPageUrl('Tasks'))}
                     />
-                </CardContent>
-            </Card>
+                </div>
+            </div>
         </div>
     );
 }
