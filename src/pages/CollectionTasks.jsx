@@ -294,7 +294,7 @@ export default function CollectionTasks() {
                 </Button>
               </DialogTrigger>
               <DialogContent
-                className="max-w-lg bg-[#1a1a2e] border-0 shadow-2xl max-h-[90vh] overflow-y-auto"
+                className="max-w-lg bg-white border-0 shadow-2xl max-h-[90vh] overflow-y-auto"
                 dir="rtl"
                 style={{ boxShadow: '0px 8px 24px rgba(0,0,0,0.15)' }}
               >
@@ -303,7 +303,7 @@ export default function CollectionTasks() {
                 </DialogHeader>
                 <div className="space-y-5 py-6">
                   <div>
-                    <Label htmlFor="client_name" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
+                    <Label htmlFor="client_name" className="text-sm font-medium text-gray-700 mb-2 block text-right">
                       שם לקוח / ישות לחיוב *
                     </Label>
                     <Input
@@ -311,12 +311,12 @@ export default function CollectionTasks() {
                       value={formData.client_name}
                       onChange={(e) => setFormData({...formData, client_name: e.target.value})}
                       placeholder="שם הלקוח או הישות"
-                      className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
+                      className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="invoice_number" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
+                    <Label htmlFor="invoice_number" className="text-sm font-medium text-gray-700 mb-2 block text-right">
                       תיאור חיוב / משימה *
                     </Label>
                     <Input
@@ -324,51 +324,51 @@ export default function CollectionTasks() {
                       value={formData.invoice_number}
                       onChange={(e) => setFormData({...formData, invoice_number: e.target.value})}
                       placeholder="חשבון 1, תיקון, תשלום..."
-                      className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
+                      className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="amount" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">סכום גבייה *</Label>
+                    <Label htmlFor="amount" className="text-sm font-medium text-gray-700 mb-2 block text-right">סכום גבייה *</Label>
                     <Input
                       id="amount"
                       type="number"
                       value={formData.amount_to_collect}
                       onChange={(e) => setFormData({...formData, amount_to_collect: e.target.value})}
                       placeholder="0.00"
-                      className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
+                      className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="invoice_date" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">תאריך חשבון</Label>
+                    <Label htmlFor="invoice_date" className="text-sm font-medium text-gray-700 mb-2 block text-right">תאריך חשבון</Label>
                     <Input
                       id="invoice_date"
                       type="date"
                       value={formData.invoice_date}
                       onChange={(e) => setFormData({...formData, invoice_date: e.target.value})}
-                      className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
+                      className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="due_date" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">תאריך יעד לתשלום</Label>
+                    <Label htmlFor="due_date" className="text-sm font-medium text-gray-700 mb-2 block text-right">תאריך יעד לתשלום</Label>
                     <Input
                       id="due_date"
                       type="date"
                       value={formData.payment_due_date}
                       onChange={(e) => setFormData({...formData, payment_due_date: e.target.value})}
-                      className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
+                      className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="status" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">סטטוס גבייה</Label>
+                    <Label htmlFor="status" className="text-sm font-medium text-gray-700 mb-2 block text-right">סטטוס גבייה</Label>
                     <Select value={formData.collection_status} onValueChange={(val) => setFormData({...formData, collection_status: val})}>
-                      <SelectTrigger className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]">
+                      <SelectTrigger className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#1a1a2e]">
+                      <SelectContent className="bg-white">
                         {Object.entries(statusConfig).map(([status, config]) => (
                           <SelectItem key={status} value={status}>
                             {config.icon} {config.displayName || status}
@@ -379,12 +379,12 @@ export default function CollectionTasks() {
                   </div>
 
                   <div>
-                    <Label htmlFor="responsible" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">אחראי</Label>
+                    <Label htmlFor="responsible" className="text-sm font-medium text-gray-700 mb-2 block text-right">אחראי</Label>
                     <Select value={formData.responsible} onValueChange={(val) => setFormData({...formData, responsible: val})}>
-                      <SelectTrigger className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]">
+                      <SelectTrigger className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#1a1a2e]">
+                      <SelectContent className="bg-white">
                         {["חיה", "יניר", "דבורה", "יהודה", "רבקה", "שי"].map(name => (
                           <SelectItem key={name} value={name}>{name}</SelectItem>
                         ))}
@@ -397,14 +397,14 @@ export default function CollectionTasks() {
 
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="project" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
+                        <Label htmlFor="project" className="text-sm font-medium text-gray-700 mb-2 block text-right">
                           שיוך לפרויקט (אופציונלי)
                         </Label>
                         <Select value={formData.project_id} onValueChange={(val) => setFormData({...formData, project_id: val})}>
-                          <SelectTrigger className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]">
+                          <SelectTrigger className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900">
                             <SelectValue placeholder="ללא שיוך לפרויקט" />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#1a1a2e]">
+                          <SelectContent className="bg-white">
                             {projects.map(p => (
                               <SelectItem key={p.id} value={p.id}>{p.name} - {p.client_name}</SelectItem>
                             ))}
@@ -415,7 +415,7 @@ export default function CollectionTasks() {
                   </div>
 
                   <div className="flex justify-end gap-3 pt-6 border-t border-[rgba(255,255,255,0.08)]">
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-[rgba(255,255,255,0.12)] text-[#e0e0e0]">
+                    <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-[rgba(255,255,255,0.12)] text-gray-700">
                       ביטול
                     </Button>
                     <Button onClick={handleCreateTask} className="text-white" style={{ backgroundColor: '#16A34A' }}>
@@ -595,7 +595,7 @@ export default function CollectionTasks() {
             });
           }
           }}>
-          <DialogContent className="max-w-md bg-[#1a1a2e] border-0 shadow-2xl" dir="rtl">
+          <DialogContent className="max-w-md bg-white border-0 shadow-2xl" dir="rtl">
             <DialogHeader className="text-right pb-4 border-b border-[rgba(255,255,255,0.08)]">
               <DialogTitle className="text-xl font-semibold" style={{ color: 'var(--argaman)' }}>קליטת תשלום</DialogTitle>
             </DialogHeader>
@@ -608,7 +608,7 @@ export default function CollectionTasks() {
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-[#e0e0e0] mb-3 block text-right">
+                <Label className="text-sm font-medium text-gray-700 mb-3 block text-right">
                   האם התקבל תשלום מלא?
                 </Label>
                 <div className="flex gap-3">
@@ -633,7 +633,7 @@ export default function CollectionTasks() {
 
               {!paymentDialog.isFullPayment && (
                 <div>
-                  <Label htmlFor="amount_received" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
+                  <Label htmlFor="amount_received" className="text-sm font-medium text-gray-700 mb-2 block text-right">
                     כמה התקבל בפועל? *
                   </Label>
                   <Input
@@ -642,7 +642,7 @@ export default function CollectionTasks() {
                     value={paymentDialog.amountReceived}
                     onChange={(e) => setPaymentDialog({...paymentDialog, amountReceived: e.target.value})}
                     placeholder="0.00"
-                    className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
+                    className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900"
                     required
                   />
                   {paymentDialog.amountReceived && (
@@ -654,7 +654,7 @@ export default function CollectionTasks() {
               )}
 
               <div>
-                <Label htmlFor="receipt_date" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
+                <Label htmlFor="receipt_date" className="text-sm font-medium text-gray-700 mb-2 block text-right">
                   תאריך קבלה
                 </Label>
                 <Input
@@ -662,12 +662,12 @@ export default function CollectionTasks() {
                   type="date"
                   value={paymentDialog.receiptDate}
                   onChange={(e) => setPaymentDialog({...paymentDialog, receiptDate: e.target.value})}
-                  className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
+                  className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900"
                 />
               </div>
 
               <div>
-                <Label htmlFor="payment_notes" className="text-sm font-medium text-[#e0e0e0] mb-2 block text-right">
+                <Label htmlFor="payment_notes" className="text-sm font-medium text-gray-700 mb-2 block text-right">
                   הערות
                 </Label>
                 <Textarea
@@ -676,7 +676,7 @@ export default function CollectionTasks() {
                   onChange={(e) => setPaymentDialog({...paymentDialog, notes: e.target.value})}
                   placeholder="הערות נוספות..."
                   rows={3}
-                  className="bg-[#1a1a2e] border-[rgba(255,255,255,0.12)] text-[#f0f0f0]"
+                  className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900"
                 />
               </div>
 
@@ -691,7 +691,7 @@ export default function CollectionTasks() {
                     receiptDate: new Date().toISOString().split('T')[0],
                     notes: ''
                   })}
-                  className="border-[rgba(255,255,255,0.12)] text-[#e0e0e0]"
+                  className="border-[rgba(255,255,255,0.12)] text-gray-700"
                 >
                   ביטול
                 </Button>

@@ -27,9 +27,9 @@ export default function DeductionsModal({ isOpen, onClose, onSave, currentDeduct
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-lg bg-[#1a1a2e]" dir="rtl">
+            <DialogContent className="max-w-lg bg-white" dir="rtl">
                 <DialogHeader>
-                    <DialogTitle className="text-xl font-bold text-[#f0f0f0] text-right">
+                    <DialogTitle className="text-xl font-bold text-gray-900 text-right">
                         ניהול קיזוזים
                     </DialogTitle>
                 </DialogHeader>
@@ -48,7 +48,7 @@ export default function DeductionsModal({ isOpen, onClose, onSave, currentDeduct
                     <div className="space-y-4">
                         <Card>
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-sm font-medium text-[#e0e0e0] flex items-center gap-2">
+                                <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
                                     <Percent className="w-4 h-4" />
                                     קיזוז ביטוח
                                 </CardTitle>
@@ -64,15 +64,15 @@ export default function DeductionsModal({ isOpen, onClose, onSave, currentDeduct
                                         onChange={(e) => handleInputChange('deduction_insurance_percentage', e.target.value)}
                                         className="text-right"
                                     />
-                                    <span className="text-[#a0a0b8]">%</span>
+                                    <span className="text-gray-500">%</span>
                                 </div>
-                                <p className="text-xs text-[#a0a0b8] mt-1">אחוז קיזוז עבור ביטוח חבות וכיסויים</p>
+                                <p className="text-xs text-gray-500 mt-1">אחוז קיזוז עבור ביטוח חבות וכיסויים</p>
                             </CardContent>
                         </Card>
 
                         <Card>
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-sm font-medium text-[#e0e0e0] flex items-center gap-2">
+                                <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
                                     <Percent className="w-4 h-4" />
                                     קיזוז עיכבון
                                 </CardTitle>
@@ -88,15 +88,15 @@ export default function DeductionsModal({ isOpen, onClose, onSave, currentDeduct
                                         onChange={(e) => handleInputChange('deduction_retention_percentage', e.target.value)}
                                         className="text-right"
                                     />
-                                    <span className="text-[#a0a0b8]">%</span>
+                                    <span className="text-gray-500">%</span>
                                 </div>
-                                <p className="text-xs text-[#a0a0b8] mt-1">אחוז עיכבון לתקופת אחריות</p>
+                                <p className="text-xs text-gray-500 mt-1">אחוז עיכבון לתקופת אחריות</p>
                             </CardContent>
                         </Card>
 
                         <Card>
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-sm font-medium text-[#e0e0e0] flex items-center gap-2">
+                                <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
                                     <Percent className="w-4 h-4" />
                                     קיזוז בדיקות מעבדה
                                 </CardTitle>
@@ -112,9 +112,9 @@ export default function DeductionsModal({ isOpen, onClose, onSave, currentDeduct
                                         onChange={(e) => handleInputChange('deduction_lab_tests_percentage', e.target.value)}
                                         className="text-right"
                                     />
-                                    <span className="text-[#a0a0b8]">%</span>
+                                    <span className="text-gray-500">%</span>
                                 </div>
-                                <p className="text-xs text-[#a0a0b8] mt-1">אחוז קיזוז עבור בדיקות איכות ומעבדה</p>
+                                <p className="text-xs text-gray-500 mt-1">אחוז קיזוז עבור בדיקות איכות ומעבדה</p>
                             </CardContent>
                         </Card>
                     </div>

@@ -103,41 +103,41 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
                     חיוב {invoiceNumber}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
-                <div className="bg-[#1a1a2e] p-1 rounded-lg">
+            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
+                <div className="bg-white p-1 rounded-lg">
                     <DialogHeader className="bg-[rgba(96,165,250,0.1)] p-4 rounded-t-lg border-b">
-                        <DialogTitle className="text-[#e0e0e0] text-lg font-bold">
+                        <DialogTitle className="text-gray-700 text-lg font-bold">
                             הוספת חיוב {invoiceNumber} - {quoteLine?.name_snapshot}
                         </DialogTitle>
                     </DialogHeader>
 
-                    <div className="p-6 bg-[#1a1a2e]">
-                        <form onSubmit={handleSubmit} className="space-y-6 text-[#e0e0e0]">
+                    <div className="p-6 bg-white">
+                        <form onSubmit={handleSubmit} className="space-y-6 text-gray-700">
                            <div className="grid grid-cols-2 gap-4 p-4 bg-[rgba(96,165,250,0.1)] rounded-lg border border-blue-200">
                                 <div>
-                                    <Label className="text-sm font-semibold text-[#e0e0e0]">כמות כוללת</Label>
-                                    <p className="text-lg font-bold text-[#e0e0e0]">{totalQuantity}</p>
+                                    <Label className="text-sm font-semibold text-gray-700">כמות כוללת</Label>
+                                    <p className="text-lg font-bold text-gray-700">{totalQuantity}</p>
                                 </div>
                                 <div>
-                                    <Label className="text-sm font-semibold text-[#e0e0e0]">סכום כולל</Label>
-                                    <p className="text-lg font-bold text-[#e0e0e0]">₪{quoteLine?.line_total?.toLocaleString()}</p>
+                                    <Label className="text-sm font-semibold text-gray-700">סכום כולל</Label>
+                                    <p className="text-lg font-bold text-gray-700">₪{quoteLine?.line_total?.toLocaleString()}</p>
                                 </div>
                                 <div>
-                                    <Label className="text-sm font-semibold text-[#e0e0e0]">נותר לביצוע</Label>
-                                    <p className="text-sm text-[#a0a0b8]">{remainingPercentage.toFixed(1)}% ({remainingQuantity.toFixed(2)} יח')</p>
+                                    <Label className="text-sm font-semibold text-gray-700">נותר לביצוע</Label>
+                                    <p className="text-sm text-gray-500">{remainingPercentage.toFixed(1)}% ({remainingQuantity.toFixed(2)} יח')</p>
                                 </div>
                                 <div>
-                                    <Label className="text-sm font-semibold text-[#e0e0e0]">חויב עד כה</Label>
-                                    <p className="text-sm text-[#a0a0b8]">{totalInvoiced.toFixed(1)}%</p>
+                                    <Label className="text-sm font-semibold text-gray-700">חויב עד כה</Label>
+                                    <p className="text-sm text-gray-500">{totalInvoiced.toFixed(1)}%</p>
                                 </div>
                             </div>
                             <div>
-                                <Label htmlFor="entry-method" className="text-[#e0e0e0] font-semibold">שיטת הזנה</Label>
+                                <Label htmlFor="entry-method" className="text-gray-700 font-semibold">שיטת הזנה</Label>
                                 <Select value={entryMethod} onValueChange={setEntryMethod}>
-                                    <SelectTrigger className="bg-[#1a1a2e] border-gray-300">
+                                    <SelectTrigger className="bg-white border-gray-300">
                                         <SelectValue />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-[#1a1a2e]">
+                                    <SelectContent className="bg-white">
                                         <SelectItem value="percentage">לפי אחוז ביצוע</SelectItem>
                                         <SelectItem value="quantity">לפי כמות שבוצעה</SelectItem>
                                     </SelectContent>
@@ -146,7 +146,7 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
 
                             {entryMethod === 'percentage' ? (
                                 <div>
-                                    <Label htmlFor="percentage" className="text-[#e0e0e0] font-semibold">אחוז ביצוע (%)</Label>
+                                    <Label htmlFor="percentage" className="text-gray-700 font-semibold">אחוז ביצוע (%)</Label>
                                     <Input
                                         id="percentage"
                                         type="number"
@@ -155,7 +155,7 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
                                         step="0.1"
                                         value={percentage}
                                         onChange={(e) => setPercentage(parseFloat(e.target.value) || 0)}
-                                        className="text-right bg-[#1a1a2e] border-gray-300"
+                                        className="text-right bg-white border-gray-300"
                                     />
                                     <p className="text-xs text-[#60a5fa] mt-1 font-semibold">
                                         סכום לחיוב: ₪{calculateAmount().toLocaleString()}
@@ -163,7 +163,7 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
                                 </div>
                             ) : (
                                 <div>
-                                    <Label htmlFor="quantity" className="text-[#e0e0e0] font-semibold">כמות שבוצעה</Label>
+                                    <Label htmlFor="quantity" className="text-gray-700 font-semibold">כמות שבוצעה</Label>
                                     <Input
                                         id="quantity"
                                         type="number"
@@ -172,7 +172,7 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
                                         step="0.01"
                                         value={quantity}
                                         onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)}
-                                        className="text-right bg-[#1a1a2e] border-gray-300"
+                                        className="text-right bg-white border-gray-300"
                                     />
                                     <p className="text-xs text-[#60a5fa] mt-1 font-semibold">
                                         אחוז: {calculatePercentage().toFixed(1)}% | סכום: ₪{calculateAmount().toLocaleString()}
@@ -181,13 +181,13 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
                             )}
 
                             <div>
-                                <Label htmlFor="entry-date" className="text-[#e0e0e0] font-semibold">תאריך</Label>
-                                <Input id="entry-date" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="bg-[#1a1a2e] border-gray-300" />
+                                <Label htmlFor="entry-date" className="text-gray-700 font-semibold">תאריך</Label>
+                                <Input id="entry-date" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="bg-white border-gray-300" />
                             </div>
 
                             <div>
-                                <Label htmlFor="notes" className="text-[#e0e0e0] font-semibold">הערות</Label>
-                                <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="הערות נוספות..." rows={3} className="bg-[#1a1a2e] border-gray-300" />
+                                <Label htmlFor="notes" className="text-gray-700 font-semibold">הערות</Label>
+                                <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="הערות נוספות..." rows={3} className="bg-white border-gray-300" />
                             </div>
 
                             <div className="flex justify-end gap-3 pt-4 border-t">
@@ -250,15 +250,15 @@ const EditInvoiceEntryDialog = ({ entry, quoteLine, projectId, onInvoiceUpdated,
             <DialogTrigger asChild>
                 <Button size="sm" variant="ghost" className="text-[#60a5fa] hover:text-[#60a5fa]" onClick={() => setIsOpen(true)}><Edit className="w-4 h-4" /></Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
-                <div className="bg-[#1a1a2e] p-1 rounded-lg">
-                    <DialogHeader className="bg-[rgba(96,165,250,0.1)] p-4 rounded-t-lg border-b"><DialogTitle className="text-[#e0e0e0] text-lg font-bold">עריכת חיוב - {quoteLine?.name_snapshot}</DialogTitle></DialogHeader>
-                    <div className="p-6 bg-[#1a1a2e]">
-                        <form onSubmit={handleSubmit} className="space-y-6 text-[#e0e0e0]">
-                            <div><Label htmlFor="entry-method" className="text-[#e0e0e0] font-semibold">שיטת הזנה</Label><Select value={entryMethod} onValueChange={setEntryMethod}><SelectTrigger className="bg-[#1a1a2e] border-gray-300"><SelectValue /></SelectTrigger><SelectContent className="bg-[#1a1a2e]"><SelectItem value="percentage">לפי אחוז ביצוע</SelectItem><SelectItem value="quantity">לפי כמות שבוצעה</SelectItem></SelectContent></Select></div>
-                            {entryMethod === 'percentage' ? (<div><Label htmlFor="percentage" className="text-[#e0e0e0] font-semibold">אחוז ביצוע (%) - 0 למחיקה</Label><Input id="percentage" type="number" min="0" max={remainingPercentageForOthers + (entry?.calculated_percentage || 0)} step="0.1" value={percentage} onChange={(e) => setPercentage(parseFloat(e.target.value) || 0)} className="text-right bg-[#1a1a2e] border-gray-300" /></div>) : (<div><Label htmlFor="quantity" className="text-[#e0e0e0] font-semibold">כמות שבוצעה - 0 למחיקה</Label><Input id="quantity" type="number" min="0" max={remainingQuantityForOthers + (entry?.quantity_completed || 0)} step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)} className="text-right bg-[#1a1a2e] border-gray-300" /></div>)}
-                            <div><Label htmlFor="entry-date" className="text-[#e0e0e0] font-semibold">תאריך</Label><Input id="entry-date" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="bg-[#1a1a2e] border-gray-300" /></div>
-                            <div><Label htmlFor="notes" className="text-[#e0e0e0] font-semibold">הערות</Label><Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="הערות נוספות..." rows={3} className="bg-[#1a1a2e] border-gray-300" /></div>
+            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
+                <div className="bg-white p-1 rounded-lg">
+                    <DialogHeader className="bg-[rgba(96,165,250,0.1)] p-4 rounded-t-lg border-b"><DialogTitle className="text-gray-700 text-lg font-bold">עריכת חיוב - {quoteLine?.name_snapshot}</DialogTitle></DialogHeader>
+                    <div className="p-6 bg-white">
+                        <form onSubmit={handleSubmit} className="space-y-6 text-gray-700">
+                            <div><Label htmlFor="entry-method" className="text-gray-700 font-semibold">שיטת הזנה</Label><Select value={entryMethod} onValueChange={setEntryMethod}><SelectTrigger className="bg-white border-gray-300"><SelectValue /></SelectTrigger><SelectContent className="bg-white"><SelectItem value="percentage">לפי אחוז ביצוע</SelectItem><SelectItem value="quantity">לפי כמות שבוצעה</SelectItem></SelectContent></Select></div>
+                            {entryMethod === 'percentage' ? (<div><Label htmlFor="percentage" className="text-gray-700 font-semibold">אחוז ביצוע (%) - 0 למחיקה</Label><Input id="percentage" type="number" min="0" max={remainingPercentageForOthers + (entry?.calculated_percentage || 0)} step="0.1" value={percentage} onChange={(e) => setPercentage(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" /></div>) : (<div><Label htmlFor="quantity" className="text-gray-700 font-semibold">כמות שבוצעה - 0 למחיקה</Label><Input id="quantity" type="number" min="0" max={remainingQuantityForOthers + (entry?.quantity_completed || 0)} step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" /></div>)}
+                            <div><Label htmlFor="entry-date" className="text-gray-700 font-semibold">תאריך</Label><Input id="entry-date" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="bg-white border-gray-300" /></div>
+                            <div><Label htmlFor="notes" className="text-gray-700 font-semibold">הערות</Label><Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="הערות נוספות..." rows={3} className="bg-white border-gray-300" /></div>
                             <div className="flex justify-between pt-4 border-t">
                                 <Button type="button" variant="destructive" onClick={handleDelete} className="bg-red-600 hover:bg-red-700"><Trash2 className="w-4 h-4 ml-2" />מחק חיוב</Button>
                                 <div className="flex gap-3"><Button type="button" variant="outline" onClick={() => setIsOpen(false)}>ביטול</Button><Button type="submit" className="bg-[#D4A843] hover:bg-[#B8922E] text-white">עדכן חיוב</Button></div>
@@ -298,23 +298,23 @@ const AddItemDialog = ({ projectId, quoteId, onItemAdded }) => {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild><Button className="bg-green-600 hover:bg-green-700 text-white"><Plus className="w-4 h-4 ml-2" />הוסף פריט ידני</Button></DialogTrigger>
-            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
-                <div className="bg-[#1a1a2e] p-1 rounded-lg">
-                    <DialogHeader className="bg-[rgba(74,222,128,0.1)] p-4 rounded-t-lg border-b"><DialogTitle className="text-[#e0e0e0] text-lg font-bold">הוספת פריט חדש ידני</DialogTitle></DialogHeader>
-                    <div className="p-6 bg-[#1a1a2e]">
-                        <form onSubmit={handleSubmit} className="space-y-6 text-[#e0e0e0]">
-                            <div><Label htmlFor="clause-number" className="text-[#e0e0e0] font-semibold">מספר סעיף</Label><Input id="clause-number" value={clauseNumber} onChange={(e) => setClauseNumber(e.target.value)} placeholder="לדוגמה: A1, 1.2.3..." className="text-right bg-[#1a1a2e] border-gray-300" /></div>
-                            <div><Label htmlFor="item-name" className="text-[#e0e0e0] font-semibold">שם הפריט *</Label><Input id="item-name" value={itemName} onChange={(e) => setItemName(e.target.value)} placeholder="שם הפריט החדש..." className="text-right bg-[#1a1a2e] border-gray-300" required /></div>
-                            <div><Label htmlFor="description" className="text-[#e0e0e0] font-semibold">תיאור</Label><Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="תיאור מפורט של הפריט..." rows={3} className="bg-[#1a1a2e] border-gray-300" /></div>
+            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
+                <div className="bg-white p-1 rounded-lg">
+                    <DialogHeader className="bg-[rgba(74,222,128,0.1)] p-4 rounded-t-lg border-b"><DialogTitle className="text-gray-700 text-lg font-bold">הוספת פריט חדש ידני</DialogTitle></DialogHeader>
+                    <div className="p-6 bg-white">
+                        <form onSubmit={handleSubmit} className="space-y-6 text-gray-700">
+                            <div><Label htmlFor="clause-number" className="text-gray-700 font-semibold">מספר סעיף</Label><Input id="clause-number" value={clauseNumber} onChange={(e) => setClauseNumber(e.target.value)} placeholder="לדוגמה: A1, 1.2.3..." className="text-right bg-white border-gray-300" /></div>
+                            <div><Label htmlFor="item-name" className="text-gray-700 font-semibold">שם הפריט *</Label><Input id="item-name" value={itemName} onChange={(e) => setItemName(e.target.value)} placeholder="שם הפריט החדש..." className="text-right bg-white border-gray-300" required /></div>
+                            <div><Label htmlFor="description" className="text-gray-700 font-semibold">תיאור</Label><Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="תיאור מפורט של הפריט..." rows={3} className="bg-white border-gray-300" /></div>
                             <div className="grid grid-cols-2 gap-4">
-                                <div><Label htmlFor="quantity" className="text-[#e0e0e0] font-semibold">כמות *</Label><Input id="quantity" type="number" min="0.01" step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value) || 1)} className="text-right bg-[#1a1a2e] border-gray-300" required /></div>
-                                <div><Label htmlFor="unit-price" className="text-[#e0e0e0] font-semibold">מחיר יחידה (₪) *</Label><Input id="unit-price" type="number" min="0" step="0.01" value={unitPrice} onChange={(e) => setUnitPrice(parseFloat(e.target.value) || 0)} className="text-right bg-[#1a1a2e] border-gray-300" required /><p className="text-xs text-[#a0a0b8] mt-1">ניתן להזין 0 לפריטים ללא חיוב</p></div>
+                                <div><Label htmlFor="quantity" className="text-gray-700 font-semibold">כמות *</Label><Input id="quantity" type="number" min="0.01" step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value) || 1)} className="text-right bg-white border-gray-300" required /></div>
+                                <div><Label htmlFor="unit-price" className="text-gray-700 font-semibold">מחיר יחידה (₪) *</Label><Input id="unit-price" type="number" min="0" step="0.01" value={unitPrice} onChange={(e) => setUnitPrice(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" required /><p className="text-xs text-gray-500 mt-1">ניתן להזין 0 לפריטים ללא חיוב</p></div>
                             </div>
                             <div className={`p-3 rounded-lg border ${unitPrice === 0 ? 'bg-[rgba(96,165,250,0.1)] border-blue-200' : 'bg-[rgba(74,222,128,0.1)] border-green-200'}`}>
-                                <div className="flex justify-between items-center"><Label className="text-sm font-semibold text-[#e0e0e0]">סכום כולל</Label>{unitPrice === 0 && (<Badge className="bg-[rgba(96,165,250,0.1)] text-[#60a5fa] text-xs">ללא חיוב</Badge>)}</div>
-                                <p className="text-lg font-bold text-[#e0e0e0]">₪{(quantity * unitPrice).toLocaleString()}</p>
+                                <div className="flex justify-between items-center"><Label className="text-sm font-semibold text-gray-700">סכום כולל</Label>{unitPrice === 0 && (<Badge className="bg-[rgba(96,165,250,0.1)] text-[#60a5fa] text-xs">ללא חיוב</Badge>)}</div>
+                                <p className="text-lg font-bold text-gray-700">₪{(quantity * unitPrice).toLocaleString()}</p>
                             </div>
-                            <div><Label htmlFor="reason" className="text-[#e0e0e0] font-semibold">סיבת ההוספה *</Label><Textarea id="reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="מדוע נוסף פריט זה לפרויקט..." rows={2} className="bg-[#1a1a2e] border-gray-300" required /></div>
+                            <div><Label htmlFor="reason" className="text-gray-700 font-semibold">סיבת ההוספה *</Label><Textarea id="reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="מדוע נוסף פריט זה לפרויקט..." rows={2} className="bg-white border-gray-300" required /></div>
                             <div className="flex justify-end gap-3 pt-4 border-t"><Button type="button" variant="outline" onClick={() => setIsOpen(false)}>ביטול</Button><Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">הוסף פריט</Button></div>
                         </form>
                     </div>
@@ -681,7 +681,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                                                 const boqDiscPct = project?.boq_discount_percentage || 0; const boqDiscAmtFixed = project?.boq_discount_amount || 0;
                                                 const boqDiscAmt = discountType === 'fixed_amount' ? Math.min(boqDiscAmtFixed, rawSubtotal) : (rawSubtotal * (boqDiscPct / 100));
                                                 if (boqDiscAmt > 0 && rawSubtotal > 0) {
-                                                    return (<TableRow className="bg-[rgba(74,222,128,0.1)] border-t-2 border-green-200"><TableCell className="text-right"></TableCell><TableCell className="text-right"><p className="font-bold text-[#4ade80]">הנחה כללית</p><p className="text-sm text-[#a0a0b8]">{discountType === 'percentage' ? `${boqDiscPct}% הנחה` : 'הנחה קבועה'}</p></TableCell><TableCell className="text-right text-center">1</TableCell><TableCell className="text-right text-center font-semibold text-[#f87171]">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right font-bold text-[#f87171]">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right"></TableCell><TableCell className="text-right"></TableCell></TableRow>);
+                                                    return (<TableRow className="bg-[rgba(74,222,128,0.1)] border-t-2 border-green-200"><TableCell className="text-right"></TableCell><TableCell className="text-right"><p className="font-bold text-[#4ade80]">הנחה כללית</p><p className="text-sm text-gray-500">{discountType === 'percentage' ? `${boqDiscPct}% הנחה` : 'הנחה קבועה'}</p></TableCell><TableCell className="text-right text-center">1</TableCell><TableCell className="text-right text-center font-semibold text-[#f87171]">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right font-bold text-[#f87171]">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right"></TableCell><TableCell className="text-right"></TableCell></TableRow>);
                                                 }
                                                 return null;
                                             })()}
@@ -715,21 +715,21 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             </Card>
             <DeductionsModal isOpen={showDeductionsModal} onClose={() => setShowDeductionsModal(false)} onSave={handleDeductionsUpdate} currentDeductions={project || {}} />
             <Dialog open={showDiscountDialog} onOpenChange={setShowDiscountDialog}>
-                <DialogContent className="max-w-md bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
-                    <DialogHeader className="bg-[rgba(74,222,128,0.1)] p-4 rounded-t-lg border-b"><DialogTitle className="text-[#e0e0e0] text-lg font-bold">הנחה כללית על כתב הכמויות</DialogTitle></DialogHeader>
-                    <div className="p-6 bg-[#1a1a2e] space-y-4">
-                        <div><Label className="text-[#e0e0e0] font-semibold mb-2 block">סוג הנחה</Label><Select value={boqDiscountType} onValueChange={setBoqDiscountType}><SelectTrigger className="bg-[#1a1a2e] border-gray-300"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="percentage">אחוז (%)</SelectItem><SelectItem value="fixed_amount">סכום קבוע (₪)</SelectItem></SelectContent></Select></div>
-                        <div><Label className="text-[#e0e0e0] font-semibold mb-2 block">{boqDiscountType === 'percentage' ? 'אחוז הנחה' : 'סכום הנחה'}</Label><Input type="number" min="0" max={boqDiscountType === 'percentage' ? 100 : undefined} step={boqDiscountType === 'percentage' ? '0.1' : '0.01'} value={boqDiscountType === 'percentage' ? boqDiscountPercentage : boqDiscountAmount} onChange={(e) => { const value = parseFloat(e.target.value) || 0; if (boqDiscountType === 'percentage') setBoqDiscountPercentage(Math.max(0, Math.min(100, value))); else setBoqDiscountAmount(Math.max(0, value)); }} className="text-center bg-[#1a1a2e] border-gray-300" /><p className="text-xs text-[#a0a0b8] mt-2">ההנחה תחושב על סה"כ כל החשבונות לפני קיזוזים ומע"מ{boqDiscountType === 'fixed_amount' && ' (אם הסכום גבוה מהחיוב, ההנחה תוגבל לסכום החיוב)'}</p></div>
+                <DialogContent className="max-w-md bg-white shadow-xl rounded-lg" dir="rtl">
+                    <DialogHeader className="bg-[rgba(74,222,128,0.1)] p-4 rounded-t-lg border-b"><DialogTitle className="text-gray-700 text-lg font-bold">הנחה כללית על כתב הכמויות</DialogTitle></DialogHeader>
+                    <div className="p-6 bg-white space-y-4">
+                        <div><Label className="text-gray-700 font-semibold mb-2 block">סוג הנחה</Label><Select value={boqDiscountType} onValueChange={setBoqDiscountType}><SelectTrigger className="bg-white border-gray-300"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="percentage">אחוז (%)</SelectItem><SelectItem value="fixed_amount">סכום קבוע (₪)</SelectItem></SelectContent></Select></div>
+                        <div><Label className="text-gray-700 font-semibold mb-2 block">{boqDiscountType === 'percentage' ? 'אחוז הנחה' : 'סכום הנחה'}</Label><Input type="number" min="0" max={boqDiscountType === 'percentage' ? 100 : undefined} step={boqDiscountType === 'percentage' ? '0.1' : '0.01'} value={boqDiscountType === 'percentage' ? boqDiscountPercentage : boqDiscountAmount} onChange={(e) => { const value = parseFloat(e.target.value) || 0; if (boqDiscountType === 'percentage') setBoqDiscountPercentage(Math.max(0, Math.min(100, value))); else setBoqDiscountAmount(Math.max(0, value)); }} className="text-center bg-white border-gray-300" /><p className="text-xs text-gray-500 mt-2">ההנחה תחושב על סה"כ כל החשבונות לפני קיזוזים ומע"מ{boqDiscountType === 'fixed_amount' && ' (אם הסכום גבוה מהחיוב, ההנחה תוגבל לסכום החיוב)'}</p></div>
                         <div className="flex justify-end gap-3 pt-4 border-t"><Button type="button" variant="outline" onClick={() => setShowDiscountDialog(false)}>ביטול</Button><Button onClick={async () => { try { await Project.update(projectId, { boq_discount_type: boqDiscountType, boq_discount_percentage: boqDiscountPercentage, boq_discount_amount: boqDiscountAmount }); toast.success("הנחה כללית עודכנה"); if (onUpdateQuoteLine) onUpdateQuoteLine(null, true); setShowDiscountDialog(false); } catch (error) { console.error('Error updating BOQ discount:', error); toast.error("שגיאה בעדכון הנחה"); } }} className="bg-green-600 hover:bg-green-700 text-white">שמור</Button></div>
                     </div>
                 </DialogContent>
             </Dialog>
             <Dialog open={showPaymentTermsDialog} onOpenChange={(open) => { setShowPaymentTermsDialog(open); if (!open) { setShowCustomDays(false); setCustomDays(''); } }}>
-                <DialogContent className="max-w-md bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
-                    <DialogHeader className="bg-teal-50 p-4 rounded-t-lg border-b"><DialogTitle className="text-[#e0e0e0] text-lg font-bold">עריכת תנאי תשלום</DialogTitle></DialogHeader>
-                    <div className="p-6 bg-[#1a1a2e] space-y-4">
-                        <div><Label className="text-[#e0e0e0] font-semibold mb-2 block">בחר תנאי תשלום</Label><Select value={selectedPaymentTerms} onValueChange={(value) => { setSelectedPaymentTerms(value); setShowCustomDays(value === 'אחר'); }}><SelectTrigger className="bg-[#1a1a2e] border-gray-300"><SelectValue /></SelectTrigger><SelectContent className="bg-[#1a1a2e]"><SelectItem value="מיידי"><div className="text-right"><div className="font-semibold">מיידי</div><div className="text-xs text-[#a0a0b8]">תשלום במועד החשבונית</div></div></SelectItem><SelectItem value="שוטף"><div className="text-right"><div className="font-semibold">שוטף</div><div className="text-xs text-[#a0a0b8]">תשלום בסוף החודש</div></div></SelectItem><SelectItem value="שוטף 30"><div className="text-right"><div className="font-semibold">שוטף 30</div><div className="text-xs text-[#a0a0b8]">סוף חודש + 30 יום</div></div></SelectItem><SelectItem value="שוטף 60"><div className="text-right"><div className="font-semibold">שוטף 60</div><div className="text-xs text-[#a0a0b8]">סוף חודש + 60 יום</div></div></SelectItem><SelectItem value="שוטף 90"><div className="text-right"><div className="font-semibold">שוטף 90</div><div className="text-xs text-[#a0a0b8]">סוף חודש + 90 יום</div></div></SelectItem><SelectItem value="אחר"><div className="text-right"><div className="font-semibold">אחר (הזנת ימים)</div><div className="text-xs text-[#a0a0b8]">שוטף + מספר ימים לבחירתך</div></div></SelectItem></SelectContent></Select></div>
-                        {showCustomDays && (<div className="bg-teal-50 p-4 rounded-lg border border-teal-200"><Label htmlFor="custom-days" className="text-[#e0e0e0] font-semibold mb-2 block">מספר ימים (N)</Label><Input id="custom-days" type="number" min="0" max="365" step="1" value={customDays} onChange={(e) => setCustomDays(e.target.value)} placeholder="הזן מספר ימים (0-365)" className="bg-[#1a1a2e] border-gray-300 text-center" /><p className="text-xs text-[#a0a0b8] mt-2">תאריך היעד יחושב: סוף החודש + {customDays || 'N'} ימים</p></div>)}
+                <DialogContent className="max-w-md bg-white shadow-xl rounded-lg" dir="rtl">
+                    <DialogHeader className="bg-teal-50 p-4 rounded-t-lg border-b"><DialogTitle className="text-gray-700 text-lg font-bold">עריכת תנאי תשלום</DialogTitle></DialogHeader>
+                    <div className="p-6 bg-white space-y-4">
+                        <div><Label className="text-gray-700 font-semibold mb-2 block">בחר תנאי תשלום</Label><Select value={selectedPaymentTerms} onValueChange={(value) => { setSelectedPaymentTerms(value); setShowCustomDays(value === 'אחר'); }}><SelectTrigger className="bg-white border-gray-300"><SelectValue /></SelectTrigger><SelectContent className="bg-white"><SelectItem value="מיידי"><div className="text-right"><div className="font-semibold">מיידי</div><div className="text-xs text-gray-500">תשלום במועד החשבונית</div></div></SelectItem><SelectItem value="שוטף"><div className="text-right"><div className="font-semibold">שוטף</div><div className="text-xs text-gray-500">תשלום בסוף החודש</div></div></SelectItem><SelectItem value="שוטף 30"><div className="text-right"><div className="font-semibold">שוטף 30</div><div className="text-xs text-gray-500">סוף חודש + 30 יום</div></div></SelectItem><SelectItem value="שוטף 60"><div className="text-right"><div className="font-semibold">שוטף 60</div><div className="text-xs text-gray-500">סוף חודש + 60 יום</div></div></SelectItem><SelectItem value="שוטף 90"><div className="text-right"><div className="font-semibold">שוטף 90</div><div className="text-xs text-gray-500">סוף חודש + 90 יום</div></div></SelectItem><SelectItem value="אחר"><div className="text-right"><div className="font-semibold">אחר (הזנת ימים)</div><div className="text-xs text-gray-500">שוטף + מספר ימים לבחירתך</div></div></SelectItem></SelectContent></Select></div>
+                        {showCustomDays && (<div className="bg-teal-50 p-4 rounded-lg border border-teal-200"><Label htmlFor="custom-days" className="text-gray-700 font-semibold mb-2 block">מספר ימים (N)</Label><Input id="custom-days" type="number" min="0" max="365" step="1" value={customDays} onChange={(e) => setCustomDays(e.target.value)} placeholder="הזן מספר ימים (0-365)" className="bg-white border-gray-300 text-center" /><p className="text-xs text-gray-500 mt-2">תאריך היעד יחושב: סוף החודש + {customDays || 'N'} ימים</p></div>)}
                         <div className="flex justify-end gap-3 pt-4 border-t"><Button type="button" variant="outline" onClick={() => { setShowPaymentTermsDialog(false); setShowCustomDays(false); setCustomDays(''); }}>ביטול</Button><Button onClick={handlePaymentTermsUpdate} className="bg-teal-600 hover:bg-teal-700 text-white">שמור</Button></div>
                     </div>
                 </DialogContent>

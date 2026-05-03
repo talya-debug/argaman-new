@@ -97,7 +97,7 @@ export default function TaskActivityLog({ taskId }) {
                         disabled={isSaving}
                     />
                     <div className="flex justify-between items-center">
-                        <p className="text-xs text-[#a0a0b8]">Ctrl + Enter לשליחה מהירה</p>
+                        <p className="text-xs text-gray-500">Ctrl + Enter לשליחה מהירה</p>
                         <Button 
                             onClick={handleSubmitComment}
                             disabled={!newComment.trim() || isSaving}
@@ -119,7 +119,7 @@ export default function TaskActivityLog({ taskId }) {
                             </div>
                         ))
                     ) : activities.length === 0 ? (
-                        <div className="text-center py-8 text-[#a0a0b8]">
+                        <div className="text-center py-8 text-gray-500">
                             <MessageCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
                             <p>אין עדכונים עדיין</p>
                             <p className="text-sm">הוסף את העדכון הראשון</p>
@@ -135,8 +135,8 @@ export default function TaskActivityLog({ taskId }) {
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-medium text-[#f0f0f0]">{activity.user_name}</span>
-                                            <span className="text-xs text-[#a0a0b8] flex items-center gap-1">
+                                            <span className="font-medium text-gray-900">{activity.user_name}</span>
+                                            <span className="text-xs text-gray-500 flex items-center gap-1">
                                                 <Clock className="w-3 h-3" />
                                                 {format(new Date(activity.created_date), 'dd/MM/yyyy HH:mm', { locale: he })}
                                             </span>
@@ -144,7 +144,7 @@ export default function TaskActivityLog({ taskId }) {
                                     </div>
                                 </div>
                                 <div className="mr-10">
-                                    <p className="text-[#e0e0e0] bg-[#1a1a2e] p-3 rounded-lg">
+                                    <p className="text-gray-700 bg-white p-3 rounded-lg">
                                         {activity.comment}
                                     </p>
                                 </div>

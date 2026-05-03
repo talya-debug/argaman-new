@@ -34,7 +34,7 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
                                 הוסף דיווח חדש
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-4xl bg-[#1a1a2e] shadow-xl max-h-[90vh] flex flex-col" dir="rtl">
+                        <DialogContent className="max-w-4xl bg-white shadow-xl max-h-[90vh] flex flex-col" dir="rtl">
                             <div className="overflow-y-auto flex-1 min-h-0">
                                 <WorkLogForm 
                                     projectId={projectId} 
@@ -193,7 +193,7 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
 
             {/* Media Preview Dialog */}
             <Dialog open={selectedImage !== null} onOpenChange={(open) => !open && setSelectedImage(null)}>
-                <DialogContent className="max-w-4xl bg-[#1a1a2e]" dir="rtl">
+                <DialogContent className="max-w-4xl bg-white" dir="rtl">
                     <DialogHeader className="relative">
                         <DialogTitle>תצוגת מדיה</DialogTitle>
                         <Button 
@@ -236,7 +236,7 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
 
             {/* Signature Preview Dialog */}
             <Dialog open={selectedSignature !== null} onOpenChange={(open) => !open && setSelectedSignature(null)}>
-                <DialogContent className="max-w-2xl bg-[#1a1a2e]" dir="rtl">
+                <DialogContent className="max-w-2xl bg-white" dir="rtl">
                     <DialogHeader className="relative">
                         <DialogTitle>חתימת לקוח</DialogTitle>
                         <Button 
@@ -253,7 +253,7 @@ export default function WorkLog({ projectId, workLogEntries, onWorkLogAdded }) {
                             <>
                                 {selectedSignature.name && (
                                     <div className="text-center">
-                                        <p className="text-sm text-[#a0a0b8]">חותם: <span className="font-bold text-[#e0e0e0]">{selectedSignature.name}</span></p>
+                                        <p className="text-sm text-[#a0a0b8]">חותם: <span className="font-bold text-gray-700">{selectedSignature.name}</span></p>
                                     </div>
                                 )}
                                 <div className="flex items-center justify-center p-6 bg-gray-50 rounded-lg border-2 border-gray-200">

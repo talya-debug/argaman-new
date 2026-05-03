@@ -86,40 +86,40 @@ function AddManualPurchaseDialog({ projectId, onItemAdded }) {
                     פריט נוסף
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg bg-[#1a1a2e] shadow-xl rounded-lg" dir="rtl">
-                 <div className="bg-[#1a1a2e] p-1 rounded-lg">
+            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
+                 <div className="bg-white p-1 rounded-lg">
                     <DialogHeader className="bg-purple-50 p-4 rounded-t-lg border-b">
                         <DialogTitle className="text-slate-800 text-lg font-bold">הוספת פריט רכש נוסף</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="p-6 bg-[#1a1a2e]">
+                    <div className="p-6 bg-white">
                         <form onSubmit={handleSubmit} className="space-y-4 text-slate-800">
                             <div>
-                                <Label htmlFor="item-name" className="text-[#e0e0e0] font-semibold">שם הפריט *</Label>
+                                <Label htmlFor="item-name" className="text-gray-700 font-semibold">שם הפריט *</Label>
                                 <Input
                                     id="item-name"
                                     value={itemName}
                                     onChange={(e) => setItemName(e.target.value)}
                                     placeholder="שם הפריט לרכישה..."
-                                    className="text-right bg-[#1a1a2e] border-gray-300"
+                                    className="text-right bg-white border-gray-300"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="description" className="text-[#e0e0e0] font-semibold">תיאור</Label>
+                                <Label htmlFor="description" className="text-gray-700 font-semibold">תיאור</Label>
                                 <Textarea
                                     id="description"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     placeholder="תיאור מפורט של הפריט..."
                                     rows={3}
-                                    className="bg-[#1a1a2e] border-gray-300"
+                                    className="bg-white border-gray-300"
                                 />
                             </div>
 
                             <div>
-                                <Label htmlFor="quantity" className="text-[#e0e0e0] font-semibold">כמות מאושרת</Label>
+                                <Label htmlFor="quantity" className="text-gray-700 font-semibold">כמות מאושרת</Label>
                                 <Input
                                     id="quantity"
                                     type="number"
@@ -127,7 +127,7 @@ function AddManualPurchaseDialog({ projectId, onItemAdded }) {
                                     step="0.01"
                                     value={quantity}
                                     onChange={(e) => setQuantity(parseFloat(e.target.value) || 1)}
-                                    className="text-right bg-[#1a1a2e] border-gray-300"
+                                    className="text-right bg-white border-gray-300"
                                 />
                             </div>
 
@@ -425,12 +425,12 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
             }
             
             <Dialog open={isPoDialogOpen} onOpenChange={setIsPoDialogOpen}>
-                <DialogContent className="bg-[#1a1a2e]" dir="rtl">
+                <DialogContent className="bg-white" dir="rtl">
                     <DialogHeader>
                         <DialogTitle className="text-right text-xl font-bold">הפקת הזמנת רכש</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
-                        <p className="text-[#e0e0e0]">נבחרו {selectedPoItems.size} פריטים. הזן שם ספק כדי להפיק עבורו הזמנת רכש.</p>
+                        <p className="text-gray-700">נבחרו {selectedPoItems.size} פריטים. הזן שם ספק כדי להפיק עבורו הזמנת רכש.</p>
                         <div className="space-y-2">
                             <Label htmlFor="supplier-name" className="font-semibold">שם הספק</Label>
                             <Input 

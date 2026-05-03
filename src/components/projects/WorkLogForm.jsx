@@ -109,7 +109,7 @@ export default function WorkLogForm({ projectId, onSubmit, onCancel }) {
                         </div>
                         <div className="space-y-2">
                             <Label className="font-semibold">סה"כ שעות</Label>
-                            <div className="h-10 flex items-center justify-center bg-[#1e1e36] rounded-md border text-lg font-bold text-[#e0e0e0]">{totalHours}</div>
+                            <div className="h-10 flex items-center justify-center bg-gray-50 rounded-md border text-lg font-bold text-gray-700">{totalHours}</div>
                         </div>
                     </div>
 
@@ -126,10 +126,10 @@ export default function WorkLogForm({ projectId, onSubmit, onCancel }) {
                     <div className="space-y-4">
                         <Label className="font-semibold">הוספת מדיה (תמונה או סרטון)</Label>
                         <div className="flex items-center justify-center w-full">
-                            <label htmlFor="media-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-[#1a1a2e] hover:bg-[#1e1e36]">
+                            <label htmlFor="media-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50">
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 mb-4 text-[#a0a0b8]"/>
-                                    <p className="mb-2 text-sm text-[#a0a0b8]"><span className="font-semibold">לחץ להעלאה</span> או גרור לכאן</p>
+                                    <Upload className="w-8 h-8 mb-4 text-gray-500"/>
+                                    <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">לחץ להעלאה</span> או גרור לכאן</p>
                                     <p className="text-xs text-[#6b6b80]">תמונות (JPG, PNG, HEIC) או סרטונים (MP4, MOV)</p>
                                 </div>
                                 <input id="media-upload" type="file" multiple className="hidden" onChange={handleMediaChange} accept="image/*,video/*,.heic"/>
@@ -169,7 +169,7 @@ export default function WorkLogForm({ projectId, onSubmit, onCancel }) {
                     </form>
                 </CardContent>
             </Card>
-            <div className="flex justify-end gap-3 p-6 bg-[#1a1a2e] border-t flex-shrink-0">
+            <div className="flex justify-end gap-3 p-6 bg-white border-t flex-shrink-0">
                 <Button type="button" variant="outline" onClick={onCancel}>
                     ביטול
                 </Button>
