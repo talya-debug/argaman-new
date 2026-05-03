@@ -94,18 +94,25 @@ export default function Dashboard() {
       name: p.name?.replace('פרויקט - ', '').substring(0, 15), paid: p.paid, open: p.open,
     }));
 
-    // גרף רכש לפי סטטוס
-    const purchaseChart = [
-      { name: 'ממתין להזמנה', value: toOrder.length, color: '#f59e0b' },
-      { name: 'הוזמן', value: ordered.length, color: '#3b82f6' },
-      { name: 'סופק', value: delivered.length, color: '#22c55e' },
-    ].filter(x => x.value > 0);
+    // גרף תכנון מול ביצוע — הצעה מאושרת מול חויב + הוצאות רכש
+    const planVsActual = projectData.filter(p => p.budget > 0).map(p => ({
+      name: p.name?.replace('פרויקט - ', '').substring(0, 15),
+      budget: p.budget,
+      invoiced: p.invoiced,
+      spent: p.purchaseTotal,
+      profit: p.budget - p.invoiced,
+    }));
+
+    // יומן עבודה אחרון
+    const lastLogDate = d.workLogs.length > 0 ? d.workLogs.sort((a,b) => (b.date||b.created_date||'').localeCompare(a.date||a.created_date||''))[0] : null;
+    const lastLogDateStr = lastLogDate ? (lastLogDate.date || lastLogDate.created_date) : null;
+    const daysSinceLastLog = lastLogDateStr ? Math.floor((new Date() - new Date(lastLogDateStr)) / 86400000) : null;
 
     return {
       active, planning, openColl, openAmount, overdueColl, overdueAmount, paidAmount,
       overdueTasks, openTasks, pendingQ, pendingTotal, approvedTotal,
       toOrder, ordered, delivered, purchaseSpent, recentLogs, totalHours, totalWorkers,
-      projectData, collectionChart, purchaseChart,
+      projectData, collectionChart, planVsActual, daysSinceLastLog, lastLogDate,
     };
   }, [d]);
 
@@ -132,7 +139,7 @@ export default function Dashboard() {
   const alerts = [];
   if (computed.overdueColl.length > 0) alerts.push({ icon: DollarSign, color: '#dc2626', title: `${computed.overdueColl.length} תשלומים באיחור — ${fmt(computed.overdueAmount)}`, sub: computed.overdueColl.slice(0,2).map(c => c.project_name || 'פרויקט').join(', '), link: 'CollectionDashboard' });
   if (computed.overdueTasks.length > 0) alerts.push({ icon: Clock, color: '#f59e0b', title: `${computed.overdueTasks.length} משימות עברו דדליין`, sub: computed.overdueTasks.slice(0,2).map(t => t.title).join(', '), link: 'Tasks' });
-  if (computed.toOrder.filter(p => p.status === 'יש להזמין').length > 0) alerts.push({ icon: Package, color: '#f97316', title: `${computed.toOrder.filter(p => p.status === 'יש להזמין').length} פריטי רכש ממתינים להזמנה`, sub: 'יש ליצור הזמנות רכש', link: 'Projects' });
+  if (computed.daysSinceLastLog !== null && computed.daysSinceLastLog > 3) alerts.push({ icon: HardHat, color: '#f97316', title: `יומן עבודה לא עודכן ${computed.daysSinceLastLog} ימים`, sub: `עדכון אחרון: ${new Date(computed.lastLogDate.date || computed.lastLogDate.created_date).toLocaleDateString('he-IL')}`, link: 'Projects' });
 
   return (
     <div style={{ padding: '24px 28px', minHeight: '100vh', background: 'var(--dark)', fontFamily: 'Heebo, sans-serif' }}>
@@ -219,29 +226,31 @@ export default function Dashboard() {
             ) : <p style={{ color: 'var(--text-muted)', fontSize: 14, textAlign: 'center', padding: 40 }}>אין נתוני גבייה</p>}
           </Card>
 
-          {/* רכש לפי סטטוס */}
+          {/* תכנון מול ביצוע */}
           <Card>
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px' }}>רכש לפי סטטוס</h3>
-            {computed.purchaseChart.length > 0 ? (
+            <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px' }}>תכנון מול ביצוע</h3>
+            {computed.planVsActual.length > 0 ? (
               <>
-                <ResponsiveContainer width="100%" height={160}>
-                  <PieChart>
-                    <Pie data={computed.purchaseChart} cx="50%" cy="50%" innerRadius={40} outerRadius={65} paddingAngle={4} dataKey="value">
-                      {computed.purchaseChart.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-                    </Pie>
-                    <Tooltip formatter={(v, name) => [`${v} פריטים`, name]} contentStyle={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', borderRadius: 8, fontSize: 12 }} />
-                  </PieChart>
+                <ResponsiveContainer width="100%" height={180}>
+                  <BarChart data={computed.planVsActual} layout="vertical" margin={{ right: 10 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--dark-border)" />
+                    <XAxis type="number" tickFormatter={v => `₪${fmtNum(v/1000)}k`} style={{ fontSize: 10 }} />
+                    <YAxis type="category" dataKey="name" width={100} style={{ fontSize: 11 }} tick={{ fill: 'var(--text-secondary)' }} />
+                    <Tooltip formatter={v => fmt(v)} contentStyle={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', borderRadius: 8, fontSize: 12 }} />
+                    <Bar dataKey="budget" name="הצעה מאושרת" fill="#3b82f6" radius={[0, 3, 3, 0]} />
+                    <Bar dataKey="invoiced" name="חויב" fill="#22c55e" radius={[0, 3, 3, 0]} />
+                    <Bar dataKey="spent" name="הוצאות רכש" fill="#f59e0b" radius={[0, 3, 3, 0]} />
+                  </BarChart>
                 </ResponsiveContainer>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 4 }}>
-                  {computed.purchaseChart.map((entry, i) => (
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 8 }}>
+                  {[{label:'הצעה',color:'#3b82f6'},{label:'חויב',color:'#22c55e'},{label:'הוצאות',color:'#f59e0b'}].map((l,i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
-                      <div style={{ width: 10, height: 10, borderRadius: 3, background: entry.color }} />
-                      {entry.name} ({entry.value})
+                      <div style={{ width: 10, height: 10, borderRadius: 3, background: l.color }} /> {l.label}
                     </div>
                   ))}
                 </div>
               </>
-            ) : <p style={{ color: 'var(--text-muted)', fontSize: 14, textAlign: 'center', padding: 40 }}>אין נתוני רכש</p>}
+            ) : <p style={{ color: 'var(--text-muted)', fontSize: 14, textAlign: 'center', padding: 40 }}>אין נתונים</p>}
           </Card>
         </div>
 
