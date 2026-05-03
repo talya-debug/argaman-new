@@ -63,7 +63,7 @@ export default function LeadForm() {
         last_interaction_date: new Date().toISOString().split('T')[0]
       });
 
-      // Reset form
+      toast.success('הליד נוצר בהצלחה!');
       setFormData({
         name: '',
         phone: '',

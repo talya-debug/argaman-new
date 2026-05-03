@@ -1,6 +1,6 @@
 import { collection, query, where, getDocs, updateDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Notification } from '@/entities/Notification';
+import { Notification } from '@/entities';
 
 // סוגי התראות
 export const NOTIFICATION_TYPES = {

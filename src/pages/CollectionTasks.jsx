@@ -565,8 +565,8 @@ export default function CollectionTasks() {
                           </TableCell>
                           <TableCell className="text-right align-middle">
                             <Textarea
-                              value={task.notes || ''}
-                              onChange={(e) => handleUpdate(task.id, 'notes', e.target.value)}
+                              defaultValue={task.notes || ''}
+                              onBlur={(e) => handleUpdate(task.id, 'notes', e.target.value)}
                               placeholder="הוסף הערות..."
                               className="min-h-[60px] text-sm resize-none bg-[#1a1a2e]"
                               rows={2}
