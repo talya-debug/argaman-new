@@ -394,7 +394,7 @@ export default function Reports() {
                 fontSize: 14,
                 fontWeight: activeTab === tab.key ? 600 : 400,
                 background: activeTab === tab.key ? 'linear-gradient(135deg, var(--argaman), var(--argaman-dark))' : 'transparent',
-                color: activeTab === tab.key ? 'var(--dark)' : 'var(--text-secondary)',
+                color: activeTab === tab.key ? '#ffffff' : 'var(--text-secondary)',
                 transition: 'all 0.2s',
               }}
             >

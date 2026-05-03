@@ -206,7 +206,7 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
         </Select>
       </div>
 
-      <div className="flex flex-col-reverse md:flex-row justify-end gap-3 pt-4 border-t sticky bottom-0 bg-[#1a1a2e] pb-2 md:pb-0">
+      <div className="flex flex-col-reverse md:flex-row justify-end gap-3 pt-4 border-t sticky bottom-0 bg-white pb-2 md:pb-0">
         <Button 
           type="button" 
           variant="outline" 

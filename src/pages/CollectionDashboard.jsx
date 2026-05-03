@@ -9,11 +9,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const statusConfig = {
-  "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-[rgba(96,165,250,0.15)]", displayColor: "#60a5fa" },
-  "נשלחה חשבונית – ממתין לתשלום": { color: "bg-[rgba(249,115,22,0.15)]", displayColor: "#f97316" },
-  "עיכוב בתשלום – לטיפול יניר": { color: "bg-[rgba(251,191,36,0.15)]", displayColor: "#fbbf24" },
-  "שולם ונשלחה חשבונית מס": { color: "bg-[rgba(74,222,128,0.15)]", displayColor: "#4ade80" },
-  "בוטל / זיכוי": { color: "bg-[rgba(156,163,175,0.15)]", displayColor: "#9ca3af" }
+  "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-blue-50", textColor: "text-blue-700", displayColor: "#60a5fa" },
+  "נשלחה חשבונית – ממתין לתשלום": { color: "bg-orange-50", textColor: "text-orange-700", displayColor: "#f97316" },
+  "עיכוב בתשלום – לטיפול יניר": { color: "bg-amber-50", textColor: "text-amber-700", displayColor: "#fbbf24" },
+  "שולם ונשלחה חשבונית מס": { color: "bg-green-50", textColor: "text-green-700", displayColor: "#4ade80" },
+  "בוטל / זיכוי": { color: "bg-gray-100", textColor: "text-gray-600", displayColor: "#9ca3af" }
 };
 
 const COLORS = ['#3b82f6', '#f97316', '#eab308', '#22c55e', '#9ca3af', '#8b5cf6', '#ec4899'];
@@ -346,7 +346,7 @@ export default function CollectionDashboard() {
                             <Badge className="bg-red-600 text-white font-bold text-xs">{task.daysOverdue} ימים</Badge>
                           </TableCell>
                           <TableCell className="text-right">
-                            <Badge className={`${statusInfo?.color} text-white text-xs px-2 py-1`}>
+                            <Badge className={`${statusInfo?.color} ${statusInfo?.textColor} text-xs px-2 py-1`}>
                               {task.collection_status.substring(0, 25)}
                             </Badge>
                           </TableCell>

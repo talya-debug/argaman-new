@@ -15,12 +15,12 @@ import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
 
 const statusColors = {
-  'טיוטה': 'bg-[rgba(251,191,36,0.1)] text-[#fbbf24] border-[rgba(251,191,36,0.3)]',
-  'מוכנה': 'bg-[rgba(96,165,250,0.1)] text-[#60a5fa] border-[rgba(96,165,250,0.3)]',
-  'הצעה מוכנה ממתינה לאישור': 'bg-[rgba(96,165,250,0.1)] text-[#60a5fa] border-[rgba(96,165,250,0.3)]',
-  'נשלחה': 'bg-[rgba(74,222,128,0.1)] text-[#4ade80] border-[rgba(74,222,128,0.3)]',
-  'אושרה': 'bg-[rgba(74,222,128,0.15)] text-[#4ade80] border-[rgba(74,222,128,0.3)]',
-  'נדחתה': 'bg-[rgba(248,113,113,0.1)] text-[#f87171] border-[rgba(248,113,113,0.3)]'
+  'טיוטה': 'bg-amber-50 text-amber-700 border-amber-300',
+  'מוכנה': 'bg-blue-50 text-blue-700 border-blue-300',
+  'הצעה מוכנה ממתינה לאישור': 'bg-blue-50 text-blue-700 border-blue-300',
+  'נשלחה': 'bg-green-50 text-green-700 border-green-300',
+  'אושרה': 'bg-green-50 text-green-700 border-green-300',
+  'נדחתה': 'bg-red-50 text-red-700 border-red-300'
 };
 
 export default function Quotes() {
@@ -137,7 +137,7 @@ export default function Quotes() {
                           <TableCell style={{ color: 'var(--text-primary)' }}>₪{quote.total?.toLocaleString()}</TableCell>
                           <TableCell style={{ color: 'var(--text-secondary)' }}>{format(new Date(quote.createdAt || quote.created_date || Date.now()), 'dd/MM/yyyy', { locale: he })}</TableCell>
                           <TableCell className="text-center">
-                            <Badge className={`${statusColors[quote.status] || 'bg-[rgba(255,255,255,0.05)]'} text-xs border`}>
+                            <Badge className={`${statusColors[quote.status] || 'bg-gray-100 text-gray-600'} text-xs border`}>
                               {quote.status}
                             </Badge>
                           </TableCell>

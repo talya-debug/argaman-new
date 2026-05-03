@@ -77,7 +77,7 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                 <CardContent className="pt-8 pb-8 space-y-8">
                     {/* סכום פרויקט שאושר */}
                     <div className="text-center pb-6 border-b-2 border-blue-200">
-                        <p className="text-sm text-[#a0a0b8] mb-1 font-bold">סכום פרויקט שאושר</p>
+                        <p className="text-sm text-gray-500 mb-1 font-bold">סכום פרויקט שאושר</p>
                         <p className="text-[32px] font-bold text-[#60a5fa]">
                             {Math.round(P).toLocaleString('he-IL')} ₪
                         </p>
@@ -111,7 +111,7 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                         </div>
 
                         {/* אגדת צבעים */}
-                        <div className="space-y-3 bg-[#1a1a2e] p-6 rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.3)]" dir="rtl" style={{ lineHeight: '1.8' }}>
+                        <div className="space-y-3 bg-white border border-gray-200 p-6 rounded-lg shadow-sm" dir="rtl" style={{ lineHeight: '1.8' }}>
                             <div className="flex items-center gap-2">
                                 <div className="w-5 h-5 rounded flex-shrink-0" style={{ backgroundColor: '#EF4444' }}></div>
                                 <span className="font-bold text-lg" style={{ color: '#EF4444' }}>{Math.round(remaining).toLocaleString('he-IL')} ₪</span>
@@ -124,7 +124,7 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-5 h-5 rounded flex-shrink-0" style={{ backgroundColor: '#22C55E' }}></div>
-                                <span className="font-bold text-[#4ade80] text-lg">{Math.round(R).toLocaleString('he-IL')} ₪</span>
+                                <span className="font-bold text-green-700 text-lg">{Math.round(R).toLocaleString('he-IL')} ₪</span>
                                 <span className="font-medium text-slate-800">תשלומים שהתקבלו</span>
                             </div>
                         </div>
@@ -132,13 +132,13 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                 </CardContent>
             </Card>
 
-            <Card className="shadow-lg border-0 bg-[#1a1a2e]">
+            <Card className="shadow-lg border-0 bg-white">
                 <CardHeader>
                     <CardTitle className="text-center text-xl font-bold text-slate-800">התקדמות ביצוע</CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
                      <div className="w-2/3 mx-auto mt-4 relative">
-                        <Progress value={validPercentage} className="h-4 bg-slate-200 [&>*]:bg-[rgba(96,165,250,0.1)]0" />
+                        <Progress value={validPercentage} className="h-4 bg-slate-200 [&>*]:bg-blue-500" />
                         <div className="absolute inset-0 flex items-center justify-center">
                             <span className="text-xs font-bold text-slate-800">
                                 {validPercentage.toFixed(1)}%
@@ -203,7 +203,7 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
             </div>
             
             {/* Summary Section */}
-            <Card className="shadow-xl border-2 border-[rgba(255,255,255,0.08)] bg-[#1a1a2e]">
+            <Card className="shadow-xl border border-gray-200 bg-white">
                  <CardHeader>
                         <CardTitle className="text-center text-xl font-bold text-slate-800">סיכום כללי</CardTitle>
                 </CardHeader>

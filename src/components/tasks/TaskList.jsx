@@ -20,18 +20,18 @@ import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 
 const statusColors = {
-  "חדש": "bg-blue-500/10 text-blue-400",
-  "בתהליך": "bg-yellow-500/10 text-yellow-400",
-  "בבדיקה": "bg-purple-500/10 text-purple-400",
-  "הושלם": "bg-green-500/10 text-green-400",
-  "בוטל": "bg-red-500/10 text-red-400"
+  "חדש": "bg-blue-50 text-blue-700",
+  "בתהליך": "bg-amber-50 text-amber-700",
+  "בבדיקה": "bg-purple-50 text-purple-700",
+  "הושלם": "bg-green-50 text-green-700",
+  "בוטל": "bg-red-50 text-red-700"
 };
 
 const priorityColors = {
-  "גבוהה": "bg-red-500/10 text-red-400 border-red-500/30",
-  "דחוף": "bg-red-500/10 text-red-400 border-red-500/30",
-  "בינונית": "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
-  "נמוכה": "bg-green-500/10 text-green-400 border-green-500/30"
+  "גבוהה": "bg-red-50 text-red-700 border-red-300",
+  "דחוף": "bg-red-50 text-red-700 border-red-300",
+  "בינונית": "bg-amber-50 text-amber-700 border-amber-300",
+  "נמוכה": "bg-green-50 text-green-700 border-green-300"
 };
 
 const userOptions = ["חיה", "יניר", "דבורה", "יהודה", "רבקה", "שי"];
@@ -120,7 +120,7 @@ function EditableCell({ value, task, fieldName, options = null, onUpdate }) {
         }
         if (fieldName === 'status') {
             return (
-                <Badge className={`${statusColors[value] || 'bg-[#141428]0/15 text-gray-400'} hover:opacity-80 text-xs`}>
+                <Badge className={`${statusColors[value] || 'bg-gray-100 text-gray-600'} hover:opacity-80 text-xs`}>
                     {value}
                 </Badge>
             );
@@ -297,7 +297,7 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                                             key={task.id}
                                             className="transition-colors"
                                             style={{
-                                              background: index % 2 === 0 ? 'var(--dark-card)' : 'rgba(0,0,0,0.15)',
+                                              background: index % 2 === 0 ? 'var(--dark-card)' : 'rgba(0,0,0,0.03)',
                                               borderBottom: '1px solid var(--dark-border)'
                                             }}
                                             onMouseEnter={(e) => { for (const td of e.currentTarget.querySelectorAll('td')) td.style.background = 'var(--argaman-bg)'; }}

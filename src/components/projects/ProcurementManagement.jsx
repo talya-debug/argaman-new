@@ -499,7 +499,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
 
                                     return (
                                         <React.Fragment key={line.id}>
-                                            <TableRow className="border-b-2 border-[rgba(255,255,255,0.08)] bg-[#1a1a2e] hover:bg-[#1e1e36]">
+                                            <TableRow className="border-b-2 border-gray-200 hover:bg-gray-50">
                                                 <TableCell>
                                                      <Button variant="ghost" size="sm" onClick={() => toggleCollapsible(line.id)}>
                                                         {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
@@ -527,16 +527,16 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                             </TableRow>
                                             {isOpen && (
                                                  <TableRow>
-                                                    <TableCell colSpan={7} className="p-0 bg-[#1a1a2e]">
+                                                    <TableCell colSpan={7} className="p-0 bg-gray-50">
                                                         <div className="p-4 border-t border-slate-100">
-                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-[#e0e0e0] mb-3">
-                                                                <Package className="w-4 h-4 text-[#a0a0b8]"/>
+                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-gray-700 mb-3">
+                                                                <Package className="w-4 h-4 text-gray-400"/>
                                                                 הזמנות עבור: {line.name_snapshot} ({line.orders.length})
                                                             </h4>
                                                             {hasOrders ? (
-                                                                <Table className="bg-[#1a1a2e]">
+                                                                <Table className="bg-gray-50">
                                                                     <TableHeader>
-                                                                        <TableRow className="bg-[#1a1a2e]">
+                                                                        <TableRow className="bg-gray-100">
                                                                             <TableHead className="w-10"></TableHead>
                                                                             <TableHead className="w-12">#</TableHead>
                                                                             <TableHead>כמות הוזמנה</TableHead>
@@ -550,21 +550,21 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                     </TableHeader>
                                                                     <TableBody>
                                                                         {line.orders.map((order, index) => (
-                                                                            <TableRow key={order.id} className="text-[#e0e0e0]">
+                                                                            <TableRow key={order.id} className="text-gray-800">
                                                                                 <TableCell>
                                                                                     <Checkbox
                                                                                         checked={selectedPoItems.has(order.id)}
                                                                                         onCheckedChange={() => handleSelectPoItem(order.id)}
                                                                                     />
                                                                                 </TableCell>
-                                                                                <TableCell className="text-center font-medium text-[#a0a0b8]">
+                                                                                <TableCell className="text-center font-medium text-gray-500">
                                                                                     {index + 1}
                                                                                 </TableCell>
                                                                                 <TableCell className="text-center font-semibold">
                                                                                     {order.quantity_to_order}
                                                                                 </TableCell>
                                                                                 <TableCell>
-                                                                                    <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-[#4ade80]" />
+                                                                                    <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-green-700" />
                                                                                 </TableCell>
                                                                                 <TableCell>
                                                                                     <EditableCell value={order.ordering_responsible} onUpdate={(val) => handleOrderUpdate(order.id, "ordering_responsible", val)} type="select" options={userOptions} />
@@ -588,7 +588,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                     </TableBody>
                                                                 </Table>
                                                             ) : (
-                                                                <div className="text-center text-[#a0a0b8] py-4 border rounded-lg bg-[#1a1a2e]">
+                                                                <div className="text-center text-gray-500 py-4 border rounded-lg bg-gray-50">
                                                                     <p className="font-medium">אין עדיין הזמנות עבור פריט זה.</p>
                                                                     <p className="text-sm">לחץ על "בצע הזמנה" כדי לפתוח הזמנה חדשה.</p>
                                                                 </div>
@@ -641,15 +641,15 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                             </TableRow>
                                             {isOpenManual && (
                                                 <TableRow>
-                                                    <TableCell colSpan={7} className="p-0 bg-[#1a1a2e]">
+                                                    <TableCell colSpan={7} className="p-0 bg-gray-50">
                                                         <div className="p-4 border-t border-slate-100">
-                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-[#e0e0e0] mb-3">
-                                                                <Package className="w-4 h-4 text-[#a0a0b8]"/>
+                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-gray-700 mb-3">
+                                                                <Package className="w-4 h-4 text-gray-400"/>
                                                                 הזמנות עבור: {item.manual_item_name} ({item.orders.length})
                                                             </h4>
-                                                            <Table className="bg-[#1a1a2e]">
+                                                            <Table className="bg-gray-50">
                                                                 <TableHeader>
-                                                                    <TableRow className="bg-[#1a1a2e]">
+                                                                    <TableRow className="bg-gray-100">
                                                                         <TableHead className="w-10"></TableHead>
                                                                         <TableHead className="w-12">#</TableHead>
                                                                         <TableHead>כמות הוזמנה</TableHead>
@@ -663,21 +663,21 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                 </TableHeader>
                                                                 <TableBody>
                                                                     {item.orders.map((order, index) => (
-                                                                        <TableRow key={order.id} className="text-[#e0e0e0]">
+                                                                        <TableRow key={order.id} className="text-gray-800">
                                                                             <TableCell>
                                                                                 <Checkbox
                                                                                     checked={selectedPoItems.has(order.id)}
                                                                                     onCheckedChange={() => handleSelectPoItem(order.id)}
                                                                                 />
                                                                             </TableCell>
-                                                                            <TableCell className="text-center font-medium text-[#a0a0b8]">
+                                                                            <TableCell className="text-center font-medium text-gray-500">
                                                                                 {index + 1}
                                                                             </TableCell>
                                                                             <TableCell className="text-center font-semibold">
                                                                                 {order.quantity_to_order}
                                                                             </TableCell>
                                                                             <TableCell>
-                                                                                <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-[#4ade80]" />
+                                                                                <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-green-700" />
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <EditableCell value={order.ordering_responsible} onUpdate={(val) => handleOrderUpdate(order.id, "ordering_responsible", val)} type="select" options={userOptions} />
@@ -750,15 +750,15 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                             </TableRow>
                                             {isOpenGrille && (
                                                 <TableRow>
-                                                    <TableCell colSpan={7} className="p-0 bg-[#1a1a2e]">
+                                                    <TableCell colSpan={7} className="p-0 bg-gray-50">
                                                         <div className="p-4 border-t border-slate-100">
-                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-[#e0e0e0] mb-3">
-                                                                <Package className="w-4 h-4 text-[#a0a0b8]"/>
+                                                            <h4 className="text-sm font-semibold flex items-center gap-2 text-gray-700 mb-3">
+                                                                <Package className="w-4 h-4 text-gray-400"/>
                                                                 הזמנות עבור: גריל {item.grille_location} ({item.orders.length})
                                                             </h4>
-                                                            <Table className="bg-[#1a1a2e]">
+                                                            <Table className="bg-gray-50">
                                                                 <TableHeader>
-                                                                    <TableRow className="bg-[#1a1a2e]">
+                                                                    <TableRow className="bg-gray-100">
                                                                         <TableHead className="w-10"></TableHead>
                                                                         <TableHead className="w-12">#</TableHead>
                                                                         <TableHead>כמות הוזמנה</TableHead>
@@ -772,21 +772,21 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                 </TableHeader>
                                                                 <TableBody>
                                                                     {item.orders.map((order, index) => (
-                                                                        <TableRow key={order.id} className="text-[#e0e0e0]">
+                                                                        <TableRow key={order.id} className="text-gray-800">
                                                                             <TableCell>
                                                                                 <Checkbox
                                                                                     checked={selectedPoItems.has(order.id)}
                                                                                     onCheckedChange={() => handleSelectPoItem(order.id)}
                                                                                 />
                                                                             </TableCell>
-                                                                            <TableCell className="text-center font-medium text-[#a0a0b8]">
+                                                                            <TableCell className="text-center font-medium text-gray-500">
                                                                                 {index + 1}
                                                                             </TableCell>
                                                                             <TableCell className="text-center font-semibold">
                                                                                 {order.quantity_to_order}
                                                                             </TableCell>
                                                                             <TableCell>
-                                                                                <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-[#4ade80]" />
+                                                                                <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-green-700" />
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <EditableCell value={order.ordering_responsible} onUpdate={(val) => handleOrderUpdate(order.id, "ordering_responsible", val)} type="select" options={userOptions} />

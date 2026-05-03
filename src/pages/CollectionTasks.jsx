@@ -55,7 +55,7 @@ const EditableCell = ({ value, onSave, type = "text", options = [], field }) => 
       onClick={() => setIsEditing(true)}
       className="cursor-pointer p-2 rounded transition-colors border border-transparent" style={{ ':hover': { background: 'var(--argaman-bg)' } }} onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--argaman-bg)'; e.currentTarget.style.borderColor = 'var(--argaman-border)'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'transparent'; }}
     >
-      <span className="text-[#e0e0e0]">
+      <span>
         {type === "date" && value ? new Date(value).toLocaleDateString('he-IL') : (value || "לחץ להזנה")}
       </span>
     </div>
@@ -463,16 +463,16 @@ export default function CollectionTasks() {
           </CardHeader>
           <CardContent className="pt-6">
             {isLoading ? (
-              <div className="text-center py-12 text-[#a0a0b8]">טוען...</div>
+              <div className="text-center py-12 text-gray-500">טוען...</div>
             ) : filteredTasks.length === 0 ? (
-              <div className="text-center py-12 text-[#a0a0b8]">
+              <div className="text-center py-12 text-gray-500">
                 <p>{showClosed ? 'אין משימות סגורות' : 'אין משימות פעילות'}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-[#1e1e36]">
+                    <TableRow className="bg-gray-100">
                       <TableHead className="text-right font-bold w-[200px]">פרויקט</TableHead>
                       <TableHead className="text-right font-bold w-[120px]">סכום לגבייה</TableHead>
                       <TableHead className="text-right font-bold w-[120px]">תאריך חשבון</TableHead>
@@ -489,7 +489,7 @@ export default function CollectionTasks() {
                       const statusInfo = statusConfig[task.collection_status] || statusConfig["חשבון מאושר – יש לשלוח חשבון עסקה"];
 
                       return (
-                        <TableRow key={task.id} className="h-16 hover:bg-[#1a1a2e]">
+                        <TableRow key={task.id} className="h-16 hover:bg-gray-50">
                           <TableCell className="text-right align-middle">
                             {task.project_id ? (
                               <Link
@@ -503,11 +503,11 @@ export default function CollectionTasks() {
                               <span className="font-medium">{task.project_name}</span>
                             )}
                           </TableCell>
-                          <TableCell className="text-right font-bold text-[#f0f0f0] align-middle">
+                          <TableCell className="text-right font-bold align-middle">
                             ₪{task.amount_to_collect?.toLocaleString('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                           </TableCell>
                           <TableCell className="text-right align-middle">
-                            <span className="text-[#e0e0e0]">
+                            <span>
                               {task.invoice_date ? new Date(task.invoice_date).toLocaleDateString('he-IL') : '—'}
                             </span>
                           </TableCell>
@@ -520,7 +520,7 @@ export default function CollectionTasks() {
                           </TableCell>
                           <TableCell className="text-right align-middle">
                             {daysOverdue > 0 ? (
-                              <Badge className="bg-[rgba(248,113,113,0.1)]0 text-white font-semibold">{daysOverdue} ימים</Badge>
+                              <Badge className="bg-red-100 text-red-700 font-semibold">{daysOverdue} ימים</Badge>
                             ) : (
                               <span className="text-[#6b6b80]">—</span>
                             )}
@@ -568,7 +568,7 @@ export default function CollectionTasks() {
                               defaultValue={task.notes || ''}
                               onBlur={(e) => handleUpdate(task.id, 'notes', e.target.value)}
                               placeholder="הוסף הערות..."
-                              className="min-h-[60px] text-sm resize-none bg-[#1a1a2e]"
+                              className="min-h-[60px] text-sm resize-none"
                               rows={2}
                             />
                           </TableCell>

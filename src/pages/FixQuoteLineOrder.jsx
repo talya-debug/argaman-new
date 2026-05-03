@@ -81,11 +81,11 @@ export default function FixQuoteLineOrder() {
     };
 
     return (
-        <div className="p-4 md:p-8 bg-[#1a1a2e] min-h-screen" dir="rtl">
+        <div className="p-4 md:p-8 min-h-screen" style={{ background: 'var(--dark)', minHeight: '100vh' }} dir="rtl">
             <div className="max-w-3xl mx-auto">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-[#f0f0f0] mb-2">תיקון סדר השורות בפרויקטים</h1>
-                    <p className="text-[#a0a0b8]">בדיקה ותיקון אוטומטי של סדר השורות בכתב הכמויות לכל הפרויקטים הפתוחים</p>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">תיקון סדר השורות בפרויקטים</h1>
+                    <p className="text-gray-500">בדיקה ותיקון אוטומטי של סדר השורות בכתב הכמויות לכל הפרויקטים הפתוחים</p>
                 </div>
 
                 <Card className="mb-6">
@@ -95,7 +95,7 @@ export default function FixQuoteLineOrder() {
                             מידע חשוב
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="pt-6 space-y-3 text-sm text-[#e0e0e0]">
+                    <CardContent className="pt-6 space-y-3 text-sm text-gray-700">
                         <p>• כלי זה יבדוק את כל הפרויקטים הפתוחים (לא מוסרים או הושלמים)</p>
                         <p>• לכל פרויקט יתקן את סדר השורות לפי ההצעה המקורית</p>
                         <p>• <strong>לא ישנה</strong> שום נתונים כספיים או אחוזי ביצוע</p>
@@ -150,7 +150,7 @@ export default function FixQuoteLineOrder() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="text-sm space-y-4">
-                            <div className="space-y-2 text-[#e0e0e0]">
+                            <div className="space-y-2 text-gray-800">
                                 <p><strong>סך הפרויקטים שנבדקו:</strong> {result.total_projects_checked}</p>
                                 <p><strong>סך הפרויקטים שתוקנו:</strong> {result.details?.filter(d => d.status === 'fixed').length || 0}</p>
                                 <p><strong>סך השורות שתוקנו:</strong> {result.total_lines_fixed}</p>

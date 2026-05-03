@@ -15,10 +15,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
 const statusColors = {
-  'בתכנון': 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-  'בביצוע': 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30',
-  'הושלם': 'bg-green-500/10 text-green-400 border-green-500/30',
-  'בוטל': 'bg-red-500/10 text-red-400 border-red-500/30',
+  'בתכנון': 'bg-blue-50 text-blue-700 border-blue-300',
+  'בביצוע': 'bg-amber-50 text-amber-700 border-amber-300',
+  'הושלם': 'bg-green-50 text-green-700 border-green-300',
+  'בוטל': 'bg-red-50 text-red-700 border-red-300',
 };
 
 const ProjectCard = ({ project, onClick }) => (
@@ -42,7 +42,7 @@ const ProjectCard = ({ project, onClick }) => (
             </div>
             <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>{project.client_name}</p>
             <div className="flex justify-between items-center text-sm">
-                <Badge className={`${statusColors[project.status] || 'bg-gray-500/10 text-gray-400'} border`}>{project.status}</Badge>
+                <Badge className={`${statusColors[project.status] || 'bg-gray-100 text-gray-600'} border`}>{project.status}</Badge>
                 <span style={{ color: 'var(--text-muted)' }}>
                     התחלה: {project.start_date ? format(new Date(project.start_date), 'dd/MM/yy', { locale: he }) : 'N/A'}
                 </span>
