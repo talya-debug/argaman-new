@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bell, CheckCircle, AlertTriangle, ClipboardList, FolderOpen, Info, X } from 'lucide-react';
+import { Bell, CheckCircle, AlertTriangle, ClipboardList, FolderOpen, Info, X, FileX } from 'lucide-react';
 import { collection, query, where, orderBy, onSnapshot, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { auth } from '@/lib/firebase';
@@ -14,6 +14,7 @@ const typeIcons = {
   task_due: AlertTriangle,
   payment_overdue: AlertTriangle,
   project_started: FolderOpen,
+  work_log_missing: FileX,
   general: Info,
 };
 
@@ -22,6 +23,7 @@ const typeColors = {
   task_due: '#f59e0b',
   payment_overdue: '#dc2626',
   project_started: '#22c55e',
+  work_log_missing: '#f97316',
   general: '#94a3b8',
 };
 

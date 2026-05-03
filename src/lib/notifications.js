@@ -8,6 +8,7 @@ export const NOTIFICATION_TYPES = {
   TASK_DUE: 'task_due',
   PAYMENT_OVERDUE: 'payment_overdue',
   PROJECT_STARTED: 'project_started',
+  WORK_LOG_MISSING: 'work_log_missing',
   GENERAL: 'general',
 };
 
@@ -83,6 +84,18 @@ export async function notifyPaymentOverdue(collectionTask) {
     message: `גבייה "${collectionTask.title || collectionTask.description}" באיחור`,
     type: NOTIFICATION_TYPES.PAYMENT_OVERDUE,
     link: `/collections/${collectionTask.id}`,
+  });
+}
+
+// התראה על אי מילוי יומן עבודה
+export async function notifyWorkLogMissing(userId, date) {
+  const dateStr = new Date(date).toLocaleDateString('he-IL');
+  return await createNotification({
+    user_id: userId,
+    title: 'לא מולא יומן עבודה',
+    message: `לא דווח יומן עבודה לתאריך ${dateStr}`,
+    type: NOTIFICATION_TYPES.WORK_LOG_MISSING,
+    link: '/WorkLogForm',
   });
 }
 
