@@ -196,6 +196,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
     const [selectedPoItems, setSelectedPoItems] = useState(new Set());
     const [isPoDialogOpen, setIsPoDialogOpen] = useState(false);
     const [poSupplierName, setPoSupplierName] = useState('');
+    const [poSupplierPhone, setPoSupplierPhone] = useState('');
     const [poConfig, setPoConfig] = useState(null);
     const [subContractors, setSubContractors] = useState([]);
 
@@ -366,60 +367,78 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
         setIsPoDialogOpen(true);
     };
 
-    const handleCreatePoPdf = () => {
+    const handleCreatePoPdf = async () => {
         if (!poSupplierName.trim()) {
             toast.warning("יש להזין שם ספק");
             return;
         }
-        const itemsForPO = purchaseRecords
-            .filter(record => selectedPoItems.has(record.id))
-            .map(record => {
+
+        // מספר הזמנה אוטומטי
+        const poNumber = Math.floor(10000 + Math.random() * 90000);
+        const selectedRecords = purchaseRecords.filter(record => selectedPoItems.has(record.id));
+
+        // עדכון סטטוס כל הפריטים ל"הוזמן" + שם ספק
+        for (const record of selectedRecords) {
+            try {
+                await PurchaseRecord.update(record.id, {
+                    status: 'הוזמן',
+                    supplier_name: poSupplierName.trim(),
+                    po_number: poNumber,
+                    purchase_date: new Date().toISOString().split('T')[0],
+                });
+            } catch (e) {
+                console.error('Failed to update record:', e);
+            }
+        }
+
+        const itemsForPO = selectedRecords.map(record => {
                 if (record.is_grilles) {
                     return {
                         name_snapshot: `גריל - ${record.grille_location || 'ללא מיקום'}`,
                         description_snapshot: `סוג מפזר: ${record.diffuser_type || '-'} | רגיסטר: ${record.register || '-'} | צוואר: ${record.neck_size_cm || '-'}ס"מ | פתח: ${record.opening_size_cm || '-'}ס"מ | צבע: ${record.color || '-'}`,
-                        sku_snapshot: '-',
-                        quantity_to_order: record.quantity_to_order, 
-                        list_price_snapshot: record.unit_price || 0
+                        quantity_to_order: record.quantity_to_order,
+                        unit_price: record.unit_price || 0
                     };
                 } else if (record.is_manual) {
                     return {
                         name_snapshot: record.manual_item_name,
                         description_snapshot: record.manual_item_description,
-                        sku_snapshot: record.clause_number || '-',
                         quantity_to_order: record.quantity_to_order,
-                        list_price_snapshot: record.unit_price || 0
+                        unit_price: record.unit_price || 0
                     };
                 } else {
                     const quoteLine = quoteLines.find(l => l.id === record.quote_line_id);
-                    return { 
-                        ...quoteLine,
+                    return {
                         quantity_to_order: record.quantity_to_order,
                         name_snapshot: quoteLine?.name_snapshot,
                         description_snapshot: quoteLine?.description_snapshot,
-                        sku_snapshot: quoteLine?.model_snapshot,
-                        list_price_snapshot: record.unit_price || quoteLine?.price_no_vat_snapshot
+                        unit_price: record.unit_price || quoteLine?.price_no_vat_snapshot || 0
                     };
                 }
         });
 
-        setPoConfig({ items: itemsForPO, supplierName: poSupplierName.trim() });
+        setPoConfig({ items: itemsForPO, supplierName: poSupplierName.trim(), supplierPhone: poSupplierPhone.trim(), poNumber });
         setIsPoDialogOpen(false);
+        toast.success(`הזמנת רכש ${poNumber} הופקה — ${selectedRecords.length} פריטים עודכנו ל"הוזמן"`);
+        onUpdateQuoteLine();
     };
 
     const onPoDone = () => {
         setPoConfig(null);
         setSelectedPoItems(new Set());
         setPoSupplierName('');
+        setPoSupplierPhone('');
     };
 
     return (
         <div className="space-y-4" dir="rtl">
-            {poConfig && 
+            {poConfig &&
                 <PurchaseOrderPDF
                     project={project}
                     items={poConfig.items}
                     supplierName={poConfig.supplierName}
+                    supplierPhone={poConfig.supplierPhone}
+                    poNumber={poConfig.poNumber}
                     onDone={onPoDone}
                 />
             }
@@ -430,21 +449,31 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                         <DialogTitle className="text-right text-xl font-bold">הפקת הזמנת רכש</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
-                        <p className="text-gray-700">נבחרו {selectedPoItems.size} פריטים. הזן שם ספק כדי להפיק עבורו הזמנת רכש.</p>
+                        <p className="text-gray-700">נבחרו {selectedPoItems.size} פריטים. הפקת ההזמנה תעדכן את הסטטוס ל"הוזמן" ותיצור PDF.</p>
                         <div className="space-y-2">
-                            <Label htmlFor="supplier-name" className="font-semibold">שם הספק</Label>
-                            <Input 
+                            <Label htmlFor="supplier-name" className="font-semibold">שם הספק *</Label>
+                            <Input
                                 id="supplier-name"
-                                placeholder='לדוגמה: א.א. מיזוג כל יכול בעמ"'
+                                placeholder='לדוגמה: ישומי בקרה בע"מ'
                                 value={poSupplierName}
                                 onChange={(e) => setPoSupplierName(e.target.value)}
+                                className="text-right"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="supplier-phone" className="font-semibold">טלפון ספק</Label>
+                            <Input
+                                id="supplier-phone"
+                                placeholder="טלפון הספק"
+                                value={poSupplierPhone}
+                                onChange={(e) => setPoSupplierPhone(e.target.value)}
                                 className="text-right"
                             />
                         </div>
                     </div>
                     <DialogFooter className="flex justify-end gap-2">
                         <Button type="button" variant="outline" onClick={() => setIsPoDialogOpen(false)}>ביטול</Button>
-                        <Button onClick={handleCreatePoPdf} disabled={!poSupplierName.trim()} className="bg-indigo-600 hover:bg-indigo-700 text-white">הפק PDF</Button>
+                        <Button onClick={handleCreatePoPdf} disabled={!poSupplierName.trim()} className="bg-[#D4A843] hover:bg-[#B8922E] text-white">הפק הזמנת רכש</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
