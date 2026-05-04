@@ -21,6 +21,7 @@ const userOptions = [
 export default function CreateOrderDialog({ quoteLine, project, remainingQuantity, onOrderCreated }) {
     const [isOpen, setIsOpen] = useState(false);
     const [quantityToOrder, setQuantityToOrder] = useState(0);
+    const [unitPrice, setUnitPrice] = useState(0);
     const [supplierName, setSupplierName] = useState('');
     const [orderingResponsible, setOrderingResponsible] = useState('חיה');
     const [dueDate, setDueDate] = useState('');
@@ -29,15 +30,16 @@ export default function CreateOrderDialog({ quoteLine, project, remainingQuantit
     useEffect(() => {
         if (!isOpen) {
             setQuantityToOrder(0);
+            setUnitPrice(0);
             setSupplierName('');
             setOrderingResponsible('חיה');
             setDueDate('');
             setNotes('');
         } else {
-            // Pre-fill with remaining quantity
             setQuantityToOrder(remainingQuantity || 0);
+            setUnitPrice(quoteLine.price_no_vat_snapshot || 0);
         }
-    }, [isOpen, remainingQuantity]);
+    }, [isOpen, remainingQuantity, quoteLine]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -58,8 +60,6 @@ export default function CreateOrderDialog({ quoteLine, project, remainingQuantit
         }
 
         try {
-            // Create new order record
-            const unitPrice = quoteLine.price_no_vat_snapshot || 0;
             const newOrder = await PurchaseRecord.create({
                 project_id: project.id,
                 quote_line_id: quoteLine.id,
@@ -72,8 +72,8 @@ export default function CreateOrderDialog({ quoteLine, project, remainingQuantit
                 unit_price: unitPrice,
                 planned_total_cost: quantityToOrder * unitPrice,
                 actual_unit_price: unitPrice,
+                actual_total_cost: quantityToOrder * unitPrice,
                 quantity_delivered: 0,
-                actual_total_cost: 0,
                 is_manual: false,
                 is_grilles: false
             });
@@ -138,6 +138,23 @@ export default function CreateOrderDialog({ quoteLine, project, remainingQuantit
                                     className="text-right bg-white border-gray-300"
                                     required
                                 />
+                            </div>
+
+                            <div>
+                                <Label htmlFor="unit-price" className="text-gray-700 font-semibold">מחיר ליחידה (₪) *</Label>
+                                <Input
+                                    id="unit-price"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={unitPrice}
+                                    onChange={(e) => setUnitPrice(parseFloat(e.target.value) || 0)}
+                                    className="text-right"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                    מחיר מהצעה: ₪{(quoteLine.price_no_vat_snapshot || 0).toLocaleString()} |
+                                    סה"כ: ₪{(quantityToOrder * unitPrice).toLocaleString()}
+                                </p>
                             </div>
 
                             <div>

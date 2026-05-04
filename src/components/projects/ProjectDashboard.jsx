@@ -78,7 +78,7 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                     {/* סכום פרויקט שאושר */}
                     <div className="text-center pb-6 border-b-2 border-blue-200">
                         <p className="text-sm text-gray-500 mb-1 font-bold">סכום פרויקט שאושר</p>
-                        <p className="text-[32px] font-bold text-[#60a5fa]">
+                        <p className="text-[32px] font-bold text-blue-700">
                             {Math.round(P).toLocaleString('he-IL')} ₪
                         </p>
                     </div>
@@ -209,16 +209,16 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                     <div className="p-4 bg-[rgba(74,222,128,0.1)] rounded-lg">
-                        <p className="text-sm text-[#4ade80]">סה"כ הכנסות</p>
-                        <p className="text-2xl font-bold text-[#4ade80]">₪{totalRevenue.toLocaleString()}</p>
+                        <p className="text-sm text-green-700">סה"כ הכנסות</p>
+                        <p className="text-2xl font-bold text-green-700">₪{totalRevenue.toLocaleString()}</p>
                     </div>
                      <div className="p-4 bg-[rgba(248,113,113,0.1)] rounded-lg">
-                        <p className="text-sm text-[#f87171]">סה"כ הוצאות</p>
-                        <p className="text-2xl font-bold text-[#f87171]">₪{totalExpenses.toLocaleString()}</p>
+                        <p className="text-sm text-red-700">סה"כ הוצאות</p>
+                        <p className="text-2xl font-bold text-red-700">₪{totalExpenses.toLocaleString()}</p>
                     </div>
                      <div className="p-4 bg-[rgba(96,165,250,0.1)] rounded-lg">
-                        <p className="text-sm text-[#60a5fa]">רווח פרויקט</p>
-                        <p className={`text-2xl font-bold ${projectProfit >= 0 ? 'text-[#60a5fa]' : 'text-pink-600'}`}>
+                        <p className="text-sm text-blue-700">רווח פרויקט</p>
+                        <p className={`text-2xl font-bold ${projectProfit >= 0 ? 'text-blue-700' : 'text-pink-600'}`}>
                            ₪{projectProfit.toLocaleString()}
                         </p>
                     </div>

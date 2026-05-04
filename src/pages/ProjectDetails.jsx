@@ -217,6 +217,7 @@ export default function ProjectDetails() {
                         quoteId={quoteId}
                         onUpdateQuoteLine={handleDataChange}
                         progressEntries={progressEntries}
+                        collectionTasks={collectionTasks}
                     />
                 </TabsContent>
 

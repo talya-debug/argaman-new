@@ -157,7 +157,7 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
                                         onChange={(e) => setPercentage(parseFloat(e.target.value) || 0)}
                                         className="text-right bg-white border-gray-300"
                                     />
-                                    <p className="text-xs text-[#60a5fa] mt-1 font-semibold">
+                                    <p className="text-xs text-blue-700 mt-1 font-semibold">
                                         סכום לחיוב: ₪{calculateAmount().toLocaleString()}
                                     </p>
                                 </div>
@@ -174,7 +174,7 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
                                         onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)}
                                         className="text-right bg-white border-gray-300"
                                     />
-                                    <p className="text-xs text-[#60a5fa] mt-1 font-semibold">
+                                    <p className="text-xs text-blue-700 mt-1 font-semibold">
                                         אחוז: {calculatePercentage().toFixed(1)}% | סכום: ₪{calculateAmount().toLocaleString()}
                                     </p>
                                 </div>
@@ -248,7 +248,7 @@ const EditInvoiceEntryDialog = ({ entry, quoteLine, projectId, onInvoiceUpdated,
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button size="sm" variant="ghost" className="text-[#60a5fa] hover:text-[#60a5fa]" onClick={() => setIsOpen(true)}><Edit className="w-4 h-4" /></Button>
+                <Button size="sm" variant="ghost" className="text-blue-700 hover:text-blue-700" onClick={() => setIsOpen(true)}><Edit className="w-4 h-4" /></Button>
             </DialogTrigger>
             <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
                 <div className="bg-white p-1 rounded-lg">
@@ -311,7 +311,7 @@ const AddItemDialog = ({ projectId, quoteId, onItemAdded }) => {
                                 <div><Label htmlFor="unit-price" className="text-gray-700 font-semibold">מחיר יחידה (₪) *</Label><Input id="unit-price" type="number" min="0" step="0.01" value={unitPrice} onChange={(e) => setUnitPrice(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" required /><p className="text-xs text-gray-500 mt-1">ניתן להזין 0 לפריטים ללא חיוב</p></div>
                             </div>
                             <div className={`p-3 rounded-lg border ${unitPrice === 0 ? 'bg-[rgba(96,165,250,0.1)] border-blue-200' : 'bg-[rgba(74,222,128,0.1)] border-green-200'}`}>
-                                <div className="flex justify-between items-center"><Label className="text-sm font-semibold text-gray-700">סכום כולל</Label>{unitPrice === 0 && (<Badge className="bg-[rgba(96,165,250,0.1)] text-[#60a5fa] text-xs">ללא חיוב</Badge>)}</div>
+                                <div className="flex justify-between items-center"><Label className="text-sm font-semibold text-gray-700">סכום כולל</Label>{unitPrice === 0 && (<Badge className="bg-[rgba(96,165,250,0.1)] text-blue-700 text-xs">ללא חיוב</Badge>)}</div>
                                 <p className="text-lg font-bold text-gray-700">₪{(quantity * unitPrice).toLocaleString()}</p>
                             </div>
                             <div><Label htmlFor="reason" className="text-gray-700 font-semibold">סיבת ההוספה *</Label><Textarea id="reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="מדוע נוסף פריט זה לפרויקט..." rows={2} className="bg-white border-gray-300" required /></div>
@@ -324,7 +324,123 @@ const AddItemDialog = ({ projectId, quoteId, onItemAdded }) => {
     );
 };
 
-export default function BillOfQuantities({ quoteLines, projectId, project, quote, quoteId, onUpdateQuoteLine, progressEntries }) {
+// רכיב סטטוס חשבון inline — מחליף את הכפתור הישן
+function InvoiceStatusTracker({ invoiceNum, projectId, project, invoiceTotal, collectionTasks, onUpdate }) {
+    const [loading, setLoading] = useState(false);
+
+    // מציאת רשומת הגבייה של החשבון הזה
+    const collectionTask = (collectionTasks || []).find(t =>
+        t.project_id === projectId && t.invoice_number === `חשבון ${invoiceNum}`
+    );
+    const status = collectionTask?.collection_status || null;
+
+    const STEPS = [
+        { key: 'draft', label: 'טיוטה', color: '#94a3b8' },
+        { key: 'approved', label: 'חשבון מאושר', color: '#f59e0b' },
+        { key: 'sent', label: 'נשלחה חשבונית', color: '#3b82f6' },
+        { key: 'paid', label: 'שולם', color: '#22c55e' },
+    ];
+
+    const getActiveStep = () => {
+        if (!status) return 0;
+        if (status === 'שולם ונשלחה חשבונית מס' || status === 'שולם') return 3;
+        if (status === 'נשלחה חשבונית – ממתין לתשלום') return 2;
+        if (status.includes('חשבון מאושר')) return 1;
+        return 0;
+    };
+    const activeStep = getActiveStep();
+
+    const handleAdvance = async () => {
+        setLoading(true);
+        try {
+            if (!collectionTask) {
+                // שלב 1: יצירת רשומת גבייה — חשבון מאושר
+                const today = new Date().toISOString().split('T')[0];
+                const paymentTerms = project?.payment_terms || 'מיידי';
+                await CollectionTask.create({
+                    project_name: project?.name || '',
+                    project_id: projectId,
+                    amount_to_collect: invoiceTotal,
+                    invoice_date: today,
+                    payment_due_date: today,
+                    collection_status: 'חשבון מאושר – יש לשלוח חשבון עסקה',
+                    responsible: 'רבקה',
+                    invoice_number: `חשבון ${invoiceNum}`,
+                });
+                toast.success(`חשבון ${invoiceNum} אושר — נוצרה משימת גבייה`);
+            } else if (activeStep === 1) {
+                await CollectionTask.update(collectionTask.id, { collection_status: 'נשלחה חשבונית – ממתין לתשלום' });
+                toast.success(`חשבונית ${invoiceNum} סומנה כנשלחה`);
+            } else if (activeStep === 2) {
+                await CollectionTask.update(collectionTask.id, { collection_status: 'שולם ונשלחה חשבונית מס' });
+                toast.success(`חשבון ${invoiceNum} סומן כשולם`);
+            }
+            if (onUpdate) onUpdate();
+        } catch (e) {
+            console.error(e);
+            toast.error('שגיאה בעדכון סטטוס חשבון');
+        }
+        setLoading(false);
+    };
+
+    const nextLabel = activeStep === 0 ? 'אשר חשבון' : activeStep === 1 ? 'חשבונית נשלחה' : activeStep === 2 ? 'סמן כשולם' : null;
+
+    return (
+        <div style={{ marginTop: 16, padding: 16, background: '#f8f9fb', borderRadius: 10, border: '1px solid #e2e4e9' }}>
+            {/* סרגל התקדמות */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 12 }}>
+                {STEPS.map((step, i) => {
+                    const isActive = i <= activeStep;
+                    const isCurrent = i === activeStep;
+                    return (
+                        <React.Fragment key={step.key}>
+                            <div style={{
+                                display: 'flex', alignItems: 'center', gap: 6,
+                                padding: '4px 12px', borderRadius: 20,
+                                background: isCurrent ? step.color + '18' : 'transparent',
+                                border: isCurrent ? `1px solid ${step.color}40` : '1px solid transparent',
+                            }}>
+                                <div style={{
+                                    width: 8, height: 8, borderRadius: '50%',
+                                    background: isActive ? step.color : '#d1d5db',
+                                }} />
+                                <span style={{
+                                    fontSize: 12, fontWeight: isCurrent ? 700 : 400,
+                                    color: isActive ? step.color : '#9ca3af',
+                                }}>{step.label}</span>
+                            </div>
+                            {i < STEPS.length - 1 && (
+                                <div style={{ flex: 1, height: 2, background: i < activeStep ? STEPS[i+1].color : '#e5e7eb', minWidth: 20 }} />
+                            )}
+                        </React.Fragment>
+                    );
+                })}
+            </div>
+
+            {/* כפתור פעולה */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: 13, color: '#64748b' }}>
+                    {collectionTask && <span>סכום: ₪{(collectionTask.amount_to_collect || invoiceTotal || 0).toLocaleString()}</span>}
+                    {collectionTask?.payment_due_date && <span style={{ marginRight: 16 }}>יעד תשלום: {new Date(collectionTask.payment_due_date).toLocaleDateString('he-IL')}</span>}
+                </div>
+                {nextLabel && (
+                    <button onClick={handleAdvance} disabled={loading} style={{
+                        padding: '6px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600, border: 'none', cursor: loading ? 'wait' : 'pointer',
+                        background: STEPS[activeStep + 1]?.color || '#22c55e', color: '#fff',
+                        opacity: loading ? 0.6 : 1,
+                    }}>
+                        {loading ? '...' : nextLabel}
+                    </button>
+                )}
+                {activeStep === 3 && (
+                    <span style={{ fontSize: 13, fontWeight: 600, color: '#22c55e' }}>✓ שולם</span>
+                )}
+            </div>
+        </div>
+    );
+}
+
+export default function BillOfQuantities({ quoteLines, projectId, project, quote, quoteId, onUpdateQuoteLine, progressEntries, collectionTasks }) {
     const [localQuoteLines, setLocalQuoteLines] = useState(quoteLines || []);
     const [invoicesData, setInvoicesData] = useState({});
     const [activeTab, setActiveTab] = useState('invoice-1');
@@ -609,13 +725,13 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                     <h3 className="text-lg font-semibold text-slate-800 mb-4">סיכום חשבון {invoiceNum}</h3>
                     <div className="space-y-2">
                         <div className="flex justify-between items-center"><span>סכום ביניים</span><span className="font-semibold">₪{s.rawSubtotal.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
-                        {s.discountAmt > 0 && (<><div className="flex justify-between items-center text-[#4ade80]"><span>הנחה ({s.discountType === 'percentage' ? `${s.discountPct}%` : 'קבועה'})</span><span>-₪{s.discountAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div><div className="flex justify-between items-center font-semibold pt-1 border-t"><span>סה"כ אחרי הנחה</span><span>₪{s.afterDiscount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div></>)}
-                        {s.totalDeductions > 0 && (<div className="pr-4 border-r-2 border-red-200 py-2 space-y-1 text-[#f87171]">{s.insAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז ביטוח ({s.insPct}%)</span><span>-&nbsp;₪{s.insAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}{s.retAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז עיכבון ({s.retPct}%)</span><span>-&nbsp;₪{s.retAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}{s.labAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז מעבדה ({s.labPct}%)</span><span>-&nbsp;₪{s.labAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}</div>)}
+                        {s.discountAmt > 0 && (<><div className="flex justify-between items-center text-green-700"><span>הנחה ({s.discountType === 'percentage' ? `${s.discountPct}%` : 'קבועה'})</span><span>-₪{s.discountAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div><div className="flex justify-between items-center font-semibold pt-1 border-t"><span>סה"כ אחרי הנחה</span><span>₪{s.afterDiscount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div></>)}
+                        {s.totalDeductions > 0 && (<div className="pr-4 border-r-2 border-red-200 py-2 space-y-1 text-red-700">{s.insAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז ביטוח ({s.insPct}%)</span><span>-&nbsp;₪{s.insAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}{s.retAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז עיכבון ({s.retPct}%)</span><span>-&nbsp;₪{s.retAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}{s.labAmt > 0 && <div className="flex justify-between items-center"><span>קיזוז מעבדה ({s.labPct}%)</span><span>-&nbsp;₪{s.labAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}</div>)}
                         {s.totalDeductions > 0 && <div className="flex justify-between items-center font-semibold pt-2 border-t"><span>סה"כ לאחר קיזוז</span><span>₪{s.afterDeductions.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>}
                         <div className="flex justify-between items-center"><span>מע״מ (18%)</span><span>₪{s.vatAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
-                        <div className="flex justify-between items-center text-lg font-bold text-[#60a5fa] pt-2 border-t bg-[rgba(96,165,250,0.1)] p-2 rounded"><span>סה״כ לתשלום</span><span>₪{s.finalTotal.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
+                        <div className="flex justify-between items-center text-lg font-bold text-blue-700 pt-2 border-t bg-[rgba(96,165,250,0.1)] p-2 rounded"><span>סה״כ לתשלום</span><span>₪{s.finalTotal.toLocaleString(undefined, {minimumFractionDigits: 2})}</span></div>
                     </div>
-                    <Button onClick={() => handleMarkAsSent(invoiceNum)} disabled={sentInvoices.has(invoiceNum)} className="mt-4 bg-teal-500 hover:bg-teal-600 text-white">{sentInvoices.has(invoiceNum) ? 'נשלח ✓' : 'חשבון אושר – צור משימת גבייה'}</Button>
+                    <InvoiceStatusTracker invoiceNum={invoiceNum} projectId={projectId} project={project} invoiceTotal={s.finalTotal} collectionTasks={collectionTasks} onUpdate={onUpdateQuoteLine} />
                 </div>
             </div>
         );
@@ -629,7 +745,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                     <div className="flex justify-between items-start">
                         <CardTitle className="flex items-center gap-2"><FileSpreadsheet className="w-5 h-5" />כתב כמויות וניהול חיובים</CardTitle>
                         <div className="flex flex-wrap gap-2">
-                            <Button variant="outline" onClick={() => setShowDiscountDialog(true)} className="bg-[rgba(74,222,128,0.1)] hover:bg-[rgba(74,222,128,0.1)] border-green-200 text-[#4ade80]"><Settings className="w-4 h-4 ml-2" />הנחה כללית: {project?.boq_discount_type === 'fixed_amount' ? `₪${(project?.boq_discount_amount || 0).toLocaleString()}` : `${project?.boq_discount_percentage || 0}%`}</Button>
+                            <Button variant="outline" onClick={() => setShowDiscountDialog(true)} className="bg-[rgba(74,222,128,0.1)] hover:bg-[rgba(74,222,128,0.1)] border-green-200 text-green-700"><Settings className="w-4 h-4 ml-2" />הנחה כללית: {project?.boq_discount_type === 'fixed_amount' ? `₪${(project?.boq_discount_amount || 0).toLocaleString()}` : `${project?.boq_discount_percentage || 0}%`}</Button>
                             <Button variant="outline" onClick={() => setShowPaymentTermsDialog(true)} className="bg-teal-50 hover:bg-teal-100 border-teal-200 text-teal-700"><Settings className="w-4 h-4 ml-2" />תנאי תשלום: {project?.payment_terms || 'מיידי'}</Button>
                             <Button variant="outline" onClick={() => setShowDeductionsModal(true)} className="bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-700"><Settings className="w-4 h-4 ml-2" />ניהול קיזוזים</Button>
                             <AddItemDialog projectId={projectId} quoteId={quoteId} onItemAdded={refreshData} />
@@ -681,7 +797,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                                                 const boqDiscPct = project?.boq_discount_percentage || 0; const boqDiscAmtFixed = project?.boq_discount_amount || 0;
                                                 const boqDiscAmt = discountType === 'fixed_amount' ? Math.min(boqDiscAmtFixed, rawSubtotal) : (rawSubtotal * (boqDiscPct / 100));
                                                 if (boqDiscAmt > 0 && rawSubtotal > 0) {
-                                                    return (<TableRow className="bg-[rgba(74,222,128,0.1)] border-t-2 border-green-200"><TableCell className="text-right"></TableCell><TableCell className="text-right"><p className="font-bold text-[#4ade80]">הנחה כללית</p><p className="text-sm text-gray-500">{discountType === 'percentage' ? `${boqDiscPct}% הנחה` : 'הנחה קבועה'}</p></TableCell><TableCell className="text-right text-center">1</TableCell><TableCell className="text-right text-center font-semibold text-[#f87171]">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right font-bold text-[#f87171]">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right"></TableCell><TableCell className="text-right"></TableCell></TableRow>);
+                                                    return (<TableRow className="bg-[rgba(74,222,128,0.1)] border-t-2 border-green-200"><TableCell className="text-right"></TableCell><TableCell className="text-right"><p className="font-bold text-green-700">הנחה כללית</p><p className="text-sm text-gray-500">{discountType === 'percentage' ? `${boqDiscPct}% הנחה` : 'הנחה קבועה'}</p></TableCell><TableCell className="text-right text-center">1</TableCell><TableCell className="text-right text-center font-semibold text-red-700">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right font-bold text-red-700">-₪{boqDiscAmt.toLocaleString()}</TableCell><TableCell className="text-right"></TableCell><TableCell className="text-right"></TableCell></TableRow>);
                                                 }
                                                 return null;
                                             })()}
