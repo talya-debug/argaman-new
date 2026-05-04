@@ -85,16 +85,16 @@ export default function Reports() {
       const dt = new Date(d);
       const key = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}`;
       if (!monthMap[key]) monthMap[key] = { income: 0, expenses: 0 };
-      monthMap[key].income += Number(c.amount) || 0;
+      monthMap[key].income += Number(c.amount_to_collect) || Number(c.amount) || 0;
     });
 
-    data.purchases.forEach(p => {
-      const d = p.date || p.created_date;
+    data.purchases.filter(p => p.status === 'שולם' || p.supplier_invoice_number).forEach(p => {
+      const d = p.purchase_date || p.date || p.created_date;
       if (!d) return;
       const dt = new Date(d);
       const key = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}`;
       if (!monthMap[key]) monthMap[key] = { income: 0, expenses: 0 };
-      monthMap[key].expenses += Number(p.amount) || Number(p.total) || 0;
+      monthMap[key].expenses += Number(p.actual_total_cost) || Number(p.planned_total_cost) || Number(p.amount) || 0;
     });
 
     data.subcontractors.forEach(s => {

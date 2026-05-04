@@ -320,10 +320,44 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
             if (!order) return;
 
             const updateData = { [field]: value };
-            
+
+            // אם עדכנו כמות שהתקבלה — בדוק אם סופק מלא
+            if (field === 'quantity_delivered') {
+                const qty = Number(value) || 0;
+                const ordered = Number(order.quantity_to_order) || 0;
+                if (qty >= ordered && order.status === 'הוזמן') {
+                    updateData.status = 'סופק מלא';
+                    updateData.delivery_date = new Date().toISOString().split('T')[0];
+                } else if (qty > 0 && qty < ordered) {
+                    updateData.status = 'סופק חלקית';
+                }
+            }
+
+            // אם הוזנה חשבונית ספק — יצירת רשומת הוצאה בגבייה
+            if (field === 'supplier_invoice_number' && value && !order.supplier_invoice_number) {
+                try {
+                    const { CollectionTask } = await import('@/entities');
+                    await CollectionTask.create({
+                        project_id: order.project_id,
+                        project_name: project?.name || '',
+                        description: `חשבונית ספק ${value} — ${order.supplier_name || 'ספק'}`,
+                        amount_to_collect: -(Number(order.actual_total_cost) || Number(order.planned_total_cost) || 0),
+                        collection_status: 'הוצאה — חשבונית ספק',
+                        invoice_number: value,
+                        invoice_date: new Date().toISOString().split('T')[0],
+                        responsible: order.ordering_responsible || '',
+                        is_expense: true,
+                        purchase_record_id: orderId,
+                    });
+                } catch (e) {
+                    console.error('Failed to create expense record:', e);
+                }
+            }
+
             await PurchaseRecord.update(orderId, updateData);
-            
-            if (field === 'status' && (value === 'סופק מלא' || value === 'שולם')) {
+
+            if ((field === 'status' || updateData.status) &&
+                (value === 'סופק מלא' || value === 'שולם' || updateData.status === 'סופק מלא')) {
                 const tasks = await Task.filter({ source_type: 'procurement_record', source_id: orderId });
                 const openTask = tasks.find(t => t.status !== 'הושלם');
                 if (openTask) {
@@ -569,10 +603,11 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                             <TableHead className="w-10"></TableHead>
                                                                             <TableHead className="w-12">#</TableHead>
                                                                             <TableHead>כמות הוזמנה</TableHead>
-                                                                            <TableHead>סכום הזמנה</TableHead>
-                                                                            <TableHead>אחראי</TableHead>
+                                                                            <TableHead>סכום</TableHead>
                                                                             <TableHead>ספק</TableHead>
                                                                             <TableHead>סטטוס</TableHead>
+                                                                            <TableHead>התקבל</TableHead>
+                                                                            <TableHead>חשבונית ספק</TableHead>
                                                                             <TableHead>הערות</TableHead>
                                                                             <TableHead className="w-10"></TableHead>
                                                                         </TableRow>
@@ -596,13 +631,16 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                                     <EditableCell value={order.actual_total_cost || 0} onUpdate={(val) => handleOrderUpdate(order.id, "actual_total_cost", Number(val))} type="number" className="font-bold text-green-700" />
                                                                                 </TableCell>
                                                                                 <TableCell>
-                                                                                    <EditableCell value={order.ordering_responsible} onUpdate={(val) => handleOrderUpdate(order.id, "ordering_responsible", val)} type="select" options={userOptions} />
-                                                                                </TableCell>
-                                                                                <TableCell>
                                                                                     <EditableCell value={order.supplier_name} onUpdate={(val) => handleOrderUpdate(order.id, "supplier_name", val)} />
                                                                                 </TableCell>
                                                                                 <TableCell>
                                                                                     <EditableCell value={order.status} onUpdate={(val) => handleOrderUpdate(order.id, "status", val)} type="select" options={statusOptions} className={statusConfig[order.status]?.color} />
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    <EditableCell value={order.quantity_delivered || 0} onUpdate={(val) => handleOrderUpdate(order.id, "quantity_delivered", Number(val))} type="number" />
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    <EditableCell value={order.supplier_invoice_number} onUpdate={(val) => handleOrderUpdate(order.id, "supplier_invoice_number", val)} />
                                                                                 </TableCell>
                                                                                 <TableCell>
                                                                                     <EditableCell value={order.notes} onUpdate={(val) => handleOrderUpdate(order.id, "notes", val)} />
