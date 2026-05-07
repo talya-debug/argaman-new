@@ -7,7 +7,7 @@ import { LogIn, Loader2 } from 'lucide-react';
 
 export default function Login() {
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,9 +17,9 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      await login(email, password);
+      await login(username.trim(), password);
     } catch (err) {
-      setError('אימייל או סיסמה שגויים');
+      setError(err.message || 'שם משתמש או סיסמה שגויים');
     }
     setLoading(false);
   };
@@ -56,18 +56,17 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <Label htmlFor="email" style={{ color: 'var(--text-primary, #1a1d2e)', marginBottom: 6, display: 'block' }}>
-              אימייל
+            <Label htmlFor="username" style={{ color: 'var(--text-primary, #1a1d2e)', marginBottom: 6, display: 'block' }}>
+              שם משתמש
             </Label>
             <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="email@example.com"
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="הכנס שם משתמש"
               required
-              dir="ltr"
-              style={{ textAlign: 'left' }}
+              dir="rtl"
             />
           </div>
           <div>
@@ -79,7 +78,7 @@ export default function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="הכנס סיסמה"
               required
               dir="ltr"
               style={{ textAlign: 'left' }}

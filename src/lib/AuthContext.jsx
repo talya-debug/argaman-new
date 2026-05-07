@@ -1,10 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import {
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from 'firebase/auth';
-import { auth } from './firebase';
+import { db } from './firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -13,36 +9,56 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
-  // האזנה לשינויי מצב התחברות
+  // בדיקה אם יש יוזר שמור ב-localStorage
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        setUser({
-          id: firebaseUser.uid,
-          email: firebaseUser.email,
-          displayName: firebaseUser.displayName,
-          photoURL: firebaseUser.photoURL
-        });
+    const saved = localStorage.getItem('argaman_user');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setUser(parsed);
         setIsAuthenticated(true);
-      } else {
-        setUser(null);
-        setIsAuthenticated(false);
-      }
-      setIsLoadingAuth(false);
-    });
-
-    return () => unsubscribe();
+      } catch {}
+    }
+    setIsLoadingAuth(false);
   }, []);
 
-  // התחברות עם אימייל וסיסמה
-  const login = async (email, password) => {
-    const result = await signInWithEmailAndPassword(auth, email, password);
-    return result.user;
+  // התחברות עם שם וסיסמה
+  const login = async (username, password) => {
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('username', '==', username));
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      throw new Error('שם משתמש לא נמצא');
+    }
+
+    const userDoc = snapshot.docs[0];
+    const userData = userDoc.data();
+
+    if (userData.password !== password) {
+      throw new Error('סיסמה שגויה');
+    }
+
+    const userObj = {
+      id: userDoc.id,
+      uid: userDoc.id,
+      username: userData.username,
+      full_name: userData.full_name,
+      role: userData.role || 'user',
+      email: userData.email || '',
+    };
+
+    setUser(userObj);
+    setIsAuthenticated(true);
+    localStorage.setItem('argaman_user', JSON.stringify(userObj));
+    return userObj;
   };
 
   // התנתקות
   const logout = async () => {
-    await signOut(auth);
+    setUser(null);
+    setIsAuthenticated(false);
+    localStorage.removeItem('argaman_user');
   };
 
   return (
@@ -67,7 +83,7 @@ export const useAuth = () => {
   return context;
 };
 
-// רכיב שמגן על דפים - רק משתמשים מחוברים יכולים לגשת
+// רכיב שמגן על דפים
 export const ProtectedRoute = ({ children, fallback }) => {
   const { isAuthenticated, isLoadingAuth } = useAuth();
 
@@ -79,10 +95,7 @@ export const ProtectedRoute = ({ children, fallback }) => {
     );
   }
 
-  if (!isAuthenticated) {
-    // מחזיר null - הקומפוננטה שקוראת תטפל בניתוב לדף התחברות
-    return null;
-  }
+  if (!isAuthenticated) return null;
 
   return children;
 };

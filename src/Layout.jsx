@@ -81,11 +81,11 @@ export default function Layout({ children, currentPageName }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '13px', fontWeight: 600, color: '#fff',
         }}>
-          {user?.email?.[0]?.toUpperCase() || 'א'}
+          {user?.full_name?.[0] || user?.username?.[0]?.toUpperCase() || 'א'}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {user?.full_name || user?.email || 'ארגמן'}
+            {user?.full_name || user?.username || 'ארגמן'}
           </div>
         </div>
         {logout && (

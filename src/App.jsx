@@ -31,6 +31,10 @@ function ProtectedPage({ children }) {
     );
   }
 
+  if (!isAuthenticated) {
+    return <Login />;
+  }
+
   return children;
 }
 
