@@ -21,15 +21,13 @@ export const Notification = createEntity('notifications');
 const _UserEntity = createEntity('users');
 export const User = {
   ..._UserEntity,
-  // מחזיר את המשתמש המחובר הנוכחי - מחליף את base44.auth.me()
   async me() {
-    const currentUser = auth.currentUser;
-    if (!currentUser) return null;
-    return {
-      id: currentUser.uid,
-      email: currentUser.email,
-      full_name: currentUser.displayName || currentUser.email,
-      displayName: currentUser.displayName,
-    };
+    const saved = localStorage.getItem('argaman_user');
+    if (!saved) return null;
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return null;
+    }
   }
 };
