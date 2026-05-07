@@ -203,21 +203,27 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
     const [editingOrder, setEditingOrder] = useState(null);
     const [editOrderData, setEditOrderData] = useState({});
 
+    const refreshSavedOrders = async () => {
+        try {
+            const poData = await PurchaseOrder.filter({ project_id: project.id });
+            setSavedOrders(poData.sort((a, b) => new Date(b.date) - new Date(a.date)));
+        } catch (error) {
+            console.error("Failed to load saved orders:", error);
+        }
+    };
+
     useEffect(() => {
         const loadData = async () => {
             try {
-                const [scData, poData] = await Promise.all([
-                    SubContractor.filter({ project_id: project.id }),
-                    PurchaseOrder.filter({ project_id: project.id })
-                ]);
+                const scData = await SubContractor.filter({ project_id: project.id });
                 setSubContractors(scData);
-                setSavedOrders(poData.sort((a, b) => new Date(b.date) - new Date(a.date)));
             } catch (error) {
-                console.error("Failed to load data:", error);
+                console.error("Failed to load subcontractors:", error);
             }
+            await refreshSavedOrders();
         };
         loadData();
-    }, [project.id]);
+    }, [project.id, purchaseRecords]);
 
     const handleSubContractorUpdate = async (contractorId, field, value) => {
         try {
@@ -479,8 +485,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
         setPoConfig({ items: itemsForPO, supplierName: poSupplierName.trim(), supplierPhone: poSupplierPhone.trim(), poNumber });
         setIsPoDialogOpen(false);
         toast.success(`הזמנת רכש ${poNumber} הופקה ונשמרה — ${selectedRecords.length} פריטים עודכנו ל"הוזמן"`);
-        // רענון רשימת הזמנות שמורות
-        try { const poData = await PurchaseOrder.filter({ project_id: project.id }); setSavedOrders(poData.sort((a, b) => new Date(b.date) - new Date(a.date))); } catch {}
+        await refreshSavedOrders();
         onUpdateQuoteLine();
     };
 
@@ -1029,8 +1034,7 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                                                                             await PurchaseOrder.update(order.id, editOrderData);
                                                                             toast.success('הזמנה עודכנה');
                                                                             setEditingOrder(null);
-                                                                            const poData = await PurchaseOrder.filter({ project_id: project.id });
-                                                                            setSavedOrders(poData.sort((a, b) => new Date(b.date) - new Date(a.date)));
+                                                                            await refreshSavedOrders();
                                                                         } catch { toast.error('שגיאה בעדכון'); }
                                                                     }} className="text-green-600 h-8 px-2">שמור</Button>
                                                                     <Button size="sm" variant="ghost" onClick={() => setEditingOrder(null)} className="text-gray-500 h-8 px-2">ביטול</Button>
