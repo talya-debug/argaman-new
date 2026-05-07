@@ -16,6 +16,7 @@ export const ChangeLog = createEntity('change_logs');
 export const TaskActivity = createEntity('task_activities');
 export const PriceItem = createEntity('price_items');
 export const Notification = createEntity('notifications');
+export const PurchaseOrder = createEntity('purchase_orders');
 export const Vehicle = createEntity('vehicles');
 export const VehicleExpense = createEntity('vehicle_expenses');
 export const VehicleDocument = createEntity('vehicle_documents');

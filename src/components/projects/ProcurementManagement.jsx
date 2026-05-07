@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { PurchaseRecord, Task, SubContractor } from '@/entities';
+import { PurchaseRecord, PurchaseOrder, Task, SubContractor } from '@/entities';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -199,17 +199,24 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
     const [poSupplierPhone, setPoSupplierPhone] = useState('');
     const [poConfig, setPoConfig] = useState(null);
     const [subContractors, setSubContractors] = useState([]);
+    const [savedOrders, setSavedOrders] = useState([]);
+    const [editingOrder, setEditingOrder] = useState(null);
+    const [editOrderData, setEditOrderData] = useState({});
 
     useEffect(() => {
-        const loadSubContractors = async () => {
+        const loadData = async () => {
             try {
-                const data = await SubContractor.filter({ project_id: project.id });
-                setSubContractors(data);
+                const [scData, poData] = await Promise.all([
+                    SubContractor.filter({ project_id: project.id }),
+                    PurchaseOrder.filter({ project_id: project.id })
+                ]);
+                setSubContractors(scData);
+                setSavedOrders(poData.sort((a, b) => new Date(b.date) - new Date(a.date)));
             } catch (error) {
-                console.error("Failed to load subcontractors:", error);
+                console.error("Failed to load data:", error);
             }
         };
-        loadSubContractors();
+        loadData();
     }, [project.id]);
 
     const handleSubContractorUpdate = async (contractorId, field, value) => {
@@ -451,9 +458,29 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                 }
         });
 
+        // שמירת הזמנת הרכש כרשומה ב-Firestore
+        try {
+            await PurchaseOrder.create({
+                po_number: poNumber,
+                project_id: project.id,
+                project_name: project.name || '',
+                supplier_name: poSupplierName.trim(),
+                supplier_phone: poSupplierPhone.trim(),
+                items: itemsForPO,
+                record_ids: Array.from(selectedPoItems),
+                status: 'הוזמן',
+                total_amount: itemsForPO.reduce((sum, item) => sum + (item.quantity_to_order * item.unit_price), 0),
+                date: new Date().toISOString().split('T')[0],
+            });
+        } catch (e) {
+            console.error('Failed to save PO:', e);
+        }
+
         setPoConfig({ items: itemsForPO, supplierName: poSupplierName.trim(), supplierPhone: poSupplierPhone.trim(), poNumber });
         setIsPoDialogOpen(false);
-        toast.success(`הזמנת רכש ${poNumber} הופקה — ${selectedRecords.length} פריטים עודכנו ל"הוזמן"`);
+        toast.success(`הזמנת רכש ${poNumber} הופקה ונשמרה — ${selectedRecords.length} פריטים עודכנו ל"הוזמן"`);
+        // רענון רשימת הזמנות שמורות
+        try { const poData = await PurchaseOrder.filter({ project_id: project.id }); setSavedOrders(poData.sort((a, b) => new Date(b.date) - new Date(a.date))); } catch {}
         onUpdateQuoteLine();
     };
 
@@ -938,6 +965,125 @@ export default function ProcurementManagement({ quoteLines, purchaseRecords, pro
                     </div>
                 </CardContent>
             </Card>
+
+            {/* הזמנות רכש שמורות */}
+            {savedOrders.length > 0 && (
+                <Card className="shadow-lg border-0">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <FileText className="w-5 h-5" />
+                            הזמנות רכש שמורות ({savedOrders.length})
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="text-right">מס' הזמנה</TableHead>
+                                        <TableHead className="text-right">תאריך</TableHead>
+                                        <TableHead className="text-right">ספק</TableHead>
+                                        <TableHead className="text-center">פריטים</TableHead>
+                                        <TableHead className="text-center">סכום</TableHead>
+                                        <TableHead className="text-center">סטטוס</TableHead>
+                                        <TableHead className="text-center w-32">פעולות</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {savedOrders.map(order => {
+                                        const isEditing = editingOrder === order.id;
+                                        return (
+                                            <React.Fragment key={order.id}>
+                                                <TableRow className="hover:bg-gray-50">
+                                                    <TableCell className="font-bold text-indigo-700">#{order.po_number}</TableCell>
+                                                    <TableCell className="text-sm">{order.date ? new Date(order.date).toLocaleDateString('he-IL') : '-'}</TableCell>
+                                                    <TableCell>
+                                                        {isEditing ? (
+                                                            <Input value={editOrderData.supplier_name || ''} onChange={e => setEditOrderData({...editOrderData, supplier_name: e.target.value})} className="h-8 text-sm" />
+                                                        ) : order.supplier_name}
+                                                    </TableCell>
+                                                    <TableCell className="text-center">{order.items?.length || 0}</TableCell>
+                                                    <TableCell className="text-center font-bold text-green-700">
+                                                        {isEditing ? (
+                                                            <Input type="number" value={editOrderData.total_amount || 0} onChange={e => setEditOrderData({...editOrderData, total_amount: Number(e.target.value)})} className="h-8 w-28 text-center" />
+                                                        ) : `₪${(order.total_amount || 0).toLocaleString()}`}
+                                                    </TableCell>
+                                                    <TableCell className="text-center">
+                                                        {isEditing ? (
+                                                            <Select value={editOrderData.status} onValueChange={v => setEditOrderData({...editOrderData, status: v})}>
+                                                                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                                                                <SelectContent>
+                                                                    {Object.keys(statusConfig).map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                                                                </SelectContent>
+                                                            </Select>
+                                                        ) : (
+                                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusConfig[order.status]?.color || 'bg-gray-100'}`}>{order.status}</span>
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell className="text-center">
+                                                        <div className="flex gap-1 justify-center">
+                                                            {isEditing ? (
+                                                                <>
+                                                                    <Button size="sm" variant="ghost" onClick={async () => {
+                                                                        try {
+                                                                            await PurchaseOrder.update(order.id, editOrderData);
+                                                                            toast.success('הזמנה עודכנה');
+                                                                            setEditingOrder(null);
+                                                                            const poData = await PurchaseOrder.filter({ project_id: project.id });
+                                                                            setSavedOrders(poData.sort((a, b) => new Date(b.date) - new Date(a.date)));
+                                                                        } catch { toast.error('שגיאה בעדכון'); }
+                                                                    }} className="text-green-600 h-8 px-2">שמור</Button>
+                                                                    <Button size="sm" variant="ghost" onClick={() => setEditingOrder(null)} className="text-gray-500 h-8 px-2">ביטול</Button>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <Button size="sm" variant="ghost" onClick={() => {
+                                                                        setEditingOrder(order.id);
+                                                                        setEditOrderData({ supplier_name: order.supplier_name, supplier_phone: order.supplier_phone, total_amount: order.total_amount, status: order.status });
+                                                                    }} className="h-8 px-2"><Info className="w-4 h-4 text-blue-500" /></Button>
+                                                                    <Button size="sm" variant="ghost" onClick={() => {
+                                                                        setPoConfig({ items: order.items || [], supplierName: order.supplier_name, supplierPhone: order.supplier_phone || '', poNumber: order.po_number });
+                                                                    }} className="h-8 px-2"><FileText className="w-4 h-4 text-indigo-500" /></Button>
+                                                                    <Button size="sm" variant="ghost" onClick={async () => {
+                                                                        await PurchaseOrder.delete(order.id);
+                                                                        toast.success('הזמנה נמחקה');
+                                                                        const poData = await PurchaseOrder.filter({ project_id: project.id });
+                                                                        setSavedOrders(poData.sort((a, b) => new Date(b.date) - new Date(a.date)));
+                                                                    }} className="h-8 px-2"><Trash2 className="w-4 h-4 text-red-500" /></Button>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </TableCell>
+                                                </TableRow>
+                                                {isEditing && order.items && (
+                                                    <TableRow>
+                                                        <TableCell colSpan={7} className="bg-gray-50 p-4">
+                                                            <h4 className="text-sm font-semibold mb-2">פריטים בהזמנה:</h4>
+                                                            <Table>
+                                                                <TableHeader><TableRow className="bg-gray-100"><TableHead>פריט</TableHead><TableHead>כמות</TableHead><TableHead>מחיר יחידה</TableHead><TableHead>סה"כ</TableHead></TableRow></TableHeader>
+                                                                <TableBody>
+                                                                    {order.items.map((item, idx) => (
+                                                                        <TableRow key={idx}>
+                                                                            <TableCell className="text-sm">{item.name_snapshot}</TableCell>
+                                                                            <TableCell className="text-center">{item.quantity_to_order}</TableCell>
+                                                                            <TableCell className="text-center">₪{(item.unit_price || 0).toLocaleString()}</TableCell>
+                                                                            <TableCell className="text-center font-bold">₪{((item.quantity_to_order || 0) * (item.unit_price || 0)).toLocaleString()}</TableCell>
+                                                                        </TableRow>
+                                                                    ))}
+                                                                </TableBody>
+                                                            </Table>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )}
+                                            </React.Fragment>
+                                        );
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 }
