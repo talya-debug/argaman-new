@@ -13,6 +13,7 @@ import Quotes from './pages/Quotes';
 import Tasks from './pages/Tasks';
 import Reports from './pages/Reports';
 import SupplierPayments from './pages/SupplierPayments';
+import Vehicles from './pages/Vehicles';
 import WorkLogForm from './pages/WorkLogForm';
 import __Layout from './Layout.jsx';
 
@@ -33,6 +34,7 @@ export const PAGES = {
     "Reports": Reports,
     "SupplierPayments": SupplierPayments,
     "Tasks": Tasks,
+    "Vehicles": Vehicles,
     "WorkLogForm": WorkLogForm,
 }
 
