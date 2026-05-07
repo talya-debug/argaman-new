@@ -584,6 +584,21 @@ export default function QuoteBuilder({
     const [quoteNotes, setQuoteNotes] = useState(quote?.notes || '');
     const [discount, setDiscount] = useState({ percentage: quote?.discount_percentage || 0 });
 
+    // קטגוריות קבועות שתמיד מוצגות
+    const fixedCategories = [
+        { name: 'מפוחים', icon: '🌀' },
+        { name: 'יחידות מים', icon: '💧' },
+        { name: 'מערכות הלחה', icon: '💨' },
+        { name: 'חימום תת רצפתי', icon: '🔥' },
+        { name: 'תעלות פח', icon: '🔧' },
+        { name: 'גרילים', icon: '▦' },
+        { name: 'עבודה', icon: '👷' },
+        { name: 'משאבות', icon: '⚙' },
+        { name: 'צילרים', icon: '❄' },
+        { name: 'ויטאות', icon: '🏗' },
+        { name: 'בקרה', icon: '🎛' },
+    ];
+
     // Debug logging
     console.log('QuoteBuilder received:', {
         suppliers,
@@ -626,14 +641,23 @@ export default function QuoteBuilder({
 
     // Get items for current selection
     const currentItems = useMemo(() => {
-        if (!selectedSupplier || !selectedCategory || !priceItems) return [];
-        
+        if (!selectedCategory || !priceItems) return [];
+
+        // אם יש ספק נבחר — סינון לפי ספק + קטגוריה
+        if (selectedSupplier) {
+            return priceItems.filter(item => {
+                const supplierMatch = item.supplier_name === selectedSupplier;
+                const categoryMatch = item.category === selectedCategory || item.sub_category === selectedCategory;
+                const subCategoryMatch = selectedSubCategory ? item.sub_category === selectedSubCategory : true;
+                return supplierMatch && categoryMatch && subCategoryMatch;
+            });
+        }
+
+        // אם אין ספק — סינון לפי קטגוריה בלבד (מכפתורי הקטגוריות הקבועות)
         return priceItems.filter(item => {
-            const supplierMatch = item.supplier_name === selectedSupplier;
-            const categoryMatch = item.category === selectedCategory;
+            const categoryMatch = item.category === selectedCategory || item.sub_category === selectedCategory;
             const subCategoryMatch = selectedSubCategory ? item.sub_category === selectedSubCategory : true;
-            
-            return supplierMatch && categoryMatch && subCategoryMatch;
+            return categoryMatch && subCategoryMatch;
         });
     }, [selectedSupplier, selectedCategory, selectedSubCategory, priceItems]);
 
@@ -700,32 +724,73 @@ export default function QuoteBuilder({
         switch (currentStep) {
             case 'supplier':
                 return (
-                    <Card className="shadow-lg">
-                        <CardHeader>
-                            <CardTitle className="text-xl">בחר ספק</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                {activeSuppliers.map((supplier) => (
-                                    <Button
-                                        key={supplier}
-                                        variant={selectedSupplier === supplier ? "default" : "outline"}
-                                        className={`h-24 text-lg font-semibold transition-all ${
-                                            selectedSupplier === supplier 
-                                                ? 'bg-[#D4A843] text-white shadow-lg ring-2 ring-[#B8922E]'
-                                                : 'bg-white border-gray-200 hover:bg-[rgba(184,146,46,0.08)] hover:border-[#D4A843] text-gray-900'
-                                        }`}
-                                        onClick={() => handleSupplierSelect(supplier)}
-                                    >
-                                        {selectedSupplier === supplier && (
-                                            <Check className="w-5 h-5 ml-2" />
-                                        )}
-                                        {supplier}
-                                    </Button>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <div className="space-y-6">
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="text-xl">בחר ספק</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    {activeSuppliers.map((supplier) => (
+                                        <Button
+                                            key={supplier}
+                                            variant={selectedSupplier === supplier ? "default" : "outline"}
+                                            className={`h-24 text-lg font-semibold transition-all ${
+                                                selectedSupplier === supplier
+                                                    ? 'bg-[#D4A843] text-white shadow-lg ring-2 ring-[#B8922E]'
+                                                    : 'bg-white border-gray-200 hover:bg-[rgba(184,146,46,0.08)] hover:border-[#D4A843] text-gray-900'
+                                            }`}
+                                            onClick={() => handleSupplierSelect(supplier)}
+                                        >
+                                            {selectedSupplier === supplier && (
+                                                <Check className="w-5 h-5 ml-2" />
+                                            )}
+                                            {supplier}
+                                        </Button>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="text-xl">קטגוריות מחירון</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    {fixedCategories.map((cat) => {
+                                        const hasItems = priceItems?.some(item =>
+                                            item.category === cat.name || item.sub_category === cat.name
+                                        );
+                                        return (
+                                            <Button
+                                                key={cat.name}
+                                                variant="outline"
+                                                className={`h-16 text-base font-medium transition-all ${
+                                                    hasItems
+                                                        ? 'bg-white border-gray-200 hover:bg-[rgba(184,146,46,0.08)] hover:border-[#D4A843]'
+                                                        : 'bg-gray-50 border-dashed border-gray-300 text-gray-400'
+                                                }`}
+                                                onClick={() => {
+                                                    if (hasItems) {
+                                                        setSelectedCategory(cat.name);
+                                                        setSelectedSubCategory(null);
+                                                        setCurrentStep('items');
+                                                    } else {
+                                                        toast.info(`עדיין אין מחירון ל"${cat.name}" — ניתן להוסיף פריטים ידנית`);
+                                                    }
+                                                }}
+                                            >
+                                                <span className="ml-2 text-xl">{cat.icon}</span>
+                                                {cat.name}
+                                                {!hasItems && <span className="text-xs mr-1">(ריק)</span>}
+                                            </Button>
+                                        );
+                                    })}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
                 );
 
             case 'category':
@@ -796,7 +861,15 @@ export default function QuoteBuilder({
                                 בחר פריטים - {selectedSupplier} &gt; {selectedCategory}
                                 {selectedSubCategory && ` > ${selectedSubCategory}`}
                             </CardTitle>
-                            <Button variant="outline" onClick={categorySubCategories.length > 0 ? handleBackToSubCategories : handleBackToCategories}>
+                            <Button variant="outline" onClick={() => {
+                                if (categorySubCategories.length > 0 && selectedSubCategory) {
+                                    handleBackToSubCategories();
+                                } else if (selectedSupplier && supplierCategories.length > 0) {
+                                    handleBackToCategories();
+                                } else {
+                                    handleBackToSuppliers();
+                                }
+                            }}>
                                 <ArrowRight className="w-4 h-4 ml-2" />
                                 חזרה
                             </Button>
