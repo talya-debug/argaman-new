@@ -758,7 +758,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         // רוחב עמודות
         const colDefs = [
             { width: 16, key: 'clause' },
-            { width: 42, key: 'desc' },
+            { width: 65, key: 'desc' },
             { width: 22, key: 'notes' },
             { width: 9, key: 'qty' },
         ];
@@ -788,7 +788,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         // הוספת שורות
         rows.forEach((rowData, rowIdx) => {
             const excelRow = ws.addRow(rowData);
-            excelRow.height = rowIdx <= 4 ? 22 : 18;
+            excelRow.height = rowIdx <= 4 ? 22 : 30;
 
             // כותרת טבלה
             if (rowIdx === headerRowIdx) {
