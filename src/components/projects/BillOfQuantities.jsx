@@ -338,14 +338,18 @@ function InvoiceStatusTracker({ invoiceNum, projectId, project, invoiceTotal, co
     const STEPS = [
         { key: 'draft', label: 'טיוטה', color: '#94a3b8' },
         { key: 'approved', label: 'חשבון מאושר', color: '#f59e0b' },
-        { key: 'sent', label: 'נשלחה חשבונית', color: '#3b82f6' },
+        { key: 'sent_to_client', label: 'ממתין לאישור לקוח', color: '#a855f7' },
+        { key: 'invoice_issued', label: 'חשבונית מס', color: '#3b82f6' },
+        { key: 'waiting_payment', label: 'ממתין לתשלום', color: '#f97316' },
         { key: 'paid', label: 'שולם', color: '#22c55e' },
     ];
 
     const getActiveStep = () => {
         if (!status) return 0;
-        if (status === 'שולם ונשלחה חשבונית מס' || status === 'שולם') return 3;
-        if (status === 'נשלחה חשבונית – ממתין לתשלום') return 2;
+        if (status === 'שולם ונשלחה חשבונית מס' || status === 'שולם' || status === 'שולם חלקי – קרן בלבד') return 5;
+        if (status === 'נשלחה חשבונית – ממתין לתשלום' || status === 'עיכוב בתשלום – לטיפול יניר') return 4;
+        if (status === 'חשבונית מס הופקה') return 3;
+        if (status === 'נשלח חשבון עסקה – ממתין לאישור הלקוח') return 2;
         if (status.includes('חשבון מאושר')) return 1;
         return 0;
     };
@@ -355,12 +359,11 @@ function InvoiceStatusTracker({ invoiceNum, projectId, project, invoiceTotal, co
         setLoading(true);
         try {
             if (!collectionTask) {
-                // שלב 1: יצירת רשומת גבייה — חשבון מאושר
                 const today = new Date().toISOString().split('T')[0];
-                const paymentTerms = project?.payment_terms || 'מיידי';
                 await CollectionTask.create({
                     project_name: project?.name || '',
                     project_id: projectId,
+                    client_name: project?.client_name || '',
                     amount_to_collect: invoiceTotal,
                     invoice_date: today,
                     payment_due_date: today,
@@ -370,9 +373,15 @@ function InvoiceStatusTracker({ invoiceNum, projectId, project, invoiceTotal, co
                 });
                 toast.success(`חשבון ${invoiceNum} אושר — נוצרה משימת גבייה`);
             } else if (activeStep === 1) {
-                await CollectionTask.update(collectionTask.id, { collection_status: 'נשלחה חשבונית – ממתין לתשלום' });
-                toast.success(`חשבונית ${invoiceNum} סומנה כנשלחה`);
+                await CollectionTask.update(collectionTask.id, { collection_status: 'נשלח חשבון עסקה – ממתין לאישור הלקוח' });
+                toast.success(`חשבון עסקה ${invoiceNum} נשלח — ממתין לאישור הלקוח`);
             } else if (activeStep === 2) {
+                await CollectionTask.update(collectionTask.id, { collection_status: 'חשבונית מס הופקה' });
+                toast.success(`חשבונית מס ${invoiceNum} הופקה`);
+            } else if (activeStep === 3) {
+                await CollectionTask.update(collectionTask.id, { collection_status: 'נשלחה חשבונית – ממתין לתשלום' });
+                toast.success(`חשבונית ${invoiceNum} נשלחה — ממתין לתשלום`);
+            } else if (activeStep === 4) {
                 await CollectionTask.update(collectionTask.id, { collection_status: 'שולם ונשלחה חשבונית מס' });
                 toast.success(`חשבון ${invoiceNum} סומן כשולם`);
             }
@@ -384,7 +393,15 @@ function InvoiceStatusTracker({ invoiceNum, projectId, project, invoiceTotal, co
         setLoading(false);
     };
 
-    const nextLabel = activeStep === 0 ? 'אשר חשבון' : activeStep === 1 ? 'חשבונית נשלחה' : activeStep === 2 ? 'סמן כשולם' : null;
+    const nextLabels = [
+        'אשר חשבון',
+        'שלח חשבון עסקה',
+        'הפק חשבונית מס',
+        'שלח חשבונית',
+        'סמן כשולם',
+        null
+    ];
+    const nextLabel = nextLabels[activeStep];
 
     return (
         <div style={{ marginTop: 16, padding: 16, background: '#f8f9fb', borderRadius: 10, border: '1px solid #e2e4e9' }}>

@@ -16,9 +16,12 @@ import { toast } from "sonner";
 
 const statusConfig = {
   "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-[rgba(96,165,250,0.15)] text-[#60a5fa]", icon: "🔵" },
-  "נשלחה חשבונית – ממתין לתשלום": { color: "bg-[rgba(249,115,22,0.15)] text-[#f97316]", icon: "🟠", displayName: "נשלח חשבון – ממתין לתשלום" },
+  "נשלח חשבון עסקה – ממתין לאישור הלקוח": { color: "bg-[rgba(168,85,247,0.15)] text-[#a855f7]", icon: "🟣" },
+  "חשבונית מס הופקה": { color: "bg-[rgba(249,115,22,0.15)] text-[#f97316]", icon: "🟠" },
+  "נשלחה חשבונית – ממתין לתשלום": { color: "bg-[rgba(249,115,22,0.15)] text-[#f97316]", icon: "🟠" },
   "עיכוב בתשלום – לטיפול יניר": { color: "bg-[rgba(251,191,36,0.15)] text-[#fbbf24]", icon: "🟡" },
   "שולם ונשלחה חשבונית מס": { color: "bg-[rgba(74,222,128,0.15)] text-[#4ade80]", icon: "🟢" },
+  "שולם חלקי – קרן בלבד": { color: "bg-[rgba(74,222,128,0.15)] text-[#86efac]", icon: "🟢" },
   "בוטל / זיכוי": { color: "bg-[rgba(156,163,175,0.15)] text-[#9ca3af]", icon: "⚪" }
 };
 
@@ -87,7 +90,8 @@ export default function CollectionTasks() {
     isFullPayment: true,
     amountReceived: '',
     receiptDate: new Date().toISOString().split('T')[0],
-    notes: ''
+    notes: '',
+    paymentType: 'חלקי'
   });
 
   useEffect(() => {
@@ -178,31 +182,39 @@ export default function CollectionTasks() {
         }
 
         const remainingAmount = originalAmount - amountReceivedNum;
+        const paymentType = paymentDialog.paymentType || 'חלקי';
+        const paymentTypeLabel = paymentType === 'קרן' ? 'קרן בלבד' : paymentType === 'מע"מ' ? 'מע"מ בלבד' : 'חלקי';
 
-        const partialPaymentNote = `התקבל תשלום חלקי בסך ₪${amountReceivedNum.toLocaleString('he-IL')} בתאריך ${new Date(receiptDate).toLocaleDateString('he-IL')}. נפתחה משימת המשך ליתרה לגבייה בסך ₪${remainingAmount.toLocaleString('he-IL')}.${notes ? ` ${notes}` : ''}`;
+        const partialPaymentNote = `התקבל תשלום ${paymentTypeLabel} בסך ₪${amountReceivedNum.toLocaleString('he-IL')} בתאריך ${new Date(receiptDate).toLocaleDateString('he-IL')}. נפתחה משימת המשך ליתרה בסך ₪${remainingAmount.toLocaleString('he-IL')}.${notes ? ` ${notes}` : ''}`;
         await CollectionTask.update(task.id, {
-          collection_status: 'שולם ונשלחה חשבונית מס',
+          collection_status: paymentType === 'קרן' ? 'שולם חלקי – קרן בלבד' : 'שולם ונשלחה חשבונית מס',
           is_closed: true,
+          amount_paid: amountReceivedNum,
+          payment_type: paymentTypeLabel,
+          payment_date: receiptDate,
           notes: task.notes ? `${task.notes}\n\n${partialPaymentNote}` : partialPaymentNote
         });
 
         const followUpTask = {
-          project_name: `תשלום חלקי – המשך ל${task.invoice_number || 'חשבון'} – יתרה לגבייה`,
+          project_name: task.project_name,
+          project_id: task.project_id || '',
+          client_name: task.client_name || task.project_name || '',
           amount_to_collect: remainingAmount,
           invoice_date: task.invoice_date,
-          payment_due_date: task.payment_due_date,
-          collection_status: 'חשבון מאושר – יש לשלוח חשבון עסקה',
+          payment_due_date: paymentType === 'קרן' ? (() => {
+            // מע"מ לחודש עוקב
+            const d = new Date();
+            d.setMonth(d.getMonth() + 1);
+            return new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().split('T')[0];
+          })() : task.payment_due_date,
+          collection_status: paymentType === 'קרן' ? 'נשלחה חשבונית – ממתין לתשלום' : 'חשבון מאושר – יש לשלוח חשבון עסקה',
           responsible: task.responsible,
-          invoice_number: `${task.invoice_number || 'חשבון'} - המשך`,
-          notes: `המשך לתשלום חלקי שהתקבל בסך ₪${amountReceivedNum.toLocaleString('he-IL')}. יתרה לגבייה: ₪${remainingAmount.toLocaleString('he-IL')}.${notes ? ` ${notes}` : ''}`
+          invoice_number: task.invoice_number || '',
+          notes: `יתרת ${paymentType === 'קרן' ? 'מע"מ' : 'תשלום'} — ${task.invoice_number || 'חשבון'} — ₪${remainingAmount.toLocaleString('he-IL')}`
         };
 
-        if (task.project_id) {
-          followUpTask.project_id = task.project_id;
-        }
-
         await CollectionTask.create(followUpTask);
-        toast.success(`משימת המשך נוצרה על יתרה של ₪${remainingAmount.toLocaleString('he-IL')}`);
+        toast.success(`שולם ${paymentTypeLabel} ₪${amountReceivedNum.toLocaleString('he-IL')} — משימת המשך נוצרה על ₪${remainingAmount.toLocaleString('he-IL')}`);
       }
 
       loadTasks();
@@ -632,24 +644,53 @@ export default function CollectionTasks() {
               </div>
 
               {!paymentDialog.isFullPayment && (
-                <div>
-                  <Label htmlFor="amount_received" className="text-sm font-medium text-gray-700 mb-2 block text-right">
-                    כמה התקבל בפועל? *
-                  </Label>
-                  <Input
-                    id="amount_received"
-                    type="number"
-                    value={paymentDialog.amountReceived}
-                    onChange={(e) => setPaymentDialog({...paymentDialog, amountReceived: e.target.value})}
-                    placeholder="0.00"
-                    className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900"
-                    required
-                  />
-                  {paymentDialog.amountReceived && (
-                    <p className="text-sm text-orange-600 mt-2 font-medium">
-                      יתרה לגבייה: ₪{((paymentDialog.task?.amount_to_collect || 0) - parseFloat(paymentDialog.amountReceived || 0)).toLocaleString('he-IL')}
-                    </p>
-                  )}
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium text-gray-700 mb-2 block text-right">סוג תשלום</Label>
+                    <div className="flex gap-2">
+                      {[
+                        { value: 'קרן', label: 'קרן בלבד', desc: 'מע"מ בחודש עוקב' },
+                        { value: 'מע"מ', label: 'מע"מ בלבד', desc: 'קרן שולמה קודם' },
+                        { value: 'חלקי', label: 'תשלום חלקי', desc: 'סכום חופשי' },
+                      ].map(opt => (
+                        <Button
+                          key={opt.value}
+                          type="button"
+                          variant={(paymentDialog.paymentType || 'חלקי') === opt.value ? "default" : "outline"}
+                          onClick={() => {
+                            const total = paymentDialog.task?.amount_to_collect || 0;
+                            let autoAmount = '';
+                            if (opt.value === 'קרן') autoAmount = (total / 1.18).toFixed(2);
+                            else if (opt.value === 'מע"מ') autoAmount = (total - total / 1.18).toFixed(2);
+                            setPaymentDialog({...paymentDialog, paymentType: opt.value, amountReceived: autoAmount});
+                          }}
+                          className={`flex-1 flex flex-col h-auto py-2 ${(paymentDialog.paymentType || 'חלקי') === opt.value ? 'bg-indigo-600' : ''}`}
+                        >
+                          <span className="text-sm font-bold">{opt.label}</span>
+                          <span className="text-xs opacity-75">{opt.desc}</span>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="amount_received" className="text-sm font-medium text-gray-700 mb-2 block text-right">
+                      סכום שהתקבל *
+                    </Label>
+                    <Input
+                      id="amount_received"
+                      type="number"
+                      value={paymentDialog.amountReceived}
+                      onChange={(e) => setPaymentDialog({...paymentDialog, amountReceived: e.target.value})}
+                      placeholder="0.00"
+                      className="bg-white border-[rgba(255,255,255,0.12)] text-gray-900"
+                      required
+                    />
+                    {paymentDialog.amountReceived && (
+                      <p className="text-sm text-orange-600 mt-2 font-medium">
+                        יתרה לגבייה: ₪{((paymentDialog.task?.amount_to_collect || 0) - parseFloat(paymentDialog.amountReceived || 0)).toLocaleString('he-IL')}
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
 

@@ -10,8 +10,11 @@ import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Toolti
 
 const statusConfig = {
   "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-blue-50", textColor: "text-blue-700", displayColor: "#60a5fa" },
+  "נשלח חשבון עסקה – ממתין לאישור הלקוח": { color: "bg-purple-50", textColor: "text-purple-700", displayColor: "#a855f7" },
+  "חשבונית מס הופקה": { color: "bg-orange-50", textColor: "text-orange-700", displayColor: "#f97316" },
   "נשלחה חשבונית – ממתין לתשלום": { color: "bg-orange-50", textColor: "text-orange-700", displayColor: "#f97316" },
   "עיכוב בתשלום – לטיפול יניר": { color: "bg-amber-50", textColor: "text-amber-700", displayColor: "#fbbf24" },
+  "שולם חלקי – קרן בלבד": { color: "bg-green-50", textColor: "text-green-700", displayColor: "#86efac" },
   "שולם ונשלחה חשבונית מס": { color: "bg-green-50", textColor: "text-green-700", displayColor: "#4ade80" },
   "בוטל / זיכוי": { color: "bg-gray-100", textColor: "text-gray-600", displayColor: "#9ca3af" }
 };
