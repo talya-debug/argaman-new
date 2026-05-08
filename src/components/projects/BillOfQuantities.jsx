@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { FileSpreadsheet, Plus, Edit, Download, Trash2, Settings } from 'lucide-react';
 import { toast } from 'sonner';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 import InvoicePDF from './InvoicePDF';
 import DeductionsModal from './DeductionsModal';
 
@@ -749,35 +749,114 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             }
         }
 
-        // יצירת אקסל עם xlsx
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.aoa_to_sheet(rows);
+        // יצירת אקסל מעוצב עם ExcelJS
+        const wb = new ExcelJS.Workbook();
+        const ws = wb.addWorksheet('כתב כמויות', {
+            views: [{ rightToLeft: true }]
+        });
 
         // רוחב עמודות
-        const colWidths = [
-            { wch: 16 },  // סעיף
-            { wch: 40 },  // תיאור
-            { wch: 22 },  // הערות
-            { wch: 8 },   // כמות
+        const colDefs = [
+            { width: 16, key: 'clause' },
+            { width: 42, key: 'desc' },
+            { width: 22, key: 'notes' },
+            { width: 9, key: 'qty' },
         ];
         if (includePrices) {
-            colWidths.push({ wch: 12 }); // מחיר יחידה
-            colWidths.push({ wch: 14 }); // סה"כ מאושר
+            colDefs.push({ width: 13, key: 'price' });
+            colDefs.push({ width: 15, key: 'total' });
         }
-        for (let i = 1; i <= maxInvNum; i++) colWidths.push({ wch: 13 });
-        colWidths.push({ wch: 14 }); // מצטבר
-        colWidths.push({ wch: 14 }); // יתרה
-        ws['!cols'] = colWidths;
+        for (let i = 1; i <= maxInvNum; i++) colDefs.push({ width: 14, key: `inv${i}` });
+        colDefs.push({ width: 15, key: 'cumulative' });
+        colDefs.push({ width: 15, key: 'remaining' });
+        ws.columns = colDefs.map(c => ({ width: c.width }));
 
-        // גובה שורות — 20px לכולם חוץ מכותרת
-        ws['!rows'] = rows.map((_, i) => ({ hpt: i <= 4 ? 22 : 18 }));
+        // סגנונות
+        const headerFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1A3A5C' } };
+        const headerFont = { bold: true, color: { argb: 'FFFFFFFF' }, size: 11, name: 'Arial' };
+        const sectionFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE8EEF4' } };
+        const sectionFont = { bold: true, size: 11, name: 'Arial' };
+        const dataFont = { size: 10, name: 'Arial' };
+        const summaryFont = { bold: true, size: 10, name: 'Arial' };
+        const summaryFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF5F5F5' } };
+        const totalFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD4A843' } };
+        const totalFont = { bold: true, size: 11, name: 'Arial', color: { argb: 'FFFFFFFF' } };
+        const borderStyle = { style: 'thin', color: { argb: 'FFD0D0D0' } };
+        const border = { top: borderStyle, bottom: borderStyle, left: borderStyle, right: borderStyle };
+        const numFmt = '#,##0.00';
 
-        XLSX.utils.book_append_sheet(wb, ws, 'כתב כמויות');
+        // הוספת שורות
+        rows.forEach((rowData, rowIdx) => {
+            const excelRow = ws.addRow(rowData);
+            excelRow.height = rowIdx <= 4 ? 22 : 18;
+
+            // כותרת טבלה
+            if (rowIdx === headerRowIdx) {
+                excelRow.height = 28;
+                excelRow.eachCell((cell) => {
+                    cell.fill = headerFill;
+                    cell.font = headerFont;
+                    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+                    cell.border = border;
+                });
+                return;
+            }
+
+            // כותרות עליונות (שם חברה, פרויקט)
+            if (rowIdx <= 4) {
+                excelRow.eachCell((cell) => {
+                    cell.font = { bold: rowIdx === 0, size: rowIdx === 0 ? 14 : 11, name: 'Arial' };
+                    cell.alignment = { horizontal: 'right' };
+                });
+                return;
+            }
+
+            // שורה ריקה
+            if (!rowData || rowData.length === 0 || rowData.every(c => c === '' || c === undefined)) return;
+
+            // שורת כותרת סקשן
+            if (headerLineRows.includes(rowIdx)) {
+                excelRow.eachCell((cell) => {
+                    cell.fill = sectionFill;
+                    cell.font = sectionFont;
+                    cell.alignment = { horizontal: 'right' };
+                    cell.border = border;
+                });
+                return;
+            }
+
+            // שורות סיכום (אחרי הנתונים)
+            if (rowIdx >= rows.length - 20 && rowData[headerRow.length - 2] && typeof rowData[headerRow.length - 2] === 'string' && rowData[headerRow.length - 2] !== '') {
+                const isTotal = rowData[headerRow.length - 2]?.includes?.('סה"כ לתשלום') || rowData[headerRow.length - 2]?.includes?.('סה"כ מצטבר');
+                excelRow.eachCell((cell, colNum) => {
+                    cell.font = isTotal ? totalFont : summaryFont;
+                    cell.fill = isTotal ? totalFill : summaryFill;
+                    cell.alignment = { horizontal: 'right' };
+                    cell.border = border;
+                    if (colNum === headerRow.length && typeof cell.value === 'number') cell.numFmt = numFmt;
+                });
+                return;
+            }
+
+            // שורות נתונים רגילות
+            excelRow.eachCell((cell, colNum) => {
+                cell.font = dataFont;
+                cell.border = border;
+                cell.alignment = { horizontal: colNum <= 3 ? 'right' : 'center', vertical: 'middle', wrapText: colNum === 2 };
+                if (typeof cell.value === 'number') cell.numFmt = numFmt;
+            });
+        });
 
         // הורדה
         const cleanProjName = projectName.replace(/[^a-zA-Z0-9א-ת]/g, '_');
         const pricesSuffix = !includePrices ? '_ללא_מחירים' : '';
-        XLSX.writeFile(wb, `כתב_כמויות_חשבון_${invoiceNum}_${cleanProjName}${pricesSuffix}.xlsx`);
+        const buffer = await wb.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `כתב_כמויות_חשבון_${invoiceNum}_${cleanProjName}${pricesSuffix}.xlsx`;
+        document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url);
         toast.success('קובץ אקסל הורד בהצלחה');
     };
 
