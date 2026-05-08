@@ -586,7 +586,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         if (!invoiceNum || isNaN(invoiceNum)) return;
         if (!projectId) { toast.error("חסר מזהה פרויקט"); return; }
 
-        const csvSafe = (str) => {
+        const csvSafe = (str, maxLen = 0) => {
             let s = String(str || '');
             // ניקוי newlines שיכולים לשבור CSV
             s = s.replace(/\r?\n/g, ' ');
@@ -597,6 +597,14 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             s = s.replace(/[,]{2,}/g, '');
             // ניקוי גרשיים כפולים מיותרים (4 גרשיים → 2)
             s = s.replace(/''{2,}/g, "''");
+            // ניקוי גרשיים בודדים בתחילת טקסט
+            s = s.replace(/^''+/, '');
+            // ניקוי רווחים כפולים
+            s = s.replace(/\s{2,}/g, ' ').trim();
+            // קיצור טקסט ארוך אם צריך
+            if (maxLen > 0 && s.length > maxLen) {
+                s = s.substring(0, maxLen) + '...';
+            }
             // escape גרשיים ל-CSV
             s = s.replace(/"/g, '""');
             return `"${s}"`;
@@ -678,7 +686,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             let allNotes = (line.description_snapshot && line.description_snapshot.includes("סיבה:")) ? line.description_snapshot : '';
             if (currentInvoiceEntry?.notes) allNotes += (allNotes ? ' | ' : '') + `הערות: ${currentInvoiceEntry.notes}`;
             const cleanClause = (line.clause_number || '').replace(/^'+/, '');
-            let row = [csvSafe(cleanClause), csvSafe(line.name_snapshot || ''), csvSafe(allNotes), line.quantity || 0];
+            let row = [csvSafe(cleanClause), csvSafe(line.name_snapshot || '', 120), csvSafe(allNotes, 80), line.quantity || 0];
             if (includePrices) { row.push(((line.line_total || 0) / (line.quantity || 1)).toFixed(2)); row.push((line.line_total || 0).toFixed(2)); }
             let cumulativeTotal = 0;
             for (let i = 1; i <= maxInvNum; i++) { const entry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${i}`); const amount = entry?.amount_to_invoice || 0; row.push(amount > 0 ? amount.toFixed(2) : '0'); cumulativeTotal += amount; }
