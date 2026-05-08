@@ -586,7 +586,21 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         if (!invoiceNum || isNaN(invoiceNum)) return;
         if (!projectId) { toast.error("חסר מזהה פרויקט"); return; }
 
-        const csvSafe = (str) => `"${String(str || '').replace(/"/g, '""')}"`;
+        const csvSafe = (str) => {
+            let s = String(str || '');
+            // ניקוי newlines שיכולים לשבור CSV
+            s = s.replace(/\r?\n/g, ' ');
+            // ניקוי "טקסט ארוך:" ו"הערות:" כפרפיקס מיותר
+            s = s.replace(/\s*טקסט ארוך:\s*/g, ' ');
+            s = s.replace(/\s*הערות:\s*/g, ' ').trim();
+            // ניקוי פסיקים מיותרים בסוף
+            s = s.replace(/[,]{2,}/g, '');
+            // ניקוי גרשיים כפולים מיותרים (4 גרשיים → 2)
+            s = s.replace(/''{2,}/g, "''");
+            // escape גרשיים ל-CSV
+            s = s.replace(/"/g, '""');
+            return `"${s}"`;
+        };
         toast.info("טוען נתונים...");
 
         // Fetch data directly from entities
@@ -650,8 +664,9 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
 
         allLines.forEach(line => {
             if (line.is_header) {
-                const headerLabel = [line.clause_number, line.name_snapshot || line.model_snapshot].filter(Boolean).join(' - ');
-                let hRow = [csvSafe(line.clause_number || ''), csvSafe(`*** ${headerLabel} ***`), csvSafe(''), csvSafe('')];
+                const cleanHeaderClause = (line.clause_number || '').replace(/^'+/, '');
+                const headerLabel = [cleanHeaderClause, line.name_snapshot || line.model_snapshot].filter(Boolean).join(' - ');
+                let hRow = [csvSafe(cleanHeaderClause), csvSafe(`*** ${headerLabel} ***`), csvSafe(''), csvSafe('')];
                 if (includePrices) hRow.push(csvSafe(''), csvSafe(''));
                 for (let i = 1; i <= maxInvNum; i++) hRow.push(csvSafe(''));
                 hRow.push(csvSafe(''), csvSafe(''));
@@ -662,7 +677,8 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             subtotalForCurrentInvoice += currentInvoiceEntry?.amount_to_invoice || 0;
             let allNotes = (line.description_snapshot && line.description_snapshot.includes("סיבה:")) ? line.description_snapshot : '';
             if (currentInvoiceEntry?.notes) allNotes += (allNotes ? ' | ' : '') + `הערות: ${currentInvoiceEntry.notes}`;
-            let row = [csvSafe(line.clause_number || ''), csvSafe(line.name_snapshot || ''), csvSafe(allNotes), line.quantity || 0];
+            const cleanClause = (line.clause_number || '').replace(/^'+/, '');
+            let row = [csvSafe(cleanClause), csvSafe(line.name_snapshot || ''), csvSafe(allNotes), line.quantity || 0];
             if (includePrices) { row.push(((line.line_total || 0) / (line.quantity || 1)).toFixed(2)); row.push((line.line_total || 0).toFixed(2)); }
             let cumulativeTotal = 0;
             for (let i = 1; i <= maxInvNum; i++) { const entry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${i}`); const amount = entry?.amount_to_invoice || 0; row.push(amount > 0 ? amount.toFixed(2) : '0'); cumulativeTotal += amount; }
@@ -699,6 +715,26 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             if (s.totalDeductions > 0) csvContent += `${summaryPrefix}${csvSafe('סה"כ לאחר קיזוז')},${s.afterDeductions.toFixed(2)}\n`;
             csvContent += `${summaryPrefix}${csvSafe('מע"מ (18%)')},${s.vatAmt.toFixed(2)}\n`;
             csvContent += `${summaryPrefix}${csvSafe(`סה"כ לתשלום חשבון ${invoiceNum}`)},${s.finalTotal.toFixed(2)}\n`;
+
+            // סיכום מצטבר — כל החשבונות עד עכשיו
+            if (invoiceNum > 1) {
+                csvContent += "\n";
+                csvContent += `${summaryPrefix}${csvSafe('--- סיכום מצטבר ---')},\n`;
+                let totalCumulative = 0;
+                for (let i = 1; i <= invoiceNum; i++) {
+                    const invSummary = calcSummary(i);
+                    csvContent += `${summaryPrefix}${csvSafe(`חשבון ${i}`)},${invSummary.finalTotal.toFixed(2)}\n`;
+                    totalCumulative += invSummary.finalTotal;
+                }
+                csvContent += `${summaryPrefix}${csvSafe('סה"כ מצטבר (כולל מע"מ)')},${totalCumulative.toFixed(2)}\n`;
+                const totalApproved = allLines.reduce((sum, l) => sum + (l.is_header ? 0 : (l.line_total || 0)), 0);
+                const remainingToInvoice = totalApproved - allLines.reduce((sum, l) => {
+                    if (l.is_header) return sum;
+                    const entries = freshMap[l.id] || [];
+                    return sum + entries.reduce((s, e) => s + (e.amount_to_invoice || 0), 0);
+                }, 0);
+                csvContent += `${summaryPrefix}${csvSafe('יתרה לחיוב (לפני מע"מ)')},${remainingToInvoice.toFixed(2)}\n`;
+            }
         }
 
         const cleanProjectName = projectName.replace(/[^a-zA-Z0-9א-ת]/g, '_');
