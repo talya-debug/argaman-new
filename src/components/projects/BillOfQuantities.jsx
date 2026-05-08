@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { FileSpreadsheet, Plus, Edit, Download, Trash2, Settings } from 'lucide-react';
 import { toast } from 'sonner';
+import * as XLSX from 'xlsx';
 import InvoicePDF from './InvoicePDF';
 import DeductionsModal from './DeductionsModal';
 
@@ -581,37 +582,25 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         } catch (error) { console.error('Error creating collection task:', error); toast.error('שגיאה ביצירת משימת גבייה.'); }
     };
 
+    const cleanText = (str, maxLen = 0) => {
+        let s = String(str || '');
+        s = s.replace(/\r?\n/g, ' ');
+        s = s.replace(/\s*טקסט ארוך:\s*/g, ' ');
+        s = s.replace(/\s*הערות:\s*/g, ' ').trim();
+        s = s.replace(/[,]{2,}/g, '');
+        s = s.replace(/''{2,}/g, "'");
+        s = s.replace(/^''+/, '');
+        s = s.replace(/\s{2,}/g, ' ').trim();
+        if (maxLen > 0 && s.length > maxLen) s = s.substring(0, maxLen) + '...';
+        return s;
+    };
+
     const exportToCSV = async (includePrices = true) => {
         const invoiceNum = parseInt(activeTab.split('-')[1]);
         if (!invoiceNum || isNaN(invoiceNum)) return;
         if (!projectId) { toast.error("חסר מזהה פרויקט"); return; }
+        toast.info("מכין קובץ אקסל...");
 
-        const csvSafe = (str, maxLen = 0) => {
-            let s = String(str || '');
-            // ניקוי newlines שיכולים לשבור CSV
-            s = s.replace(/\r?\n/g, ' ');
-            // ניקוי "טקסט ארוך:" ו"הערות:" כפרפיקס מיותר
-            s = s.replace(/\s*טקסט ארוך:\s*/g, ' ');
-            s = s.replace(/\s*הערות:\s*/g, ' ').trim();
-            // ניקוי פסיקים מיותרים בסוף
-            s = s.replace(/[,]{2,}/g, '');
-            // ניקוי גרשיים כפולים מיותרים (4 גרשיים → 2)
-            s = s.replace(/''{2,}/g, "''");
-            // ניקוי גרשיים בודדים בתחילת טקסט
-            s = s.replace(/^''+/, '');
-            // ניקוי רווחים כפולים
-            s = s.replace(/\s{2,}/g, ' ').trim();
-            // קיצור טקסט ארוך אם צריך
-            if (maxLen > 0 && s.length > maxLen) {
-                s = s.substring(0, maxLen) + '...';
-            }
-            // escape גרשיים ל-CSV
-            s = s.replace(/"/g, '""');
-            return `"${s}"`;
-        };
-        toast.info("טוען נתונים...");
-
-        // Fetch data directly from entities
         let allLines, freshEntries, freshProject;
         try {
             const [linesData, entriesData, projectData] = await Promise.all([
@@ -622,10 +611,9 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             allLines = linesData;
             freshEntries = entriesData;
             freshProject = projectData;
-            toast.info(`נטענו ${allLines.length} שורות`);
         } catch (e) {
             console.error('Fetch failed:', e);
-            toast.error("שגיאה בטעינת נתונים - " + e.message);
+            toast.error("שגיאה בטעינת נתונים");
             return;
         }
 
@@ -655,105 +643,142 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             return { rawSubtotal, discountAmt, discountType, discountPct, discountFixed, afterDiscount, insPct, retPct, labPct, insAmt, retAmt, labAmt, totalDeductions, afterDeductions, vatAmt, finalTotal };
         };
 
-        let csvContent = "\uFEFF";
-        const projectName = p?.name || 'פרויקט'; const clientName = p?.client_name || ''; const currentDate = new Date().toLocaleDateString('he-IL');
-        csvContent += `${csvSafe('ארגמן מערכות מיזוג מתקדמות בע״מ')}\n`;
-        csvContent += `${csvSafe(`כתב כמויות מצטבר${!includePrices ? ' (ללא מחירים)' : ''}`)}\n`;
-        csvContent += `${csvSafe(`פרויקט: ${projectName}`)},${csvSafe(`תאריך: ${currentDate}`)}\n`;
-        csvContent += `${csvSafe(`לקוח: ${clientName}`)}\n\n`;
+        const projectName = p?.name || 'פרויקט';
+        const clientName = p?.client_name || '';
+        const currentDate = new Date().toLocaleDateString('he-IL');
 
-        let headerRow = ["סעיף", "תיאור פריט", "הערות", "כמות"];
-        if (includePrices) headerRow.push("מחיר יחידה", 'סה"כ מאושר');
+        // בניית מערך נתונים לאקסל
+        const rows = [];
+
+        // כותרות עליונות
+        rows.push(['ארגמן מערכות מיזוג מתקדמות בע"מ']);
+        rows.push([`כתב כמויות מצטבר${!includePrices ? ' (ללא מחירים)' : ''}`]);
+        rows.push([`פרויקט: ${projectName}`, '', `תאריך: ${currentDate}`]);
+        rows.push([`לקוח: ${clientName}`]);
+        rows.push([]); // שורה ריקה
+
+        // כותרת טבלה
+        const headerRow = ['סעיף', 'תיאור פריט', 'הערות', 'כמות'];
+        if (includePrices) headerRow.push('מחיר יחידה', 'סה"כ מאושר');
         for (let i = 1; i <= maxInvNum; i++) headerRow.push(`חשבון ${i}`);
-        headerRow.push("מצטבר עד כה", "יתרה לחיוב");
-        csvContent += headerRow.map(h => csvSafe(h)).join(',') + "\n";
+        headerRow.push('מצטבר עד כה', 'יתרה לחיוב');
+        rows.push(headerRow);
+        const headerRowIdx = rows.length - 1;
 
-        let subtotalForCurrentInvoice = 0; let rowsWritten = 0;
+        // שורות נתונים
+        let subtotalForCurrentInvoice = 0;
+        const dataStartRow = rows.length;
+        const headerLineRows = [];
 
         allLines.forEach(line => {
             if (line.is_header) {
-                const cleanHeaderClause = (line.clause_number || '').replace(/^'+/, '');
+                const cleanHeaderClause = cleanText(line.clause_number);
                 const headerLabel = [cleanHeaderClause, line.name_snapshot || line.model_snapshot].filter(Boolean).join(' - ');
-                let hRow = [csvSafe(cleanHeaderClause), csvSafe(`*** ${headerLabel} ***`), csvSafe(''), csvSafe('')];
-                if (includePrices) hRow.push(csvSafe(''), csvSafe(''));
-                for (let i = 1; i <= maxInvNum; i++) hRow.push(csvSafe(''));
-                hRow.push(csvSafe(''), csvSafe(''));
-                csvContent += hRow.join(',') + "\n"; rowsWritten++; return;
+                const hRow = [cleanHeaderClause, headerLabel];
+                const totalCols = headerRow.length;
+                while (hRow.length < totalCols) hRow.push('');
+                headerLineRows.push(rows.length);
+                rows.push(hRow);
+                return;
             }
             const allEntriesForLine = freshMap[line.id] || [];
             const currentInvoiceEntry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${invoiceNum}`);
             subtotalForCurrentInvoice += currentInvoiceEntry?.amount_to_invoice || 0;
             let allNotes = (line.description_snapshot && line.description_snapshot.includes("סיבה:")) ? line.description_snapshot : '';
-            if (currentInvoiceEntry?.notes) allNotes += (allNotes ? ' | ' : '') + `הערות: ${currentInvoiceEntry.notes}`;
-            const cleanClause = (line.clause_number || '').replace(/^'+/, '');
-            let row = [csvSafe(cleanClause), csvSafe(line.name_snapshot || '', 120), csvSafe(allNotes, 80), line.quantity || 0];
-            if (includePrices) { row.push(((line.line_total || 0) / (line.quantity || 1)).toFixed(2)); row.push((line.line_total || 0).toFixed(2)); }
+            if (currentInvoiceEntry?.notes) allNotes += (allNotes ? ' | ' : '') + currentInvoiceEntry.notes;
+
+            const row = [
+                cleanText(line.clause_number),
+                cleanText(line.name_snapshot, 100),
+                cleanText(allNotes, 60),
+                line.quantity || 0
+            ];
+            if (includePrices) {
+                row.push(Number(((line.line_total || 0) / (line.quantity || 1)).toFixed(2)));
+                row.push(Number((line.line_total || 0).toFixed(2)));
+            }
             let cumulativeTotal = 0;
-            for (let i = 1; i <= maxInvNum; i++) { const entry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${i}`); const amount = entry?.amount_to_invoice || 0; row.push(amount > 0 ? amount.toFixed(2) : '0'); cumulativeTotal += amount; }
-            row.push(cumulativeTotal.toFixed(2)); row.push(Math.max(0, (line.line_total || 0) - cumulativeTotal).toFixed(2));
-            csvContent += row.join(',') + "\n"; rowsWritten++;
+            for (let i = 1; i <= maxInvNum; i++) {
+                const entry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${i}`);
+                const amount = entry?.amount_to_invoice || 0;
+                row.push(Number(amount.toFixed(2)));
+                cumulativeTotal += amount;
+            }
+            row.push(Number(cumulativeTotal.toFixed(2)));
+            row.push(Number(Math.max(0, (line.line_total || 0) - cumulativeTotal).toFixed(2)));
+            rows.push(row);
         });
 
-        if (includePrices) {
-            const discountType = p?.boq_discount_type || 'percentage';
-            const boqDiscPct = p?.boq_discount_percentage || 0; const boqDiscFixed = p?.boq_discount_amount || 0;
-            const boqDiscAmt = discountType === 'fixed_amount' ? Math.min(boqDiscFixed, subtotalForCurrentInvoice) : subtotalForCurrentInvoice * (boqDiscPct / 100);
-            if (boqDiscAmt > 0) {
-                const discountDesc = discountType === 'percentage' ? `${boqDiscPct}% הנחה` : 'הנחה קבועה';
-                let discountRow = [csvSafe(''), csvSafe('הנחה כללית'), csvSafe(discountDesc), '1', `${(-boqDiscAmt).toFixed(2)}`, `${(-boqDiscAmt).toFixed(2)}`];
-                for (let i = 1; i <= maxInvNum; i++) discountRow.push(csvSafe(''));
-                discountRow.push(`${(-boqDiscAmt).toFixed(2)}`, csvSafe(''));
-                csvContent += discountRow.join(',') + "\n";
-            }
-        }
+        // שורה ריקה לפני סיכום
+        rows.push([]);
 
+        // סיכום
         if (includePrices) {
             const s = calcSummary(invoiceNum);
-            const summaryPrefix = ','.repeat(6 + maxInvNum);
-            csvContent += "\n";
-            csvContent += `${summaryPrefix}${csvSafe(`סכום ביניים חשבון ${invoiceNum}`)},${s.rawSubtotal.toFixed(2)}\n`;
+            const summaryCol = headerRow.length - 2;
+            const addSummaryRow = (label, value) => {
+                const r = new Array(headerRow.length).fill('');
+                r[summaryCol] = label;
+                r[summaryCol + 1] = Number(value.toFixed(2));
+                rows.push(r);
+            };
+            addSummaryRow(`סכום ביניים חשבון ${invoiceNum}`, s.rawSubtotal);
             if (s.discountAmt > 0) {
-                const dDesc = s.discountType === 'percentage' ? `${s.discountPct}% הנחה` : 'הנחה קבועה';
-                csvContent += `${summaryPrefix}${csvSafe(`הנחה כללית (${dDesc})`)},${(-s.discountAmt).toFixed(2)}\n`;
-                csvContent += `${summaryPrefix}${csvSafe('סה"כ אחרי הנחה')},${s.afterDiscount.toFixed(2)}\n`;
+                addSummaryRow(`הנחה (${s.discountType === 'percentage' ? s.discountPct + '%' : 'קבועה'})`, -s.discountAmt);
+                addSummaryRow('סה"כ אחרי הנחה', s.afterDiscount);
             }
-            if (s.insAmt > 0) csvContent += `${summaryPrefix}${csvSafe(`קיזוז ביטוח (${s.insPct}%)`)},${(-s.insAmt).toFixed(2)}\n`;
-            if (s.retAmt > 0) csvContent += `${summaryPrefix}${csvSafe(`קיזוז עיכבון (${s.retPct}%)`)},${(-s.retAmt).toFixed(2)}\n`;
-            if (s.labAmt > 0) csvContent += `${summaryPrefix}${csvSafe(`קיזוז מעבדה (${s.labPct}%)`)},${(-s.labAmt).toFixed(2)}\n`;
-            if (s.totalDeductions > 0) csvContent += `${summaryPrefix}${csvSafe('סה"כ לאחר קיזוז')},${s.afterDeductions.toFixed(2)}\n`;
-            csvContent += `${summaryPrefix}${csvSafe('מע"מ (18%)')},${s.vatAmt.toFixed(2)}\n`;
-            csvContent += `${summaryPrefix}${csvSafe(`סה"כ לתשלום חשבון ${invoiceNum}`)},${s.finalTotal.toFixed(2)}\n`;
+            if (s.insAmt > 0) addSummaryRow(`קיזוז ביטוח (${s.insPct}%)`, -s.insAmt);
+            if (s.retAmt > 0) addSummaryRow(`קיזוז עיכבון (${s.retPct}%)`, -s.retAmt);
+            if (s.labAmt > 0) addSummaryRow(`קיזוז מעבדה (${s.labPct}%)`, -s.labAmt);
+            if (s.totalDeductions > 0) addSummaryRow('סה"כ לאחר קיזוז', s.afterDeductions);
+            addSummaryRow('מע"מ (18%)', s.vatAmt);
+            addSummaryRow(`סה"כ לתשלום חשבון ${invoiceNum}`, s.finalTotal);
 
-            // סיכום מצטבר — כל החשבונות עד עכשיו
             if (invoiceNum > 1) {
-                csvContent += "\n";
-                csvContent += `${summaryPrefix}${csvSafe('--- סיכום מצטבר ---')},\n`;
+                rows.push([]);
+                const titleR = new Array(headerRow.length).fill('');
+                titleR[summaryCol] = '--- סיכום מצטבר ---';
+                rows.push(titleR);
                 let totalCumulative = 0;
                 for (let i = 1; i <= invoiceNum; i++) {
                     const invSummary = calcSummary(i);
-                    csvContent += `${summaryPrefix}${csvSafe(`חשבון ${i}`)},${invSummary.finalTotal.toFixed(2)}\n`;
+                    addSummaryRow(`חשבון ${i}`, invSummary.finalTotal);
                     totalCumulative += invSummary.finalTotal;
                 }
-                csvContent += `${summaryPrefix}${csvSafe('סה"כ מצטבר (כולל מע"מ)')},${totalCumulative.toFixed(2)}\n`;
-                const totalApproved = allLines.reduce((sum, l) => sum + (l.is_header ? 0 : (l.line_total || 0)), 0);
-                const remainingToInvoice = totalApproved - allLines.reduce((sum, l) => {
-                    if (l.is_header) return sum;
-                    const entries = freshMap[l.id] || [];
-                    return sum + entries.reduce((s, e) => s + (e.amount_to_invoice || 0), 0);
-                }, 0);
-                csvContent += `${summaryPrefix}${csvSafe('יתרה לחיוב (לפני מע"מ)')},${remainingToInvoice.toFixed(2)}\n`;
+                addSummaryRow('סה"כ מצטבר (כולל מע"מ)', totalCumulative);
             }
         }
 
-        const cleanProjectName = projectName.replace(/[^a-zA-Z0-9א-ת]/g, '_');
+        // יצירת אקסל עם xlsx
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+
+        // רוחב עמודות
+        const colWidths = [
+            { wch: 16 },  // סעיף
+            { wch: 40 },  // תיאור
+            { wch: 22 },  // הערות
+            { wch: 8 },   // כמות
+        ];
+        if (includePrices) {
+            colWidths.push({ wch: 12 }); // מחיר יחידה
+            colWidths.push({ wch: 14 }); // סה"כ מאושר
+        }
+        for (let i = 1; i <= maxInvNum; i++) colWidths.push({ wch: 13 });
+        colWidths.push({ wch: 14 }); // מצטבר
+        colWidths.push({ wch: 14 }); // יתרה
+        ws['!cols'] = colWidths;
+
+        // גובה שורות — 20px לכולם חוץ מכותרת
+        ws['!rows'] = rows.map((_, i) => ({ hpt: i <= 4 ? 22 : 18 }));
+
+        XLSX.utils.book_append_sheet(wb, ws, 'כתב כמויות');
+
+        // הורדה
+        const cleanProjName = projectName.replace(/[^a-zA-Z0-9א-ת]/g, '_');
         const pricesSuffix = !includePrices ? '_ללא_מחירים' : '';
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", `כתב_כמויות_חשבון_${invoiceNum}_${cleanProjectName}${pricesSuffix}.csv`);
-        document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url);
-        toast.success(`הקובץ יוצא בהצלחה - ${allLines.length} שורות, ${rowsWritten} שורות נכתבו`);
+        XLSX.writeFile(wb, `כתב_כמויות_חשבון_${invoiceNum}_${cleanProjName}${pricesSuffix}.xlsx`);
+        toast.success('קובץ אקסל הורד בהצלחה');
     };
 
     const handlePrint = () => { const invoiceNum = activeTab.split('-')[1]; if (!invoiceNum || isNaN(invoiceNum)) return; setPdfData({ invoiceNum }); };
@@ -794,8 +819,8 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                             <Button variant="outline" onClick={() => setShowDeductionsModal(true)} className="bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-700"><Settings className="w-4 h-4 ml-2" />ניהול קיזוזים</Button>
                             <AddItemDialog projectId={projectId} quoteId={quoteId} onItemAdded={refreshData} />
                             <Button onClick={addNewInvoice} className="bg-green-600 hover:bg-green-700 text-white"><Plus className="w-4 h-4 ml-2" />הוסף חשבון</Button>
-                            <Button onClick={() => exportToCSV(true)} variant="outline" disabled={!activeTab.startsWith('invoice-')}><Download className="w-4 h-4 ml-2" />ייצוא Excel עם מחירים</Button>
-                            <Button onClick={() => exportToCSV(false)} variant="outline" disabled={!activeTab.startsWith('invoice-')} className="bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700"><Download className="w-4 h-4 ml-2" />ייצוא Excel ללא מחירים</Button>
+                            <Button onClick={() => exportToCSV(true)} variant="outline" disabled={!activeTab.startsWith('invoice-')}><Download className="w-4 h-4 ml-2" />ייצוא אקסל עם מחירים</Button>
+                            <Button onClick={() => exportToCSV(false)} variant="outline" disabled={!activeTab.startsWith('invoice-')} className="bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700"><Download className="w-4 h-4 ml-2" />ייצוא אקסל ללא מחירים</Button>
                         </div>
                     </div>
                 </CardHeader>
