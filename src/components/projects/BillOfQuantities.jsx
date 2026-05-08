@@ -665,7 +665,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             headerRow.push('מצטבר עד כה', 'יתרה לחיוב');
         } else {
             for (let i = 1; i <= maxInvNum; i++) headerRow.push(`חשבון ${i} (%)`);
-            headerRow.push('ביצוע מצטבר (%)', 'כמות מצטברת');
+            headerRow.push('ביצוע מצטבר (%)', 'כמות שבוצעה', 'כמות שנותרה');
         }
         rows.push(headerRow);
         const headerRowIdx = rows.length - 1;
@@ -719,8 +719,12 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                     row.push(pct > 0 ? `${pct.toFixed(1)}%` : '-');
                     cumulativePct += pct;
                 }
+                const qty = line.quantity || 0;
+                const doneQty = Number((qty * cumulativePct / 100).toFixed(2));
+                const remainQty = Number(Math.max(0, qty - doneQty).toFixed(2));
                 row.push(`${cumulativePct.toFixed(1)}%`);
-                row.push(Number(((line.quantity || 0) * cumulativePct / 100).toFixed(2)));
+                row.push(doneQty);
+                row.push(remainQty);
             }
             rows.push(row);
         });
