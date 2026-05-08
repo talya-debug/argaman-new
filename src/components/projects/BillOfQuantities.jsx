@@ -659,9 +659,14 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
 
         // כותרת טבלה
         const headerRow = ['סעיף', 'תיאור פריט', 'הערות', 'כמות'];
-        if (includePrices) headerRow.push('מחיר יחידה', 'סה"כ מאושר');
-        for (let i = 1; i <= maxInvNum; i++) headerRow.push(`חשבון ${i}`);
-        headerRow.push('מצטבר עד כה', 'יתרה לחיוב');
+        if (includePrices) {
+            headerRow.push('מחיר יחידה', 'סה"כ מאושר');
+            for (let i = 1; i <= maxInvNum; i++) headerRow.push(`חשבון ${i}`);
+            headerRow.push('מצטבר עד כה', 'יתרה לחיוב');
+        } else {
+            for (let i = 1; i <= maxInvNum; i++) headerRow.push(`חשבון ${i} (%)`);
+            headerRow.push('ביצוע מצטבר (%)', 'כמות מצטברת');
+        }
         rows.push(headerRow);
         const headerRowIdx = rows.length - 1;
 
@@ -696,16 +701,27 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             if (includePrices) {
                 row.push(Number(((line.line_total || 0) / (line.quantity || 1)).toFixed(2)));
                 row.push(Number((line.line_total || 0).toFixed(2)));
+                let cumulativeTotal = 0;
+                for (let i = 1; i <= maxInvNum; i++) {
+                    const entry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${i}`);
+                    const amount = entry?.amount_to_invoice || 0;
+                    row.push(Number(amount.toFixed(2)));
+                    cumulativeTotal += amount;
+                }
+                row.push(Number(cumulativeTotal.toFixed(2)));
+                row.push(Number(Math.max(0, (line.line_total || 0) - cumulativeTotal).toFixed(2)));
+            } else {
+                // ללא מחירים — אחוזי ביצוע + כמות מצטברת
+                let cumulativePct = 0;
+                for (let i = 1; i <= maxInvNum; i++) {
+                    const entry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${i}`);
+                    const pct = entry?.calculated_percentage || 0;
+                    row.push(pct > 0 ? `${pct.toFixed(1)}%` : '-');
+                    cumulativePct += pct;
+                }
+                row.push(`${cumulativePct.toFixed(1)}%`);
+                row.push(Number(((line.quantity || 0) * cumulativePct / 100).toFixed(2)));
             }
-            let cumulativeTotal = 0;
-            for (let i = 1; i <= maxInvNum; i++) {
-                const entry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${i}`);
-                const amount = entry?.amount_to_invoice || 0;
-                row.push(Number(amount.toFixed(2)));
-                cumulativeTotal += amount;
-            }
-            row.push(Number(cumulativeTotal.toFixed(2)));
-            row.push(Number(Math.max(0, (line.line_total || 0) - cumulativeTotal).toFixed(2)));
             rows.push(row);
         });
 
