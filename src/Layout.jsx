@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import {
   LayoutDashboard, Users, FileText, FolderOpen, CheckSquare,
-  Link2, DollarSign, BarChart3, CreditCard, Car, Menu, X, LogOut
+  Link2, DollarSign, BarChart3, CreditCard, Car, UserCog, Menu, X, LogOut
 } from 'lucide-react'
 import { useAuth } from '@/lib/AuthContext'
 import NotificationBell from '@/components/notifications/NotificationBell'
@@ -16,6 +16,7 @@ const navigationItems = [
   { to: '/Links', icon: Link2, label: 'קישורים' },
   { to: '/CollectionDashboard', icon: DollarSign, label: 'גבייה' },
   { to: '/SupplierPayments', icon: CreditCard, label: 'תשלומים לספקים' },
+  { to: '/SubContractors', icon: UserCog, label: 'קבלני משנה' },
   { to: '/Vehicles', icon: Car, label: 'רכבים' },
   { to: '/Reports', icon: BarChart3, label: 'דוחות' },
 ]
