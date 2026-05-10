@@ -7,6 +7,7 @@ import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const statusConfig = {
   "חשבון מאושר – יש לשלוח חשבון עסקה": { color: "bg-blue-50", textColor: "text-blue-700", displayColor: "#60a5fa" },
@@ -26,6 +27,7 @@ export default function CollectionDashboard() {
   const [projects, setProjects] = useState([]);
   const [quotes, setQuotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [kpiDialog, setKpiDialog] = useState(null); // 'overdue' | 'paidWeek' | 'paidMonth' | null
 
   useEffect(() => {
     loadData();
@@ -118,6 +120,16 @@ export default function CollectionDashboard() {
   const overdueTasks = useMemo(() => {
     return openTasks.filter(t => t.daysOverdue > 0);
   }, [openTasks]);
+
+  const paidTasksWeek = useMemo(() => {
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    return collectionTasks.filter(t => t.collection_status === "שולם ונשלחה חשבונית מס" && t.updated_date && new Date(t.updated_date) >= weekAgo);
+  }, [collectionTasks]);
+
+  const paidTasksMonth = useMemo(() => {
+    const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    return collectionTasks.filter(t => t.collection_status === "שולם ונשלחה חשבונית מס" && t.updated_date && new Date(t.updated_date) >= monthAgo);
+  }, [collectionTasks]);
 
   const responsibleData = useMemo(() => {
     const grouped = {};
@@ -232,7 +244,7 @@ export default function CollectionDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-red-500 to-red-600 text-white">
+          <Card className="bg-gradient-to-br from-red-500 to-red-600 text-white cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setKpiDialog('overdue')}>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium opacity-90">כספים באיחור</CardTitle>
             </CardHeader>
@@ -247,7 +259,7 @@ export default function CollectionDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white">
+          <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setKpiDialog('paidWeek')}>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium opacity-90">שולם השבוע</CardTitle>
             </CardHeader>
@@ -259,7 +271,7 @@ export default function CollectionDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-600 to-green-700 text-white">
+          <Card className="bg-gradient-to-br from-green-600 to-green-700 text-white cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setKpiDialog('paidMonth')}>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium opacity-90">שולם החודש</CardTitle>
             </CardHeader>
@@ -439,6 +451,46 @@ export default function CollectionDashboard() {
             </CardContent>
           </Card>
         </div>
+        {/* דיאלוג פירוט KPI */}
+        <Dialog open={!!kpiDialog} onOpenChange={(o) => { if (!o) setKpiDialog(null); }}>
+          <DialogContent className="max-w-2xl bg-white max-h-[80vh] overflow-y-auto" dir="rtl">
+            <DialogHeader>
+              <DialogTitle>
+                {kpiDialog === 'overdue' && 'כספים באיחור'}
+                {kpiDialog === 'paidWeek' && 'שולם השבוע'}
+                {kpiDialog === 'paidMonth' && 'שולם החודש'}
+              </DialogTitle>
+            </DialogHeader>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-right">פרויקט</TableHead>
+                  <TableHead className="text-right">סכום</TableHead>
+                  <TableHead className="text-right">{kpiDialog === 'overdue' ? 'ימי איחור' : 'תאריך עדכון'}</TableHead>
+                  <TableHead className="text-right">סטטוס</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {(kpiDialog === 'overdue' ? overdueTasks : kpiDialog === 'paidWeek' ? paidTasksWeek : paidTasksMonth)?.map(task => (
+                  <TableRow key={task.id}>
+                    <TableCell className="text-right font-medium">{task.project_name || '—'}</TableCell>
+                    <TableCell className="text-right font-bold">₪{(task.amount_to_collect || 0).toLocaleString()}</TableCell>
+                    <TableCell className="text-right">
+                      {kpiDialog === 'overdue'
+                        ? <Badge className="bg-red-600 text-white text-xs">{task.daysOverdue || calculateDaysOverdue(task.payment_due_date)} ימים</Badge>
+                        : task.updated_date ? new Date(task.updated_date).toLocaleDateString('he-IL') : '—'
+                      }
+                    </TableCell>
+                    <TableCell className="text-right text-sm">{task.collection_status?.substring(0, 25)}</TableCell>
+                  </TableRow>
+                ))}
+                {(kpiDialog === 'overdue' ? overdueTasks : kpiDialog === 'paidWeek' ? paidTasksWeek : paidTasksMonth)?.length === 0 && (
+                  <TableRow><TableCell colSpan={4} className="text-center py-6 text-gray-400">אין נתונים</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

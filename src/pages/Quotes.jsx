@@ -13,6 +13,9 @@ import { format } from "date-fns";
 import { he } from "date-fns/locale";
 import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const QUOTE_STATUSES = ['טיוטה', 'מוכנה', 'נשלחה', 'מאושרת', 'נדחתה'];
 
 const statusColors = {
   'טיוטה': 'bg-amber-50 text-amber-700 border-amber-300',
@@ -64,6 +67,17 @@ export default function Quotes() {
     } else {
         console.error("מזהה הצעת המחיר לא תקין.");
         toast.error("מזהה הצעת המחיר לא תקין");
+    }
+  };
+
+  const handleStatusChange = async (quoteId, newStatus) => {
+    try {
+      await Quote.update(quoteId, { status: newStatus });
+      setQuotes(prev => prev.map(q => q.id === quoteId ? { ...q, status: newStatus } : q));
+      toast.success(`סטטוס עודכן ל-${newStatus}`);
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast.error('שגיאה בעדכון סטטוס');
     }
   };
 
@@ -136,10 +150,19 @@ export default function Quotes() {
                           <TableCell style={{ color: 'var(--text-primary)' }}>{quote.client_name}</TableCell>
                           <TableCell style={{ color: 'var(--text-primary)' }}>₪{quote.total?.toLocaleString()}</TableCell>
                           <TableCell style={{ color: 'var(--text-secondary)' }}>{format(new Date(quote.createdAt || quote.created_date || Date.now()), 'dd/MM/yyyy', { locale: he })}</TableCell>
-                          <TableCell className="text-center">
-                            <Badge className={`${statusColors[quote.status] || 'bg-gray-100 text-gray-600'} text-xs border`}>
-                              {quote.status}
-                            </Badge>
+                          <TableCell className="text-center" onClick={e => e.stopPropagation()}>
+                            <Select value={quote.status} onValueChange={(val) => handleStatusChange(quote.id, val)}>
+                              <SelectTrigger className="w-[130px] mx-auto h-8 text-xs" style={{ borderColor: 'var(--dark-border)' }}>
+                                <Badge className={`${statusColors[quote.status] || 'bg-gray-100 text-gray-600'} text-xs border`}>
+                                  {quote.status}
+                                </Badge>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {QUOTE_STATUSES.map(s => (
+                                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </TableCell>
                         </TableRow>
                       ))

@@ -38,12 +38,17 @@ function ExpiryBadge({ dateStr, label }) {
 // דיאלוג הוספה/עריכת רכב
 function VehicleFormDialog({ vehicle, onSave, onClose }) {
     const isEdit = !!vehicle;
-    const [form, setForm] = useState({
+    const getInitialForm = (v) => ({
         license_plate: '', vehicle_type: 'רכב', brand: '', model: '', year: new Date().getFullYear(),
         color: '', assigned_to: '', current_km: 0, test_expiry: '', insurance_expiry: '',
         next_oil_change_km: 0, next_service_date: '', status: 'פעיל', notes: '',
-        ...(vehicle || {})
+        ...(v || {})
     });
+    const [form, setForm] = useState(getInitialForm(vehicle));
+
+    useEffect(() => {
+        setForm(getInitialForm(vehicle));
+    }, [vehicle]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

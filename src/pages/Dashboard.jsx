@@ -190,7 +190,7 @@ export default function Dashboard() {
             { label: 'גבייה פתוחה', val: fmt(computed.openAmount), sub: `${computed.openColl.length} חשבוניות`, icon: DollarSign, color: '#D4A843', link: 'CollectionDashboard' },
             { label: 'שולם', val: fmt(computed.paidAmount), sub: 'נגבה', icon: CheckCircle, color: '#22c55e', link: 'CollectionDashboard' },
             { label: 'הצעות בצנרת', val: fmt(computed.pendingTotal), sub: `${computed.pendingQ.length} הצעות`, icon: FileText, color: '#3b82f6', link: 'Quotes' },
-            { label: 'רכש', val: fmt(computed.purchaseSpent), sub: `${computed.ordered.length} הזמנות פתוחות`, icon: Package, color: '#8b5cf6', link: 'Projects' },
+            { label: 'רכש', val: fmt(computed.purchaseSpent), sub: `${computed.ordered.length} הזמנות פתוחות`, icon: Package, color: '#8b5cf6', link: 'SupplierPayments' },
             { label: 'שעות עבודה', val: fmtNum(computed.totalHours), sub: `${computed.recentLogs.length} יומנים (30 יום)`, icon: HardHat, color: '#06b6d4', link: 'Projects' },
           ].map((c, i) => (
             <Card key={i} onClick={() => navigate(createPageUrl(c.link))} style={{ padding: '18px 20px', position: 'relative', overflow: 'hidden' }}>
