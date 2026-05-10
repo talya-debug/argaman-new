@@ -139,6 +139,27 @@ export default function ProjectDetails() {
                         auto_created: true,
                     });
                 }
+
+                // התראת עיקבון — אם מוגדרת תקופת עיקבון בפרויקט
+                const retentionMonths = project.retention_months || details.retention_months;
+                if (retentionMonths && retentionMonths > 0) {
+                    const retentionDate = new Date();
+                    retentionDate.setMonth(retentionDate.getMonth() + retentionMonths);
+                    await Task.create({
+                        title: `עיקבון לגבייה - ${project.name}`,
+                        description: `תקופת עיקבון של ${retentionMonths} חודשים הסתיימה. יש לפנות ללקוח לגבייה.`,
+                        assigned_to: 'רבקה',
+                        source_type: 'retention',
+                        source_id: project.id,
+                        project_id: project.id,
+                        client_name: project.name,
+                        priority: 'גבוהה',
+                        status: 'חדש',
+                        due_date: retentionDate.toISOString().split('T')[0],
+                        auto_created: true,
+                    });
+                    toast.info(`נוצרה משימת עיקבון לתאריך ${retentionDate.toLocaleDateString('he-IL')}`);
+                }
             }
 
             toast.success("פרטי הפרויקט עודכנו");
@@ -173,7 +194,19 @@ export default function ProjectDetails() {
                     <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>{project.name}</h1>
                     <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>ניהול מלא של הפרויקט עבור: {project.client_name}</p>
                 </div>
-                <div>
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                        <label className="text-sm" style={{ color: 'var(--text-secondary)' }}>עיקבון (חודשים):</label>
+                        <input
+                            type="number"
+                            min="0"
+                            max="60"
+                            value={project.retention_months || 0}
+                            onChange={(e) => handleUpdateProjectDetails({ retention_months: Number(e.target.value) })}
+                            className="w-16 h-9 text-center rounded border text-sm"
+                            style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }}
+                        />
+                    </div>
                     <Select value={project.status} onValueChange={(newStatus) => handleUpdateProjectDetails({ status: newStatus })}>
                         <SelectTrigger className="w-[180px]" style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }}>
                             <SelectValue placeholder="שנה סטטוס" />
