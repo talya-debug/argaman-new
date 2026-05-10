@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Quote, User } from "@/entities";
+import { Quote, Lead, Project, User } from "@/entities";
 import { Button } from "@/components/ui/button";
 import { Plus, Search, FileText } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -72,8 +72,40 @@ export default function Quotes() {
 
   const handleStatusChange = async (quoteId, newStatus) => {
     try {
+      const quote = quotes.find(q => q.id === quoteId);
       await Quote.update(quoteId, { status: newStatus });
       setQuotes(prev => prev.map(q => q.id === quoteId ? { ...q, status: newStatus } : q));
+
+      // אם ההצעה אושרה — לעדכן את הליד ל"אושר" וליצור פרויקט
+      if (newStatus === 'אושרה' && quote?.lead_id) {
+        try {
+          const lead = await Lead.get(quote.lead_id);
+          if (lead && lead.status !== 'אושר') {
+            await Lead.update(quote.lead_id, { status: 'אושר' });
+          }
+          // בדיקה אם כבר יש פרויקט
+          const existingProjects = await Project.filter({ lead_id: quote.lead_id });
+          if (!existingProjects || existingProjects.length === 0) {
+            const newProject = await Project.create({
+              name: `פרויקט - ${lead.name}`,
+              client_name: lead.name,
+              lead_id: lead.id,
+              quote_id: quoteId,
+              status: 'בתכנון',
+              start_date: new Date().toISOString().split('T')[0],
+              responsible: lead.responsible,
+              description: `פרויקט שנוצר מהצעת מחיר: ${lead.name}`,
+              deduction_insurance_percentage: 0,
+              deduction_retention_percentage: 0,
+              deduction_lab_tests_percentage: 0
+            });
+            toast.success(`פרויקט "${newProject.name}" נוצר בהצלחה!`);
+          }
+        } catch (e) {
+          console.error('Error creating project from quote approval:', e);
+        }
+      }
+
       toast.success(`סטטוס עודכן ל-${newStatus}`);
     } catch (error) {
       console.error('Error updating status:', error);
