@@ -62,6 +62,10 @@ export default function SupplierPayments() {
         return record.name_snapshot || 'פריט';
     };
 
+    const getItemDescription = (record) => {
+        return record.description_snapshot || record.manual_item_description || '';
+    };
+
     const filtered = useMemo(() => {
         return records.filter(r => {
             if (filterStatus !== 'all' && r.status !== filterStatus) return false;
@@ -239,7 +243,7 @@ export default function SupplierPayments() {
                                                 <TableCell className="font-bold text-indigo-700">#{order.po_number}</TableCell>
                                                 <TableCell className="text-sm">{order.date ? new Date(order.date).toLocaleDateString('he-IL') : '-'}</TableCell>
                                                 <TableCell>
-                                                    <Link to={`/ProjectDetails?id=${order.project_id}`} className="text-blue-600 hover:underline text-sm">
+                                                    <Link to={`/ProjectDetails?id=${order.project_id}&tab=procurement`} className="text-blue-600 hover:underline text-sm">
                                                         {project?.name || order.project_name || '-'}
                                                     </Link>
                                                 </TableCell>
@@ -312,14 +316,19 @@ export default function SupplierPayments() {
                                         <TableRow key={record.id} className="hover:bg-slate-50">
                                             <TableCell>
                                                 <Link
-                                                    to={`/ProjectDetails?id=${record.project_id}`}
+                                                    to={`/ProjectDetails?id=${record.project_id}&tab=procurement`}
                                                     className="text-blue-600 hover:underline font-medium text-sm"
                                                 >
                                                     {project?.name || 'לא ידוע'}
                                                 </Link>
                                             </TableCell>
-                                            <TableCell className="font-medium text-slate-800 text-sm">
-                                                {getItemName(record)}
+                                            <TableCell className="text-sm">
+                                                <div>
+                                                    <p className="font-medium text-slate-800">{getItemName(record)}</p>
+                                                    {getItemDescription(record) && (
+                                                        <p className="text-xs text-gray-500 mt-0.5">{getItemDescription(record)}</p>
+                                                    )}
+                                                </div>
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 {isEditing ? (
@@ -388,6 +397,13 @@ export default function SupplierPayments() {
                                         </TableRow>
                                     );
                                 })}
+                                {filtered.length > 0 && (
+                                    <TableRow className="bg-slate-100 font-bold">
+                                        <TableCell colSpan={4} className="text-left font-bold text-slate-800">סה"כ</TableCell>
+                                        <TableCell className="text-center font-bold text-green-700">₪{totals.total.toLocaleString()}</TableCell>
+                                        <TableCell colSpan={5}></TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
                     </div>

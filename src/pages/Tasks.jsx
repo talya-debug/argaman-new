@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Task, User } from "@/entities";
+import { Task, User, Project } from "@/entities";
 import { Button } from "@/components/ui/button";
 import { Plus, Archive } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -17,6 +17,7 @@ export default function TasksPage() {
   const [editingTask, setEditingTask] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [filters, setFilters] = useState({});
+  const [projects, setProjects] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,8 +25,12 @@ export default function TasksPage() {
       try {
         const user = await User.me();
         setCurrentUser(user);
-        const allTasks = await Task.list('-created_date');
+        const [allTasks, allProjects] = await Promise.all([
+          Task.list('-created_date'),
+          Project.list()
+        ]);
         setTasks(allTasks);
+        setProjects(allProjects);
       } catch (error) {
         console.error('Error loading tasks:', error);
         toast.error("שגיאה בטעינת המשימות");
@@ -100,6 +105,9 @@ export default function TasksPage() {
     if (filters.creator) {
         filtered = filtered.filter(t => t.creator === filters.creator);
     }
+    if (filters.project_id) {
+        filtered = filtered.filter(t => t.project_id === filters.project_id);
+    }
 
     const todo = [];
     const done = [];
@@ -166,6 +174,7 @@ export default function TasksPage() {
             onFilterChange={handleFilterChange}
             users={uniqueUsers}
             creators={uniqueCreators}
+            projects={projects}
         />
 
         <div className="space-y-8">

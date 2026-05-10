@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from "react";
-import { Project, Task, CollectionTask, WorkLogEntry, Quote, PurchaseRecord, ProgressEntry } from "@/entities";
+import { Project, Task, CollectionTask, WorkLogEntry, Quote, PurchaseRecord, ProgressEntry, Vehicle } from "@/entities";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
@@ -9,7 +9,7 @@ import {
 import {
   AlertTriangle, DollarSign, FolderOpen, ClipboardList,
   Clock, FileText, CheckCircle, AlertCircle, ChevronLeft,
-  Receipt, Package, HardHat, TrendingUp, Calendar
+  Receipt, Package, HardHat, TrendingUp, Calendar, Car
 } from "lucide-react";
 
 const fmt = (n) => '₪' + new Intl.NumberFormat('he-IL', { maximumFractionDigits: 0 }).format(n || 0);
@@ -26,13 +26,13 @@ export default function Dashboard() {
   const load = async () => {
     setLoading(true);
     try {
-      const [projects, tasks, collections, workLogs, quotes, purchases, progress] = await Promise.all([
+      const [projects, tasks, collections, workLogs, quotes, purchases, progress, vehicles] = await Promise.all([
         Project.list('-created_date', 200), Task.list('-created_date', 500),
         CollectionTask.list('-created_date', 500), WorkLogEntry.list('-created_date', 200),
         Quote.list('-created_date', 500), PurchaseRecord.list('-created_date', 2000),
-        ProgressEntry.list('-created_date', 1000),
+        ProgressEntry.list('-created_date', 1000), Vehicle.list(),
       ]);
-      setD({ projects, tasks, collections, workLogs, quotes, purchases, progress });
+      setD({ projects, tasks, collections, workLogs, quotes, purchases, progress, vehicles });
     } catch (e) { console.error(e); }
     setLoading(false);
   };
@@ -103,6 +103,22 @@ export default function Dashboard() {
       profit: p.budget - p.invoiced,
     }));
 
+    // התראות רכבים
+    const daysUntil = (dateStr) => {
+      if (!dateStr) return null;
+      const diff = (new Date(dateStr) - new Date()) / (1000 * 60 * 60 * 24);
+      return Math.ceil(diff);
+    };
+    const vehicleAlerts = [];
+    (d.vehicles || []).forEach(v => {
+      const testDays = daysUntil(v.test_expiry);
+      const insDays = daysUntil(v.insurance_expiry);
+      if (testDays !== null && testDays < 0) vehicleAlerts.push({ type: 'error', msg: `${v.license_plate} — טסט פג תוקף!` });
+      else if (testDays !== null && testDays <= 30) vehicleAlerts.push({ type: 'warning', msg: `${v.license_plate} — טסט יפוג בעוד ${testDays} יום` });
+      if (insDays !== null && insDays < 0) vehicleAlerts.push({ type: 'error', msg: `${v.license_plate} — ביטוח פג תוקף!` });
+      else if (insDays !== null && insDays <= 30) vehicleAlerts.push({ type: 'warning', msg: `${v.license_plate} — ביטוח יפוג בעוד ${insDays} יום` });
+    });
+
     // יומן עבודה אחרון
     const lastLogDate = d.workLogs.length > 0 ? d.workLogs.sort((a,b) => (b.date||b.created_date||'').localeCompare(a.date||a.created_date||''))[0] : null;
     const lastLogDateStr = lastLogDate ? (lastLogDate.date || lastLogDate.created_date) : null;
@@ -112,7 +128,7 @@ export default function Dashboard() {
       active, planning, openColl, openAmount, overdueColl, overdueAmount, paidAmount,
       overdueTasks, openTasks, pendingQ, pendingTotal, approvedTotal,
       toOrder, ordered, delivered, purchaseSpent, recentLogs, totalHours, totalWorkers,
-      projectData, collectionChart, planVsActual, daysSinceLastLog, lastLogDate,
+      projectData, collectionChart, planVsActual, daysSinceLastLog, lastLogDate, vehicleAlerts,
     };
   }, [d]);
 
@@ -140,6 +156,11 @@ export default function Dashboard() {
   if (computed.overdueColl.length > 0) alerts.push({ icon: DollarSign, color: '#dc2626', title: `${computed.overdueColl.length} תשלומים באיחור — ${fmt(computed.overdueAmount)}`, sub: computed.overdueColl.slice(0,2).map(c => c.project_name || 'פרויקט').join(', '), link: 'CollectionDashboard' });
   if (computed.overdueTasks.length > 0) alerts.push({ icon: Clock, color: '#f59e0b', title: `${computed.overdueTasks.length} משימות עברו דדליין`, sub: computed.overdueTasks.slice(0,2).map(t => t.title).join(', '), link: 'Tasks' });
   if (computed.daysSinceLastLog !== null && computed.daysSinceLastLog > 3) alerts.push({ icon: HardHat, color: '#f97316', title: `יומן עבודה לא עודכן ${computed.daysSinceLastLog} ימים`, sub: `עדכון אחרון: ${new Date(computed.lastLogDate.date || computed.lastLogDate.created_date).toLocaleDateString('he-IL')}`, link: 'Projects' });
+  if (computed.vehicleAlerts.length > 0) {
+    const errors = computed.vehicleAlerts.filter(a => a.type === 'error');
+    const warnings = computed.vehicleAlerts.filter(a => a.type === 'warning');
+    alerts.push({ icon: Car, color: errors.length > 0 ? '#dc2626' : '#f59e0b', title: `${computed.vehicleAlerts.length} התראות רכבים`, sub: computed.vehicleAlerts.slice(0, 2).map(a => a.msg).join(', '), link: 'Vehicles' });
+  }
 
   return (
     <div style={{ padding: '24px 28px', minHeight: '100vh', background: 'var(--dark)', fontFamily: 'Heebo, sans-serif' }}>

@@ -4,7 +4,7 @@ import { Filter } from 'lucide-react';
 
 const ALL_RESPONSIBLES = ["יניר", "שי", "חיה", "דבורה", "רבקה", "יהודה"];
 
-export default function TaskFilters({ onFilterChange, users = [], creators = [] }) {
+export default function TaskFilters({ onFilterChange, users = [], creators = [], projects = [] }) {
   // Ensure all possible responsibles are in the list
   const allPossibleUsers = [...new Set([...users, ...ALL_RESPONSIBLES])].sort();
   const allPossibleCreators = [...new Set([...creators, ...ALL_RESPONSIBLES])].sort();
@@ -15,7 +15,7 @@ export default function TaskFilters({ onFilterChange, users = [], creators = [] 
 
   return (
     <div className="p-4 mb-6 rounded-xl" dir="rtl" style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="space-y-2">
                 <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
                     <Filter className="w-4 h-4" />
@@ -43,6 +43,21 @@ export default function TaskFilters({ onFilterChange, users = [], creators = [] 
                     <SelectContent>
                         <SelectItem value="all">כל היוצרים</SelectItem>
                         {allPossibleCreators.map(creator => <SelectItem key={creator} value={creator}>{creator}</SelectItem>)}
+                    </SelectContent>
+                </Select>
+            </div>
+            <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+                    <Filter className="w-4 h-4" />
+                    סינון לפי פרויקט
+                </label>
+                <Select onValueChange={(value) => handleFilter('project_id', value)}>
+                    <SelectTrigger style={{ background: 'var(--dark)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }}>
+                        <SelectValue placeholder="כל הפרויקטים" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">כל הפרויקטים</SelectItem>
+                        {projects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
                     </SelectContent>
                 </Select>
             </div>
