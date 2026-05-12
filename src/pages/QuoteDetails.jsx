@@ -3,7 +3,8 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Quote, QuoteLine, Lead, PriceItem, User } from '@/entities';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowRight, FileText, Settings, Save, FileDown, Upload } from 'lucide-react';
+import { ArrowRight, FileText, Settings, Save, FileDown, Upload, Building2, Home } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createPageUrl } from '@/utils';
 import { toast } from "sonner";
 import jsPDF from 'jspdf';
@@ -446,6 +447,19 @@ export default function QuoteDetails() {
                 }
 
                 pdf.save(`quote-${quote?.quote_number || quote?.id || 'new'}.pdf`);
+
+                // אם הצעה פרטית — הורד גם את קובץ אודות ארגמן
+                if (quote?.quote_type === 'פרטי') {
+                    setTimeout(() => {
+                        const link = document.createElement('a');
+                        link.href = '/about-argaman.pdf';
+                        link.download = 'about-argaman.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }, 1000);
+                }
+
                 setShowPreview(false);
             } catch (error) {
                 console.error("Error generating PDF:", error);
@@ -546,6 +560,21 @@ export default function QuoteDetails() {
                             <p style={{ color: '#5a6078' }}>עבור: {lead?.name || 'לקוח חדש'}</p>
                         </div>
                         <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-gray-600">סוג:</span>
+                                <Select
+                                    value={quote?.quote_type || 'מסחרי'}
+                                    onValueChange={(val) => handleUpdateQuote({ quote_type: val })}
+                                >
+                                    <SelectTrigger className="w-[120px]">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="מסחרי"><span className="flex items-center gap-1"><Building2 className="w-3 h-3" />מסחרי</span></SelectItem>
+                                        <SelectItem value="פרטי"><span className="flex items-center gap-1"><Home className="w-3 h-3" />פרטי</span></SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                             <Button
                                 onClick={() => setShowImportDialog(true)}
                                 className="bg-purple-600 hover:bg-purple-700 text-white"

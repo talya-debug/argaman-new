@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Car, Plus, Edit2, Trash2, AlertTriangle, Check, Fuel, Wrench, FileText, Upload, Download, X, Eye } from 'lucide-react';
+import { Car, Plus, Edit2, Trash2, AlertTriangle, Check, Fuel, Wrench, FileText, Upload, Download, X, Eye, Gauge } from 'lucide-react';
 import { toast } from 'sonner';
 
 const VEHICLE_TYPES = ['משאית', 'טנדר', 'רכב', 'קטנוע', 'אחר'];
@@ -176,7 +176,49 @@ function DocUploadDialog({ vehicleId, onSave }) {
     );
 }
 
-// פרטי רכב — הוצאות + מסמכים
+// דיאלוג דיווח ק"מ
+function KmReportDialog({ vehicleId, currentKm, onSave }) {
+    const [open, setOpen] = useState(false);
+    const [form, setForm] = useState({ date: new Date().toISOString().split('T')[0], km: currentKm || 0 });
+
+    useEffect(() => { setForm(prev => ({ ...prev, km: currentKm || 0 })); }, [currentKm]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const kmVal = Number(form.km);
+        if (!kmVal || kmVal <= 0) { toast.error('יש להזין ק"מ תקין'); return; }
+        try {
+            await VehicleExpense.create({
+                vehicle_id: vehicleId,
+                expense_type: 'דיווח_קמ',
+                amount: 0,
+                date: form.date,
+                km_at_expense: kmVal,
+                description: `דיווח ק"מ: ${kmVal.toLocaleString()}`
+            });
+            await Vehicle.update(vehicleId, { current_km: kmVal });
+            toast.success('דיווח ק"מ נשמר');
+            setOpen(false);
+            onSave();
+        } catch { toast.error('שגיאה בשמירת דיווח'); }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild><Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white"><Plus className="w-4 h-4 ml-1" />דווח ק"מ</Button></DialogTrigger>
+            <DialogContent className="max-w-md bg-white" dir="rtl">
+                <DialogHeader><DialogTitle>דיווח קילומטראז'</DialogTitle></DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div><Label>תאריך</Label><Input type="date" value={form.date} onChange={e => setForm(prev => ({ ...prev, date: e.target.value }))} /></div>
+                    <div><Label>ק"מ נוכחי</Label><Input type="number" value={form.km} onChange={e => setForm(prev => ({ ...prev, km: e.target.value }))} /></div>
+                    <DialogFooter><Button type="button" variant="outline" onClick={() => setOpen(false)}>ביטול</Button><Button type="submit" className="bg-indigo-600 text-white">שמור</Button></DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+// פרטי רכב — הוצאות + מסמכים + דיווח ק"מ
 function VehicleDetails({ vehicle, onClose, onRefresh }) {
     const [expenses, setExpenses] = useState([]);
     const [docs, setDocs] = useState([]);
@@ -192,7 +234,21 @@ function VehicleDetails({ vehicle, onClose, onRefresh }) {
     };
     useEffect(() => { load(); }, [vehicle.id]);
 
-    const totalExpenses = expenses.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+    // דיווחי ק"מ
+    const kmReports = expenses.filter(e => e.expense_type === 'דיווח_קמ').sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // ממוצע ק"מ חודשי
+    const avgMonthlyKm = useMemo(() => {
+        if (kmReports.length < 2) return null;
+        const sorted = [...kmReports].sort((a, b) => new Date(a.date) - new Date(b.date));
+        const firstDate = new Date(sorted[0].date);
+        const lastDate = new Date(sorted[sorted.length - 1].date);
+        const months = Math.max(1, (lastDate - firstDate) / (1000 * 60 * 60 * 24 * 30.44));
+        const kmDiff = (Number(sorted[sorted.length - 1].km_at_expense) || 0) - (Number(sorted[0].km_at_expense) || 0);
+        return Math.round(kmDiff / months);
+    }, [kmReports]);
+
+    const totalExpenses = expenses.filter(e => e.expense_type !== 'דיווח_קמ').reduce((s, e) => s + (Number(e.amount) || 0), 0);
     const fuelExpenses = expenses.filter(e => e.expense_type === 'דלק').reduce((s, e) => s + (Number(e.amount) || 0), 0);
 
     const handleDeleteExpense = async (id) => {
@@ -223,9 +279,10 @@ function VehicleDetails({ vehicle, onClose, onRefresh }) {
             </div>
 
             <Tabs value={tab} onValueChange={setTab}>
-                <TabsList className="grid grid-cols-2">
-                    <TabsTrigger value="expenses"><Fuel className="w-4 h-4 ml-1" />הוצאות ({expenses.length})</TabsTrigger>
+                <TabsList className="grid grid-cols-3">
+                    <TabsTrigger value="expenses"><Fuel className="w-4 h-4 ml-1" />הוצאות ({expenses.filter(e => e.expense_type !== 'דיווח_קמ').length})</TabsTrigger>
                     <TabsTrigger value="docs"><FileText className="w-4 h-4 ml-1" />מסמכים ({docs.length})</TabsTrigger>
+                    <TabsTrigger value="km"><Gauge className="w-4 h-4 ml-1" />דיווח ק"מ ({kmReports.length})</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="expenses">
@@ -235,9 +292,9 @@ function VehicleDetails({ vehicle, onClose, onRefresh }) {
                     <Table>
                         <TableHeader><TableRow><TableHead>תאריך</TableHead><TableHead>סוג</TableHead><TableHead>סכום</TableHead><TableHead>ק"מ</TableHead><TableHead>תיאור</TableHead><TableHead className="w-10"></TableHead></TableRow></TableHeader>
                         <TableBody>
-                            {expenses.length === 0 ? (
+                            {expenses.filter(e => e.expense_type !== 'דיווח_קמ').length === 0 ? (
                                 <TableRow><TableCell colSpan={6} className="text-center py-6 text-gray-400">אין הוצאות</TableCell></TableRow>
-                            ) : expenses.map(exp => (
+                            ) : expenses.filter(e => e.expense_type !== 'דיווח_קמ').map(exp => (
                                 <TableRow key={exp.id}>
                                     <TableCell className="text-sm">{new Date(exp.date).toLocaleDateString('he-IL')}</TableCell>
                                     <TableCell><span className="bg-gray-100 px-2 py-1 rounded text-xs">{exp.expense_type}</span></TableCell>
@@ -273,6 +330,30 @@ function VehicleDetails({ vehicle, onClose, onRefresh }) {
                                             <Button variant="ghost" size="icon" onClick={() => handleDeleteDoc(doc.id)}><Trash2 className="w-4 h-4 text-red-500" /></Button>
                                         </div>
                                     </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TabsContent>
+
+                <TabsContent value="km">
+                    <div className="flex justify-between items-center mb-3">
+                        {avgMonthlyKm !== null && (
+                            <div className="text-sm text-gray-600">
+                                ממוצע חודשי: <span className="font-bold text-indigo-700">{avgMonthlyKm.toLocaleString()} ק"מ</span>
+                            </div>
+                        )}
+                        <KmReportDialog vehicleId={vehicle.id} currentKm={vehicle.current_km} onSave={() => { load(); onRefresh(); }} />
+                    </div>
+                    <Table>
+                        <TableHeader><TableRow><TableHead>תאריך</TableHead><TableHead>ק"מ</TableHead></TableRow></TableHeader>
+                        <TableBody>
+                            {kmReports.length === 0 ? (
+                                <TableRow><TableCell colSpan={2} className="text-center py-6 text-gray-400">אין דיווחי ק"מ</TableCell></TableRow>
+                            ) : kmReports.map(r => (
+                                <TableRow key={r.id}>
+                                    <TableCell className="text-sm">{new Date(r.date).toLocaleDateString('he-IL')}</TableCell>
+                                    <TableCell className="font-bold">{(Number(r.km_at_expense) || 0).toLocaleString()} ק"מ</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
