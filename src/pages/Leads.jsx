@@ -8,6 +8,7 @@ import LeadsTable from "../components/leads/LeadsTable";
 import LeadForm from "../components/leads/LeadForm";
 import LeadFilters from "../components/leads/LeadFilters";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import { createNotification } from "@/lib/notifications";
@@ -407,20 +408,22 @@ export default function Leads() {
           setShowForm(open);
           if (!open) setEditingLead(null);
         }}>
-          <DialogContent className="max-w-xl" style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)' }}>
-            <DialogHeader>
+          <DialogContent className="max-w-xl max-h-[90vh] flex flex-col p-0" style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)' }}>
+            <DialogHeader className="px-6 pt-6 pb-2">
               <DialogTitle className="text-right" style={{ color: 'var(--argaman)' }}>
                 {editingLead ? 'עריכת ליד' : 'ליד חדש'}
               </DialogTitle>
             </DialogHeader>
-            <LeadForm
-              lead={editingLead}
-              onSubmit={handleSubmit}
-              onCancel={() => {
-                setShowForm(false);
-                setEditingLead(null);
-              }}
-            />
+            <ScrollArea className="flex-1 px-6">
+              <LeadForm
+                lead={editingLead}
+                onSubmit={handleSubmit}
+                onCancel={() => {
+                  setShowForm(false);
+                  setEditingLead(null);
+                }}
+              />
+            </ScrollArea>
           </DialogContent>
         </Dialog>
 
