@@ -74,7 +74,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
   };
 
   return (
-    <div className="p-6 rounded-lg" dir="rtl">
+    <div className="py-2" dir="rtl">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -245,7 +245,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
           />
         </div>
 
-        <div className="flex justify-end gap-3 pt-4 border-t">
+        <div className="flex justify-end gap-3 pt-4 pb-2 border-t">
           <Button type="button" variant="ghost" onClick={onCancel}>
             ביטול
           </Button>
