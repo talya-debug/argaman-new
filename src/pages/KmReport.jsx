@@ -8,8 +8,10 @@ import { Car, Check, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function KmReport() {
+    const [allVehicles, setAllVehicles] = useState([]);
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedUser, setSelectedUser] = useState(null);
     const [reports, setReports] = useState({});
     const [submitted, setSubmitted] = useState(new Set());
     const [submitting, setSubmitting] = useState(null);
@@ -18,15 +20,25 @@ export default function KmReport() {
         const load = async () => {
             try {
                 const data = await Vehicle.list();
-                setVehicles(data.filter(v => v.status === 'פעיל'));
-                const initial = {};
-                data.forEach(v => { initial[v.id] = ''; });
-                setReports(initial);
+                setAllVehicles(data.filter(v => v.status === 'פעיל'));
             } catch { toast.error('שגיאה בטעינה'); }
             setLoading(false);
         };
         load();
     }, []);
+
+    // כשבוחרים משתמש — מסננים רכבים
+    useEffect(() => {
+        if (!selectedUser) return;
+        const filtered = allVehicles.filter(v => v.assigned_to === selectedUser);
+        setVehicles(filtered);
+        const initial = {};
+        filtered.forEach(v => { initial[v.id] = ''; });
+        setReports(initial);
+    }, [selectedUser, allVehicles]);
+
+    // רשימת עובדים ייחודית מהרכבים
+    const assignedUsers = [...new Set(allVehicles.map(v => v.assigned_to).filter(Boolean))];
 
     const handleSubmit = async (vehicle) => {
         const km = Number(reports[vehicle.id]);
@@ -67,8 +79,22 @@ export default function KmReport() {
                     <p className="text-sm text-gray-400 mt-1">{new Date().toLocaleDateString('he-IL', { month: 'long', year: 'numeric' })}</p>
                 </div>
 
-                {vehicles.length === 0 ? (
-                    <Card><CardContent className="p-8 text-center text-gray-400">אין רכבים פעילים</CardContent></Card>
+                {!selectedUser ? (
+                    <Card className="border-0 shadow-md">
+                        <CardContent className="p-6">
+                            <p className="text-center font-medium text-slate-700 mb-4">מי אתה?</p>
+                            <div className="grid grid-cols-2 gap-3">
+                                {assignedUsers.map(name => (
+                                    <Button key={name} variant="outline" className="h-14 text-lg font-medium hover:bg-indigo-50 hover:border-indigo-400" onClick={() => setSelectedUser(name)}>
+                                        {name}
+                                    </Button>
+                                ))}
+                            </div>
+                            {assignedUsers.length === 0 && <p className="text-center text-gray-400 mt-4">אין רכבים משויכים לעובדים</p>}
+                        </CardContent>
+                    </Card>
+                ) : vehicles.length === 0 ? (
+                    <Card><CardContent className="p-8 text-center text-gray-400">אין רכבים משויכים ל-{selectedUser}</CardContent></Card>
                 ) : vehicles.map(v => {
                     const isDone = submitted.has(v.id);
                     return (
