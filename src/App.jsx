@@ -13,7 +13,7 @@ const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : () => <></>;
 
 // דפים ציבוריים — לא דורשים התחברות
-const PUBLIC_PAGES = ['LeadForm', 'WorkLogForm'];
+const PUBLIC_PAGES = ['LeadForm', 'WorkLogForm', 'KmReport'];
 
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>

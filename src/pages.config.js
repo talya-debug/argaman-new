@@ -14,6 +14,7 @@ import Tasks from './pages/Tasks';
 import Reports from './pages/Reports';
 import SubContractors from './pages/SubContractors';
 import SupplierPayments from './pages/SupplierPayments';
+import KmReport from './pages/KmReport';
 import Vehicles from './pages/Vehicles';
 import WorkLogForm from './pages/WorkLogForm';
 import __Layout from './Layout.jsx';
@@ -35,6 +36,7 @@ export const PAGES = {
     "Reports": Reports,
     "SubContractors": SubContractors,
     "SupplierPayments": SupplierPayments,
+    "KmReport": KmReport,
     "Tasks": Tasks,
     "Vehicles": Vehicles,
     "WorkLogForm": WorkLogForm,
