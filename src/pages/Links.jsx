@@ -9,7 +9,8 @@ import {
   Copy,
   BookUser,
   CheckSquare,
-  CheckCircle
+  CheckCircle,
+  Car
 } from "lucide-react";
 import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
@@ -50,6 +51,15 @@ const quickLinks = [
     bgColor: "rgba(167,139,250,0.1)",
     gradient: "from-[#a78bfa] to-[#7c3aed]",
     url: createPageUrl("Leads")
+  },
+  {
+    title: "דיווח ק\"מ חודשי",
+    description: "לינק ציבורי לדיווח קילומטראז' — לשליחה לעובדים פעם בחודש",
+    icon: Car,
+    color: "#6366f1",
+    bgColor: "rgba(99,102,241,0.1)",
+    gradient: "from-[#6366f1] to-[#4f46e5]",
+    url: createPageUrl("KmReport")
   }
 ];
 
