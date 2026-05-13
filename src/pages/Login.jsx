@@ -96,7 +96,7 @@ export default function Login() {
         </form>
 
         <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <p style={{ fontSize: 11, color: 'gray' }}>גרסה 2.0</p>
+          <p style={{ fontSize: 11, color: 'blue' }}>גרסה 2.0</p>
         </div>
       </div>
     </div>
