@@ -94,6 +94,10 @@ export default function Login() {
             {loading ? 'מתחבר...' : 'התחבר'}
           </Button>
         </form>
+
+        <div style={{ textAlign: 'center', marginTop: 16 }}>
+          <p style={{ fontSize: 11, color: 'gray' }}>גרסה 2.0</p>
+        </div>
       </div>
     </div>
   );
