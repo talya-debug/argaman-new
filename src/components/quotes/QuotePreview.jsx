@@ -165,6 +165,72 @@ export default function QuotePreview({ quote, quoteLines, lead }) {
                 <p className="font-medium">תודה על אמונכם בנו!</p>
                 <p className="text-sm mt-1">לשירות מקצועי ואמין - ארגמן מערכות מתקדמות</p>
             </div>
+
+            {/* ── דף אודות — מוצג רק בהצעה פרטית ── */}
+            {quote?.quote_type === 'פרטי' && (
+                <div style={{ pageBreakBefore: 'always' }}>
+                    {/* כותרת עליונה */}
+                    <div className="p-8 border-b-2 border-blue-600 flex justify-between items-center">
+                        <div className="text-right">
+                            <h1 className="text-3xl font-bold text-blue-900 mb-2">ארגמן מערכות מתקדמות</h1>
+                            <p className="text-[#B8922E] font-medium">מיזוג אוויר | חימום תת רצפתי | אוורור ופינוי עשן</p>
+                            <p className="text-gray-500 text-sm mt-2">ח.פ: 516524287 | מספר קבלן: 37992</p>
+                        </div>
+                        <img
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68b3dec209adbcb52b0ebf8a/7e2e3cf19_.png"
+                            alt="Argaman Logo"
+                            className="w-40 h-auto"
+                        />
+                    </div>
+
+                    {/* תוכן אודות */}
+                    <div className="px-8 py-6" style={{ direction: 'rtl', textAlign: 'right' }}>
+                        <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center">אודות</h2>
+
+                        <p className="text-gray-800 font-bold text-lg mb-1">ארגמן מערכות מיזוג</p>
+                        <p className="text-gray-700 leading-relaxed mb-4">
+                            הינה חברה קבלנית הרשומה מס 37992
+                            ומבוססת על ניסיון רב שנים של מייסדיה הפועלים בענף המיזוג משנת 1999 ובעלי הסמכה ממשרד העבודה. דרג 3 הגבוה בענף והינה קבלן רשום מספר 37992
+                        </p>
+
+                        <p className="text-gray-800 font-bold text-lg mb-1">ארגמן מערכות מיזוג</p>
+                        <p className="text-gray-700 leading-relaxed mb-1">
+                            מציעה לקהל לקוחותיה מגוון פתרונות מיזוג בהתאמה אישית. וברמה מקצועית גבוהה ובתוך עמידה בסטנדרט עבודה מהמובילים בענף המיזוג.
+                        </p>
+                        <p className="text-gray-700 leading-relaxed mb-4">
+                            אנו שמים דגש מרכזי על תכנון מערכות גמישות ואיכותיות המותאמות באופן אישי לצורכי הלקוח, ומקפידים על מקצועיות בהתקנה תחזוקה קלה ושוטפת, ושומרים על שירות ברמה גבוהה ומקצועית.
+                        </p>
+
+                        <p className="text-gray-800 font-bold text-lg mb-2">ארגמן מערכות מיזוג</p>
+                        <p className="text-gray-700 mb-2">מספקת מגוון רחב של שירותים תחת קורת גג אחת:</p>
+                        <ul className="text-gray-700 space-y-1 mb-4 pr-4">
+                            <li>• מיזוג אוויר ביתי</li>
+                            <li>• מערכות VRF ומולטי ביתיות ותעשייתיות</li>
+                            <li>• מערכות חימום תת רצפתי מבוססות מים</li>
+                            <li>• מערכות חימום מים</li>
+                            <li>• מערכות צ'ילרים</li>
+                            <li>• מיזוג אוויר תעשייתי</li>
+                            <li>• מערכות אוורור ופינוי עשן</li>
+                            <li>• טיפול ואחזקה של מערכות מיזוג אוויר ביתי ותעשייתי</li>
+                        </ul>
+
+                        <p className="text-gray-800 font-bold text-lg mb-1">ארגמן מערכות מיזוג</p>
+                        <p className="text-gray-700 leading-relaxed mb-1">
+                            נוסדה מתוך חזון לתת מענה מקצועי, אמין, אכפתי והוגן.
+                        </p>
+                        <p className="text-gray-700 leading-relaxed">
+                            בין לקוחותנו ניתן למצוא: חברות מוסדות ולקוחות פרטיים רבים
+                        </p>
+                    </div>
+
+                    {/* פוטר אודות */}
+                    <div className="px-8 py-4 border-t-2 border-blue-600 text-center">
+                        <p className="text-blue-900 font-bold">ארגמן מערכות מיזוג מתקדמות בע"מ</p>
+                        <p className="text-gray-600 text-sm mt-1">משרד: 077-5625046 | שי ארגמן: 0509281254 | יניר ארזואן: 0549734747</p>
+                        <p className="text-gray-600 text-sm">argaman.ac@gmail.com</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

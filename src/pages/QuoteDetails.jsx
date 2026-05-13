@@ -9,7 +9,6 @@ import { createPageUrl } from '@/utils';
 import { toast } from "sonner";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { PDFDocument } from 'pdf-lib';
 import QuoteBuilder from '../components/quotes/QuoteBuilder';
 import QuotePreview from '../components/quotes/QuotePreview';
 import ExcelImportDialog from '../components/quotes/ExcelImportDialog';
@@ -447,49 +446,7 @@ export default function QuoteDetails() {
                     pageIdx++;
                 }
 
-                const fileName = `quote-${quote?.quote_number || quote?.id || 'new'}.pdf`;
-
-                // אם הצעה פרטית — מצרף את דף אודות ארגמן לתוך אותו PDF
-                if (quote?.quote_type === 'פרטי') {
-                    try {
-                        const quoteBytes = pdf.output('arraybuffer');
-                        console.log('הצעה פרטית — מתחיל מיזוג PDF, גודל הצעה:', quoteBytes.byteLength);
-
-                        const aboutRes = await fetch('/about-argaman.pdf');
-                        if (!aboutRes.ok) throw new Error(`fetch failed: ${aboutRes.status}`);
-                        const aboutBytes = await aboutRes.arrayBuffer();
-                        console.log('קובץ אודות נטען, גודל:', aboutBytes.byteLength);
-
-                        const mergedPdf = await PDFDocument.create();
-                        const quotePdfDoc = await PDFDocument.load(quoteBytes);
-                        const aboutPdfDoc = await PDFDocument.load(aboutBytes);
-
-                        const quotePages = await mergedPdf.copyPages(quotePdfDoc, quotePdfDoc.getPageIndices());
-                        quotePages.forEach(p => mergedPdf.addPage(p));
-                        const aboutPages = await mergedPdf.copyPages(aboutPdfDoc, aboutPdfDoc.getPageIndices());
-                        aboutPages.forEach(p => mergedPdf.addPage(p));
-
-                        console.log('מיזוג הצליח, עמודי הצעה:', quotePdfDoc.getPageCount(), 'עמודי אודות:', aboutPdfDoc.getPageCount());
-
-                        const mergedBytes = await mergedPdf.save();
-                        const blob = new Blob([mergedBytes], { type: 'application/pdf' });
-                        const url = URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = fileName;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        URL.revokeObjectURL(url);
-                        toast.success('הצעה פרטית עם דף אודות הורדה בהצלחה');
-                    } catch (mergeErr) {
-                        console.error("שגיאה במיזוג PDF אודות:", mergeErr);
-                        toast.error('שגיאה בצירוף דף אודות — מוריד הצעה בלבד');
-                        pdf.save(fileName);
-                    }
-                } else {
-                    pdf.save(fileName);
-                }
+                pdf.save(`quote-${quote?.quote_number || quote?.id || 'new'}.pdf`);
 
                 setShowPreview(false);
             } catch (error) {
