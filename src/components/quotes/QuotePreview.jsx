@@ -168,7 +168,7 @@ export default function QuotePreview({ quote, quoteLines, lead }) {
 
             {/* ── דף אודות — מוצג רק בהצעה פרטית ── */}
             {quote?.quote_type === 'פרטי' && (
-                <div style={{ pageBreakBefore: 'always' }}>
+                <div style={{ pageBreakBefore: 'always', paddingTop: '32px' }}>
                     {/* כותרת עליונה */}
                     <div className="p-8 border-b-2 border-blue-600 flex justify-between items-center">
                         <div className="text-right">
