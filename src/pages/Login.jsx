@@ -89,7 +89,7 @@ export default function Login() {
             <p style={{ color: '#dc2626', fontSize: 14, textAlign: 'center' }}>{error}</p>
           )}
 
-          <Button type="submit" disabled={loading} style={{ marginTop: 8, gap: 8 }}>
+          <Button type="submit" disabled={loading} style={{ marginTop: 8, gap: 8, fontSize: '18px' }}>
             {loading ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
             {loading ? 'מתחבר...' : 'התחבר'}
           </Button>
