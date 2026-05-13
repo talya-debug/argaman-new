@@ -43,7 +43,7 @@ export default function Login() {
         boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
       }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <img src="/logo.jpg" alt="ארגמן" style={{ width: 80, height: 80, borderRadius: 12, margin: '0 auto 16px' }}
+          <img src="/logo.jpg" alt="ארגמן" style={{ width: 200, height: 200, borderRadius: 12, margin: '0 auto 16px' }}
             onError={(e) => { e.target.style.display = 'none'; }}
           />
           <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary, #1a1d2e)', marginBottom: 4 }}>
