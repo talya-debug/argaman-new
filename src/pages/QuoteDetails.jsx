@@ -9,6 +9,7 @@ import { createPageUrl } from '@/utils';
 import { toast } from "sonner";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { PDFDocument } from 'pdf-lib';
 import QuoteBuilder from '../components/quotes/QuoteBuilder';
 import QuotePreview from '../components/quotes/QuotePreview';
 import ExcelImportDialog from '../components/quotes/ExcelImportDialog';
@@ -446,18 +447,40 @@ export default function QuoteDetails() {
                     pageIdx++;
                 }
 
-                pdf.save(`quote-${quote?.quote_number || quote?.id || 'new'}.pdf`);
+                const fileName = `quote-${quote?.quote_number || quote?.id || 'new'}.pdf`;
 
-                // אם הצעה פרטית — הורד גם את קובץ אודות ארגמן
+                // אם הצעה פרטית — מצרף את דף אודות ארגמן לתוך אותו PDF
                 if (quote?.quote_type === 'פרטי') {
-                    setTimeout(() => {
+                    try {
+                        const quoteBytes = pdf.output('arraybuffer');
+                        const aboutRes = await fetch('/about-argaman.pdf');
+                        const aboutBytes = await aboutRes.arrayBuffer();
+
+                        const mergedPdf = await PDFDocument.create();
+                        const quotePdfDoc = await PDFDocument.load(quoteBytes);
+                        const aboutPdfDoc = await PDFDocument.load(aboutBytes);
+
+                        const quotePages = await mergedPdf.copyPages(quotePdfDoc, quotePdfDoc.getPageIndices());
+                        quotePages.forEach(p => mergedPdf.addPage(p));
+                        const aboutPages = await mergedPdf.copyPages(aboutPdfDoc, aboutPdfDoc.getPageIndices());
+                        aboutPages.forEach(p => mergedPdf.addPage(p));
+
+                        const mergedBytes = await mergedPdf.save();
+                        const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+                        const url = URL.createObjectURL(blob);
                         const link = document.createElement('a');
-                        link.href = '/about-argaman.pdf';
-                        link.download = 'about-argaman.pdf';
+                        link.href = url;
+                        link.download = fileName;
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
-                    }, 1000);
+                        URL.revokeObjectURL(url);
+                    } catch (mergeErr) {
+                        console.error("שגיאה במיזוג PDF אודות:", mergeErr);
+                        pdf.save(fileName);
+                    }
+                } else {
+                    pdf.save(fileName);
                 }
 
                 setShowPreview(false);
