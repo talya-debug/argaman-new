@@ -453,8 +453,12 @@ export default function QuoteDetails() {
                 if (quote?.quote_type === 'פרטי') {
                     try {
                         const quoteBytes = pdf.output('arraybuffer');
+                        console.log('הצעה פרטית — מתחיל מיזוג PDF, גודל הצעה:', quoteBytes.byteLength);
+
                         const aboutRes = await fetch('/about-argaman.pdf');
+                        if (!aboutRes.ok) throw new Error(`fetch failed: ${aboutRes.status}`);
                         const aboutBytes = await aboutRes.arrayBuffer();
+                        console.log('קובץ אודות נטען, גודל:', aboutBytes.byteLength);
 
                         const mergedPdf = await PDFDocument.create();
                         const quotePdfDoc = await PDFDocument.load(quoteBytes);
@@ -464,6 +468,8 @@ export default function QuoteDetails() {
                         quotePages.forEach(p => mergedPdf.addPage(p));
                         const aboutPages = await mergedPdf.copyPages(aboutPdfDoc, aboutPdfDoc.getPageIndices());
                         aboutPages.forEach(p => mergedPdf.addPage(p));
+
+                        console.log('מיזוג הצליח, עמודי הצעה:', quotePdfDoc.getPageCount(), 'עמודי אודות:', aboutPdfDoc.getPageCount());
 
                         const mergedBytes = await mergedPdf.save();
                         const blob = new Blob([mergedBytes], { type: 'application/pdf' });
@@ -475,8 +481,10 @@ export default function QuoteDetails() {
                         link.click();
                         document.body.removeChild(link);
                         URL.revokeObjectURL(url);
+                        toast.success('הצעה פרטית עם דף אודות הורדה בהצלחה');
                     } catch (mergeErr) {
                         console.error("שגיאה במיזוג PDF אודות:", mergeErr);
+                        toast.error('שגיאה בצירוף דף אודות — מוריד הצעה בלבד');
                         pdf.save(fileName);
                     }
                 } else {
