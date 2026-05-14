@@ -15,7 +15,7 @@ const navigationItems = [
   { to: '/Tasks', icon: CheckSquare, label: 'משימות' },
   { to: '/Links', icon: Link2, label: 'קישורים' },
   { to: '/CollectionDashboard', icon: DollarSign, label: 'גבייה' },
-  { to: '/SupplierPayments', icon: CreditCard, label: 'תשלומים לספקים' },
+  { to: '/SupplierPayments', icon: CreditCard, label: 'הוצאות לתשלום' },
   { to: '/SubContractors', icon: UserCog, label: 'קבלני משנה' },
   { to: '/Vehicles', icon: Car, label: 'רכבים' },
   { to: '/Reports', icon: BarChart3, label: 'דוחות' },
