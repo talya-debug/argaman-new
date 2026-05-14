@@ -16,7 +16,6 @@ const navigationItems = [
   { to: '/Links', icon: Link2, label: 'קישורים' },
   { to: '/CollectionDashboard', icon: DollarSign, label: 'גבייה' },
   { to: '/SupplierPayments', icon: CreditCard, label: 'הוצאות לתשלום' },
-  { to: '/SubContractors', icon: UserCog, label: 'קבלני משנה' },
   { to: '/Vehicles', icon: Car, label: 'רכבים' },
   { to: '/PriceList', icon: Package, label: 'מחירון' },
   { to: '/Reports', icon: BarChart3, label: 'דוחות' },
