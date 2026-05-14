@@ -196,6 +196,18 @@ export default function ProjectDetails() {
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2">
+                        <label className="text-sm" style={{ color: 'var(--text-secondary)' }}>תעריף שעתי ₪:</label>
+                        <input
+                            type="number"
+                            min="0"
+                            value={project.hourly_rate || ''}
+                            placeholder="194"
+                            onChange={(e) => handleUpdateProjectDetails({ hourly_rate: Number(e.target.value) })}
+                            className="w-20 h-9 text-center rounded border text-sm"
+                            style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)', color: 'var(--text-primary)' }}
+                        />
+                    </div>
+                    <div className="flex items-center gap-2">
                         <label className="text-sm" style={{ color: 'var(--text-secondary)' }}>עיקבון (חודשים):</label>
                         <input
                             type="number"
@@ -236,6 +248,7 @@ export default function ProjectDetails() {
                         workLogEntries={workLogEntries}
                         purchaseRecords={purchaseRecords}
                         quote={quote}
+                        project={project}
                         subContractors={subContractors}
                         collectionTasks={collectionTasks}
                     />

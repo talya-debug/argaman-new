@@ -13,6 +13,7 @@ import Quotes from './pages/Quotes';
 import Tasks from './pages/Tasks';
 import Reports from './pages/Reports';
 import SubContractors from './pages/SubContractors';
+import PriceList from './pages/PriceList';
 import SupplierPayments from './pages/SupplierPayments';
 import KmReport from './pages/KmReport';
 import Vehicles from './pages/Vehicles';
@@ -35,6 +36,7 @@ export const PAGES = {
     "Quotes": Quotes,
     "Reports": Reports,
     "SubContractors": SubContractors,
+    "PriceList": PriceList,
     "SupplierPayments": SupplierPayments,
     "KmReport": KmReport,
     "Tasks": Tasks,

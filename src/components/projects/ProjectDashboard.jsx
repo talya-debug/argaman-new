@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DollarSign, UserCheck, ShoppingCart, TrendingUp, TrendingDown, FileText } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 
-const LABOR_COST_PER_HOUR = 3500 / 18;
+const DEFAULT_HOURLY_RATE = 3500 / 18;
 
 const StatCard = ({ title, value, icon, colorClass }) => {
     const Icon = icon;
@@ -20,7 +20,7 @@ const StatCard = ({ title, value, icon, colorClass }) => {
     );
 };
 
-export default function ProjectDashboard({ quoteLines, progressEntries, workLogEntries, purchaseRecords, quote, subContractors, collectionTasks }) {
+export default function ProjectDashboard({ quoteLines, progressEntries, workLogEntries, purchaseRecords, quote, project, subContractors, collectionTasks }) {
     const approvedProjectAmount = quote?.total || quoteLines.reduce((sum, line) => sum + (line.line_total || 0), 0);
     const vatPercentage = quote?.vat_percentage || 18;
     const totalRevenueBeforeVAT = progressEntries.reduce((sum, entry) => sum + (entry.amount_to_invoice || 0), 0);
@@ -39,7 +39,8 @@ export default function ProjectDashboard({ quoteLines, progressEntries, workLogE
         return sum + planned;
     }, 0);
     
-    const totalLaborCost = workLogEntries.reduce((sum, entry) => sum + ((entry.total_hours || 0) * LABOR_COST_PER_HOUR), 0);
+    const hourlyRate = project?.hourly_rate || DEFAULT_HOURLY_RATE;
+    const totalLaborCost = workLogEntries.reduce((sum, entry) => sum + ((entry.total_hours || 0) * hourlyRate), 0);
     
     const subContractorCosts = (subContractors || []).reduce((sum, contractor) => sum + (contractor.amount || 0), 0);
     

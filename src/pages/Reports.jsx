@@ -10,7 +10,7 @@ import {
 import { exportToCSV } from "@/lib/exportExcel";
 import { Download, TrendingUp, TrendingDown, DollarSign, Percent, Clock, AlertTriangle, Layers, FileText } from "lucide-react";
 
-const HOURLY_RATE = 3500 / 18;
+const DEFAULT_HOURLY_RATE = 3500 / 18;
 
 const TABS = [
   { key: "pnl", label: "רווח/הפסד" },
@@ -71,6 +71,15 @@ export default function Reports() {
     setLoading(false);
   };
 
+  // מפת תעריף שעתי לפי פרויקט
+  const projectRateMap = useMemo(() => {
+    const map = {};
+    data.projects.forEach(p => { map[p.id] = p.hourly_rate || DEFAULT_HOURLY_RATE; });
+    return map;
+  }, [data.projects]);
+
+  const getRate = (projectId) => projectRateMap[projectId] || DEFAULT_HOURLY_RATE;
+
   // ========== P&L חישובים ==========
   const pnlData = useMemo(() => {
     const paidCollections = data.collections.filter(c =>
@@ -112,7 +121,7 @@ export default function Reports() {
       const dt = new Date(d);
       const key = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}`;
       if (!monthMap[key]) monthMap[key] = { income: 0, expenses: 0 };
-      monthMap[key].expenses += (Number(w.total_hours) || 0) * HOURLY_RATE;
+      monthMap[key].expenses += (Number(w.total_hours) || 0) * getRate(w.project_id);
     });
 
     const sorted = Object.entries(monthMap).sort((a, b) => a[0].localeCompare(b[0]));
@@ -227,7 +236,7 @@ export default function Reports() {
   const expenseData = useMemo(() => {
     const purchaseTotal = data.purchases.reduce((s, p) => s + (Number(p.amount) || Number(p.total) || 0), 0);
     const subTotal = data.subcontractors.reduce((s, p) => s + (Number(p.amount) || Number(p.total) || 0), 0);
-    const laborTotal = data.workLogs.reduce((s, w) => s + (Number(w.total_hours) || 0) * HOURLY_RATE, 0);
+    const laborTotal = data.workLogs.reduce((s, w) => s + (Number(w.total_hours) || 0) * getRate(w.project_id), 0);
 
     const pieData = [
       { name: 'רכש', value: purchaseTotal },
@@ -245,7 +254,7 @@ export default function Reports() {
 
     data.purchases.forEach(p => addToProject(p.project_id, 'procurement', Number(p.amount) || Number(p.total) || 0));
     data.subcontractors.forEach(s => addToProject(s.project_id, 'subcontractor', Number(s.amount) || Number(s.total) || 0));
-    data.workLogs.forEach(w => addToProject(w.project_id, 'labor', (Number(w.total_hours) || 0) * HOURLY_RATE));
+    data.workLogs.forEach(w => addToProject(w.project_id, 'labor', (Number(w.total_hours) || 0) * getRate(w.project_id)));
 
     const projectMap = {};
     data.projects.forEach(p => { projectMap[p.id] = p.name || p.project_name || '—'; });
