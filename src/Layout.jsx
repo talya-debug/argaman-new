@@ -44,13 +44,13 @@ export default function Layout({ children, currentPageName }) {
         style={{
           display: 'flex', alignItems: 'center', gap: '10px',
           padding: '10px 14px', borderRadius: '8px', textDecoration: 'none',
-          fontSize: '14px', fontWeight: 500, marginBottom: '2px',
-          color: isActive ? 'var(--argaman)' : 'var(--text-secondary)',
+          fontSize: '15px', fontWeight: 500, marginBottom: '2px',
+          color: isActive ? 'var(--argaman-light)' : 'rgba(255,255,255,0.75)',
           background: isActive ? 'var(--argaman-bg)' : 'transparent',
           transition: 'all 0.2s',
         }}
-        onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = 'var(--argaman-bg)'; e.currentTarget.style.color = 'var(--argaman-light)' }}}
-        onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)' }}}
+        onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = 'var(--argaman-bg)'; e.currentTarget.style.color = '#fff' }}}
+        onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.75)' }}}
       >
         <item.icon size={18} />{item.label}
       </Link>
@@ -66,7 +66,7 @@ export default function Layout({ children, currentPageName }) {
         <img src="/logo.jpg" alt="ארגמן" style={{ height: '44px', borderRadius: '10px' }} />
         <div>
           <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--argaman)' }}>ארגמן</div>
-          <div style={{ fontSize: '11px', color: 'var(--text-muted)', letterSpacing: '1px' }}>מערכות מיזוג</div>
+          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1px' }}>מערכות מיזוג</div>
         </div>
       </div>
 
@@ -87,13 +87,13 @@ export default function Layout({ children, currentPageName }) {
           {user?.full_name?.[0] || user?.username?.[0]?.toUpperCase() || 'א'}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <div style={{ fontSize: '13px', fontWeight: 500, color: 'rgba(255,255,255,0.85)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {user?.full_name || user?.username || 'ארגמן'}
           </div>
         </div>
         {logout && (
           <button onClick={logout} style={{
-            background: 'none', border: 'none', color: 'var(--text-muted)',
+            background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)',
             cursor: 'pointer', padding: '4px'
           }}>
             <LogOut size={16} />
