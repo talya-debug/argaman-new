@@ -245,7 +245,7 @@ export default function Training() {
                   <Icon size={22} style={{ color: section.color }} />
                 </div>
                 <h2 className="text-lg font-bold text-slate-800 flex-1">{section.title}</h2>
-                {isOpen ? <ChevronUp size={20} className="text-gray-400" /> : <ChevronDown size={20} className="text-gray-400" />}
+                <span style={{ fontSize: '20px', color: '#9ca3af', fontWeight: 'bold', lineHeight: 1 }}>{isOpen ? '−' : '+'}</span>
               </div>
               {isOpen && (
                 <CardContent className="pt-0 pb-5 px-5">
