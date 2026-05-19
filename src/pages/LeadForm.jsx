@@ -28,6 +28,15 @@ export default function LeadForm() {
       toast.error("נא למלא שם וטלפון.");
       return;
     }
+    const phoneRegex = /^[0-9\-+\s()]+$/;
+    if (formData.phone && !phoneRegex.test(formData.phone)) {
+      toast.error('מספר טלפון לא תקין — מותר רק ספרות, מקפים, +, רווחים וסוגריים');
+      return;
+    }
+    if (formData.email && !formData.email.includes('@')) {
+      toast.error('כתובת מייל לא תקינה — חסר @');
+      return;
+    }
     setIsSubmitting(true);
     try {
       const submitData = { ...formData };
@@ -52,9 +61,9 @@ export default function LeadForm() {
   const labelStyle = { color: 'var(--text-primary)', fontWeight: 600, fontSize: 14, display: 'block', marginBottom: 6 };
 
   const fields = [
-    { id: 'name', label: 'שם *', required: true, placeholder: 'שם הלקוח' },
-    { id: 'phone', label: 'טלפון *', required: true, placeholder: 'מספר טלפון' },
-    { id: 'email', label: 'מייל', type: 'email', placeholder: 'כתובת מייל' },
+    { id: 'name', label: 'שם *', required: true, placeholder: 'שם הלקוח', maxLength: 100 },
+    { id: 'phone', label: 'טלפון *', required: true, placeholder: 'מספר טלפון', maxLength: 20 },
+    { id: 'email', label: 'מייל', type: 'email', placeholder: 'כתובת מייל', maxLength: 100 },
     { id: 'estimated_value', label: 'ערך משוער (₪)', type: 'number', placeholder: 'ערך משוער' },
     { id: 'followup_date', label: 'תאריך פולואפ', type: 'date' },
     { id: 'source', label: 'מקור', placeholder: 'מקור הליד' },
@@ -77,7 +86,7 @@ export default function LeadForm() {
                 <Input
                   id={f.id} type={f.type || 'text'} value={formData[f.id]}
                   onChange={(e) => handleChange(f.id, e.target.value)}
-                  required={f.required} placeholder={f.placeholder} style={{ height: 44 }}
+                  required={f.required} placeholder={f.placeholder} maxLength={f.maxLength} style={{ height: 44 }}
                 />
               </div>
             ))}
@@ -104,7 +113,7 @@ export default function LeadForm() {
 
           <div style={{ marginTop: 20 }}>
             <label style={labelStyle}>הערות</label>
-            <Textarea value={formData.notes} onChange={(e) => handleChange('notes', e.target.value)} rows={4} placeholder="הערות נוספות" />
+            <Textarea value={formData.notes} onChange={(e) => handleChange('notes', e.target.value)} rows={4} maxLength={500} placeholder="הערות נוספות" />
           </div>
 
           <div style={{ marginTop: 28, textAlign: 'center' }}>

@@ -54,6 +54,13 @@ function VehicleFormDialog({ vehicle, onSave, onClose }) {
         e.preventDefault();
         if (!form.license_plate) { toast.error('יש להזין מספר רכב'); return; }
         try {
+            // בדיקת כפילות לוחית רישוי
+            const existing = await Vehicle.filter({ license_plate: form.license_plate });
+            const isDuplicate = isEdit
+                ? existing.some(v => v.id !== vehicle.id)
+                : existing.length > 0;
+            if (isDuplicate) { toast.error('רכב עם מספר רישוי זה כבר קיים במערכת'); return; }
+
             if (isEdit) {
                 await Vehicle.update(vehicle.id, form);
                 toast.success('רכב עודכן');
@@ -391,6 +398,7 @@ export default function Vehicles() {
     useEffect(() => { load(); }, []);
 
     const handleDelete = async (id) => {
+        if (!window.confirm('למחוק את הרכב? פעולה זו לא ניתנת לביטול')) return;
         await Vehicle.delete(id);
         toast.success('רכב נמחק');
         load();

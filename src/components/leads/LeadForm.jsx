@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UploadCloud, X } from "lucide-react";
+import { toast } from 'sonner';
 
 const STATUSES = [
   "חדש",
@@ -43,6 +44,26 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // ולידציית טלפון
+    const phoneRegex = /^[0-9\-+\s()]+$/;
+    if (formData.phone && !phoneRegex.test(formData.phone)) {
+      toast.error('מספר טלפון לא תקין — מותר רק ספרות, מקפים, +, רווחים וסוגריים');
+      return;
+    }
+
+    // ולידציית מייל
+    if (formData.email && !formData.email.includes('@')) {
+      toast.error('כתובת מייל לא תקינה — חסר @');
+      return;
+    }
+
+    // ולידציית URL תיקיית דרייב
+    if (formData.drive_folder_url && !formData.drive_folder_url.startsWith('http://') && !formData.drive_folder_url.startsWith('https://')) {
+      toast.error('קישור לתיקייה חייב להתחיל ב-http:// או https://');
+      return;
+    }
+
     const submitData = { ...formData };
 
     // Fix estimated_value handling
@@ -84,6 +105,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
               required
+              maxLength={100}
               className="text-right border-gray-300"
               placeholder="שם הלקוח"
             />
@@ -96,6 +118,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
               value={formData.phone}
               onChange={(e) => handleChange('phone', e.target.value)}
               required
+              maxLength={20}
               className="text-right border-gray-300"
               placeholder="מספר טלפון"
             />
@@ -108,6 +131,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
               type="email"
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
+              maxLength={100}
               className="text-right border-gray-300"
               placeholder="כתובת מייל"
             />
@@ -228,6 +252,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
             type="url"
             value={formData.drive_folder_url}
             onChange={(e) => handleChange('drive_folder_url', e.target.value)}
+            maxLength={500}
             className="text-right border-gray-300"
             placeholder="https://drive.google.com/..."
           />
@@ -240,6 +265,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
             value={formData.notes}
             onChange={(e) => handleChange('notes', e.target.value)}
             rows={3}
+            maxLength={500}
             className="text-right border-gray-300"
             placeholder="הערות נוספות"
           />

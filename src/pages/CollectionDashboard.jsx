@@ -97,11 +97,11 @@ export default function CollectionDashboard() {
     const paidTasks = collectionTasks.filter(t => t.collection_status === "שולם ונשלחה חשבונית מס");
 
     const paidThisWeek = paidTasks
-      .filter(t => t.updated_date && new Date(t.updated_date) >= weekAgo)
+      .filter(t => { const d = t.payment_date || t.updated_date; return d && new Date(d) >= weekAgo; })
       .reduce((sum, t) => sum + (t.amount_to_collect || 0), 0);
 
     const paidThisMonth = paidTasks
-      .filter(t => t.updated_date && new Date(t.updated_date) >= monthAgo)
+      .filter(t => { const d = t.payment_date || t.updated_date; return d && new Date(d) >= monthAgo; })
       .reduce((sum, t) => sum + (t.amount_to_collect || 0), 0);
 
     return { totalInProgress, totalOverdue, paidThisWeek, paidThisMonth, overdueCount };
@@ -123,12 +123,12 @@ export default function CollectionDashboard() {
 
   const paidTasksWeek = useMemo(() => {
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    return collectionTasks.filter(t => t.collection_status === "שולם ונשלחה חשבונית מס" && t.updated_date && new Date(t.updated_date) >= weekAgo);
+    return collectionTasks.filter(t => { const d = t.payment_date || t.updated_date; return t.collection_status === "שולם ונשלחה חשבונית מס" && d && new Date(d) >= weekAgo; });
   }, [collectionTasks]);
 
   const paidTasksMonth = useMemo(() => {
     const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    return collectionTasks.filter(t => t.collection_status === "שולם ונשלחה חשבונית מס" && t.updated_date && new Date(t.updated_date) >= monthAgo);
+    return collectionTasks.filter(t => { const d = t.payment_date || t.updated_date; return t.collection_status === "שולם ונשלחה חשבונית מס" && d && new Date(d) >= monthAgo; });
   }, [collectionTasks]);
 
   const responsibleData = useMemo(() => {
@@ -189,7 +189,7 @@ export default function CollectionDashboard() {
 
     const durations = paidTasks.map(t => {
       const invoice = new Date(t.invoice_date);
-      const paid = new Date(t.updated_date || new Date());
+      const paid = new Date(t.payment_date || t.updated_date || new Date());
       return Math.floor((paid - invoice) / (1000 * 60 * 60 * 24));
     }).filter(d => d >= 0);
 
@@ -466,7 +466,7 @@ export default function CollectionDashboard() {
                 <TableRow>
                   <TableHead className="text-right">פרויקט</TableHead>
                   <TableHead className="text-right">סכום</TableHead>
-                  <TableHead className="text-right">{kpiDialog === 'overdue' ? 'ימי איחור' : 'תאריך עדכון'}</TableHead>
+                  <TableHead className="text-right">{kpiDialog === 'overdue' ? 'ימי איחור' : 'תאריך תשלום'}</TableHead>
                   <TableHead className="text-right">סטטוס</TableHead>
                 </TableRow>
               </TableHeader>
@@ -478,7 +478,7 @@ export default function CollectionDashboard() {
                     <TableCell className="text-right">
                       {kpiDialog === 'overdue'
                         ? <Badge className="bg-red-600 text-white text-xs">{task.daysOverdue || calculateDaysOverdue(task.payment_due_date)} ימים</Badge>
-                        : task.updated_date ? new Date(task.updated_date).toLocaleDateString('he-IL') : '—'
+                        : (task.payment_date || task.updated_date) ? new Date(task.payment_date || task.updated_date).toLocaleDateString('he-IL') : '—'
                       }
                     </TableCell>
                     <TableCell className="text-right text-sm">{task.collection_status?.substring(0, 25)}</TableCell>
