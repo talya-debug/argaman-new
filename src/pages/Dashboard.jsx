@@ -91,12 +91,12 @@ export default function Dashboard() {
 
     // גרף גבייה לפי פרויקט
     const collectionChart = projectData.filter(p => p.paid > 0 || p.open > 0).map(p => ({
-      name: p.name?.replace('פרויקט - ', '').substring(0, 15), paid: p.paid, open: p.open,
+      name: p.name?.replace('פרויקט - ', '').substring(0, 20), paid: p.paid, open: p.open,
     }));
 
     // גרף תכנון מול ביצוע — הצעה מאושרת מול חויב + הוצאות רכש
     const planVsActual = projectData.filter(p => p.budget > 0).map(p => ({
-      name: p.name?.replace('פרויקט - ', '').substring(0, 15),
+      name: p.name?.replace('פרויקט - ', '').substring(0, 20),
       budget: p.budget,
       invoiced: p.invoiced,
       spent: p.purchaseTotal,
@@ -234,11 +234,11 @@ export default function Dashboard() {
           <Card>
             <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 16px' }}>גבייה לפי פרויקט</h3>
             {computed.collectionChart.length > 0 ? (
-              <ResponsiveContainer width="100%" height={Math.max(220, computed.collectionChart.length * 50)}>
-                <BarChart data={computed.collectionChart} layout="vertical" margin={{ right: 20 }}>
+              <ResponsiveContainer width="100%" height={Math.max(250, computed.collectionChart.length * 60)}>
+                <BarChart data={computed.collectionChart} layout="vertical" margin={{ right: 30, left: 10 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--dark-border)" />
                   <XAxis type="number" tickFormatter={v => `₪${fmtNum(v)}`} style={{ fontSize: 11 }} />
-                  <YAxis type="category" dataKey="name" width={120} style={{ fontSize: 11 }} tick={{ fill: 'var(--text-secondary)' }} />
+                  <YAxis type="category" dataKey="name" width={150} style={{ fontSize: 12 }} tick={{ fill: 'var(--text-secondary)' }} />
                   <Tooltip formatter={v => fmt(v)} contentStyle={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', borderRadius: 8, fontSize: 13 }} />
                   <Bar dataKey="paid" name="שולם" fill="#22c55e" radius={[0, 4, 4, 0]} />
                   <Bar dataKey="open" name="פתוח" fill="#f59e0b" radius={[0, 4, 4, 0]} />
@@ -252,11 +252,11 @@ export default function Dashboard() {
             <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px' }}>תכנון מול ביצוע</h3>
             {computed.planVsActual.length > 0 ? (
               <>
-                <ResponsiveContainer width="100%" height={Math.max(180, computed.planVsActual.length * 50)}>
-                  <BarChart data={computed.planVsActual} layout="vertical" margin={{ right: 10 }}>
+                <ResponsiveContainer width="100%" height={Math.max(220, computed.planVsActual.length * 60)}>
+                  <BarChart data={computed.planVsActual} layout="vertical" margin={{ right: 20, left: 10 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--dark-border)" />
                     <XAxis type="number" tickFormatter={v => `₪${fmtNum(v/1000)}k`} style={{ fontSize: 10 }} />
-                    <YAxis type="category" dataKey="name" width={120} style={{ fontSize: 11 }} tick={{ fill: 'var(--text-secondary)' }} />
+                    <YAxis type="category" dataKey="name" width={150} style={{ fontSize: 12 }} tick={{ fill: 'var(--text-secondary)' }} />
                     <Tooltip formatter={v => fmt(v)} contentStyle={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', borderRadius: 8, fontSize: 12 }} />
                     <Bar dataKey="budget" name="הצעה מאושרת" fill="#3b82f6" radius={[0, 3, 3, 0]} />
                     <Bar dataKey="invoiced" name="חויב" fill="#22c55e" radius={[0, 3, 3, 0]} />

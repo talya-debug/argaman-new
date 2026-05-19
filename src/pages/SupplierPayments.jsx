@@ -269,14 +269,14 @@ export default function SupplierPayments() {
 
             {/* מתגי תצוגה */}
             <div className="flex gap-2">
-                <Button variant={activeView === 'records' ? 'default' : 'outline'} onClick={() => { setActiveView('records'); setFilterStatus('all'); }} className={activeView === 'records' ? 'bg-indigo-600' : ''}>
+                <Button variant={activeView === 'records' ? 'default' : 'outline'} onClick={() => { setActiveView('records'); setFilterStatus('all'); setEditingId(null); }} className={activeView === 'records' ? 'bg-indigo-600' : ''}>
                     רכש ציוד ({filteredRecords.length})
                 </Button>
-                <Button variant={activeView === 'orders' ? 'default' : 'outline'} onClick={() => { setActiveView('orders'); setFilterStatus('all'); }} className={activeView === 'orders' ? 'bg-indigo-600' : ''}>
+                <Button variant={activeView === 'orders' ? 'default' : 'outline'} onClick={() => { setActiveView('orders'); setFilterStatus('all'); setEditingId(null); }} className={activeView === 'orders' ? 'bg-indigo-600' : ''}>
                     <FileText className="w-4 h-4 ml-2" />
                     הזמנות רכש ({orders.length})
                 </Button>
-                <Button variant={activeView === 'subcontractors' ? 'default' : 'outline'} onClick={() => { setActiveView('subcontractors'); setFilterStatus('all'); }} className={activeView === 'subcontractors' ? 'bg-amber-600' : ''}>
+                <Button variant={activeView === 'subcontractors' ? 'default' : 'outline'} onClick={() => { setActiveView('subcontractors'); setFilterStatus('all'); setEditingId(null); }} className={activeView === 'subcontractors' ? 'bg-amber-600' : ''}>
                     <HardHat className="w-4 h-4 ml-2" />
                     קבלני משנה ({filteredSubs.length})
                 </Button>

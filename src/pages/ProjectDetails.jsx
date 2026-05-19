@@ -116,7 +116,7 @@ export default function ProjectDetails() {
                 const completionTasks = [
                     {
                         title: `סגירת פרויקט - ${project.name}`,
-                        assigned_to: 'אדמיניסטרציה',
+                        assigned_to: 'חיה',
                         source_type: 'project_completion',
                         priority: 'גבוהה',
                         status: 'חדש'

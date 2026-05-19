@@ -128,9 +128,9 @@ export default function Projects() {
         </div>
 
         <Tabs defaultValue="active">
-            <TabsList className="grid w-full grid-cols-2" style={{ background: 'var(--dark-card)' }}>
-                <TabsTrigger value="active" className="data-[state=active]:text-white" style={{ '--tw-bg-opacity': 1 }}>פרויקטים פעילים ({activeProjects.length})</TabsTrigger>
-                <TabsTrigger value="archived" className="data-[state=active]:text-white">ארכיון ({archivedProjects.length})</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2" style={{ background: 'var(--dark-2)', padding: '4px', borderRadius: '12px' }}>
+                <TabsTrigger value="active" style={{ fontSize: '15px', fontWeight: 600, padding: '10px 16px', borderRadius: '8px' }} className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">פרויקטים פעילים ({activeProjects.length})</TabsTrigger>
+                <TabsTrigger value="archived" style={{ fontSize: '15px', fontWeight: 600, padding: '10px 16px', borderRadius: '8px' }} className="data-[state=active]:bg-gray-600 data-[state=active]:text-white">ארכיון ({archivedProjects.length})</TabsTrigger>
             </TabsList>
             <TabsContent value="active" className="mt-6">
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
