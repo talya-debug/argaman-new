@@ -419,22 +419,16 @@ export default function SupplierPayments() {
                                                 ) : <span className="text-sm">{record.supplier_name || '-'}</span>}
                                             </TableCell>
                                             <TableCell className="text-center">
-                                                {isEditing ? (
-                                                    <Select value={editData.status} onValueChange={(v) => setEditData({...editData, status: v})}>
-                                                        <SelectTrigger className="h-8 text-xs">
-                                                            <SelectValue />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {purchaseStatusOptions.map(s => (
-                                                                <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                ) : (
-                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${purchaseStatusConfig[record.status]?.color || 'bg-gray-100'}`}>
-                                                        {record.status || '-'}
-                                                    </span>
-                                                )}
+                                                <Select value={record.status || 'יש להזמין'} onValueChange={async (v) => { try { await PurchaseRecord.update(record.id, { status: v }); await loadData(); toast.success('סטטוס עודכן'); } catch(e) { toast.error('שגיאה'); } }}>
+                                                    <SelectTrigger className="h-8 text-xs w-[130px]">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {purchaseStatusOptions.map(s => (
+                                                            <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
                                             </TableCell>
                                             <TableCell>
                                                 {isEditing ? (
@@ -523,22 +517,16 @@ export default function SupplierPayments() {
                                                 ) : `₪${(sub.amount || 0).toLocaleString()}`}
                                             </TableCell>
                                             <TableCell className="text-center">
-                                                {isEditing ? (
-                                                    <Select value={editData.payment_status} onValueChange={(v) => setEditData({...editData, payment_status: v})}>
-                                                        <SelectTrigger className="h-8 text-xs">
-                                                            <SelectValue />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {subStatusOptions.map(s => (
-                                                                <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                ) : (
-                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${subStatusConfig[sub.payment_status]?.color || 'bg-gray-100'}`}>
-                                                        {sub.payment_status || '-'}
-                                                    </span>
-                                                )}
+                                                <Select value={sub.payment_status || 'ממתין לאישור'} onValueChange={async (v) => { try { await SubContractor.update(sub.id, { payment_status: v }); await loadData(); toast.success('סטטוס עודכן'); } catch(e) { toast.error('שגיאה'); } }}>
+                                                    <SelectTrigger className="h-8 text-xs w-[140px]">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {subStatusOptions.map(s => (
+                                                            <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
                                             </TableCell>
                                             <TableCell>
                                                 {isEditing ? (

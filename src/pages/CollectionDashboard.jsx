@@ -376,7 +376,6 @@ export default function CollectionDashboard() {
           </Card>
         </div>
 
-        {/* Charts removed — not useful */}
         <div className="grid grid-cols-1 gap-6">
 
           {/* Collection Time Stats */}
