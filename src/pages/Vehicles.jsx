@@ -104,6 +104,7 @@ function ExpenseFormDialog({ vehicleId, onSave }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (Number(form.amount) <= 0) { toast.error('יש להזין סכום חיובי'); return; }
         try {
             await VehicleExpense.create({ ...form, vehicle_id: vehicleId, amount: Number(form.amount), km_at_expense: Number(form.km_at_expense) });
             if (form.km_at_expense > 0) await Vehicle.update(vehicleId, { current_km: Number(form.km_at_expense) });
@@ -121,9 +122,9 @@ function ExpenseFormDialog({ vehicleId, onSave }) {
                 <DialogHeader><DialogTitle>הוספת הוצאה</DialogTitle></DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div><Label>סוג</Label><Select value={form.expense_type} onValueChange={v => set('expense_type', v)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{EXPENSE_TYPES.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent></Select></div>
-                    <div><Label>סכום (₪)</Label><Input type="number" value={form.amount} onChange={e => set('amount', e.target.value)} /></div>
+                    <div><Label>סכום (₪)</Label><Input type="number" min="0" required value={form.amount} onChange={e => set('amount', Number(e.target.value))} /></div>
                     <div><Label>תאריך</Label><Input type="date" value={form.date} onChange={e => set('date', e.target.value)} /></div>
-                    <div><Label>קילומטראז'</Label><Input type="number" value={form.km_at_expense} onChange={e => set('km_at_expense', e.target.value)} /></div>
+                    <div><Label>קילומטראז'</Label><Input type="number" value={form.km_at_expense} onChange={e => set('km_at_expense', Number(e.target.value))} /></div>
                     <div><Label>תיאור</Label><Input value={form.description} onChange={e => set('description', e.target.value)} /></div>
                     <DialogFooter><Button type="button" variant="outline" onClick={() => setOpen(false)}>ביטול</Button><Button type="submit" className="bg-green-600 text-white">הוסף</Button></DialogFooter>
                 </form>
@@ -154,7 +155,17 @@ function DocUploadDialog({ vehicleId, onSave }) {
             setFile(null);
             setForm({ doc_type: 'רישיון רכב', title: '', expiry_date: '', notes: '' });
             onSave();
-        } catch (err) { console.error(err); toast.error('שגיאה בהעלאה'); }
+        } catch (err) {
+            console.error(err);
+            const msg = err?.message || '';
+            if (msg.includes('size') || msg.includes('too large') || msg.includes('exceeded')) {
+                toast.error('הקובץ גדול מדי — יש להעלות קובץ קטן יותר');
+            } else if (msg.includes('network') || msg.includes('fetch') || msg.includes('ERR_NETWORK') || !navigator.onLine) {
+                toast.error('בעיית רשת — נסה שוב');
+            } else {
+                toast.error('שגיאה בהעלאת המסמך: ' + (msg || 'נסה שוב'));
+            }
+        }
         setUploading(false);
     };
 
@@ -210,7 +221,7 @@ function KmReportDialog({ vehicleId, currentKm, onSave }) {
                 <DialogHeader><DialogTitle>דיווח קילומטראז'</DialogTitle></DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div><Label>תאריך</Label><Input type="date" value={form.date} onChange={e => setForm(prev => ({ ...prev, date: e.target.value }))} /></div>
-                    <div><Label>ק"מ נוכחי</Label><Input type="number" value={form.km} onChange={e => setForm(prev => ({ ...prev, km: e.target.value }))} /></div>
+                    <div><Label>ק"מ נוכחי</Label><Input type="number" value={form.km} onChange={e => setForm(prev => ({ ...prev, km: Number(e.target.value) }))} /></div>
                     <DialogFooter><Button type="button" variant="outline" onClick={() => setOpen(false)}>ביטול</Button><Button type="submit" className="bg-indigo-600 text-white">שמור</Button></DialogFooter>
                 </form>
             </DialogContent>

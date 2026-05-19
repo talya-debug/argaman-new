@@ -79,6 +79,10 @@ export default function Reports() {
   }, [data.projects]);
 
   const getRate = (projectId) => projectRateMap[projectId] || DEFAULT_HOURLY_RATE;
+  const usesDefaultRate = (projectId) => {
+    const proj = data.projects.find(p => p.id === projectId);
+    return !proj?.hourly_rate;
+  };
 
   // ========== P&L חישובים ==========
   const pnlData = useMemo(() => {
@@ -97,7 +101,7 @@ export default function Reports() {
       monthMap[key].income += Number(c.amount_to_collect) || Number(c.amount) || 0;
     });
 
-    data.purchases.filter(p => p.status === 'שולם' || p.supplier_invoice_number).forEach(p => {
+    data.purchases.filter(p => p.status === 'שולם').forEach(p => {
       const d = p.purchase_date || p.date || p.created_date;
       if (!d) return;
       const dt = new Date(d);
@@ -265,6 +269,7 @@ export default function Reports() {
       subcontractor: vals.subcontractor,
       labor: vals.labor,
       total: vals.procurement + vals.subcontractor + vals.labor,
+      usesDefaultRate: usesDefaultRate(pid),
     })).sort((a, b) => b.total - a.total);
 
     return { purchaseTotal, subTotal, laborTotal, grandTotal: purchaseTotal + subTotal + laborTotal, pieData, projectRows };
@@ -659,7 +664,7 @@ function ExpensesTab({ data }) {
                   <td style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{r.projectName}</td>
                   <td>{fmt(r.procurement)}</td>
                   <td>{fmt(r.subcontractor)}</td>
-                  <td>{fmt(r.labor)}</td>
+                  <td>{fmt(r.labor)}{r.usesDefaultRate && r.labor > 0 && <span title="תעריף ברירת מחדל" style={{ color: '#f59e0b', marginRight: 4, fontSize: 12 }}>⚠ תעריף ברירת מחדל</span>}</td>
                   <td style={{ color: 'var(--argaman)', fontWeight: 600 }}>{fmt(r.total)}</td>
                 </tr>
               ))}

@@ -7,7 +7,8 @@ import TaskForm from "../components/tasks/TaskForm";
 import TaskList from "../components/tasks/TaskList";
 import TaskFilters from "../components/tasks/TaskFilters";
 import { toast } from "sonner";
-import { createNotification } from "@/lib/notifications";
+import { createNotification, notifyTaskDueSoon, NOTIFICATION_TYPES } from "@/lib/notifications";
+import { Notification } from "@/entities";
 import { differenceInDays } from 'date-fns';
 
 export default function TasksPage() {
@@ -31,6 +32,9 @@ export default function TasksPage() {
         ]);
         setTasks(allTasks);
         setProjects(allProjects);
+
+        // בדיקת משימות שמתקרבות לדדליין — התראה חד-פעמית
+        checkDueDateNotifications(allTasks);
       } catch (error) {
         console.error('Error loading tasks:', error);
         toast.error("שגיאה בטעינת המשימות");
@@ -95,6 +99,39 @@ export default function TasksPage() {
 
   const handleFilterChange = (name, value) => {
     setFilters(prev => ({ ...prev, [name]: value }));
+  };
+
+  // בדיקת התראות דדליין — רק פעם אחת לכל משימה
+  const checkDueDateNotifications = async (taskList) => {
+    try {
+      const now = new Date();
+      const oneDayMs = 24 * 60 * 60 * 1000;
+      const dueSoonTasks = taskList.filter(t => {
+        if (!t.due_date || t.status === 'הושלם' || t.status === 'בוטל') return false;
+        const dueDate = new Date(t.due_date);
+        const diff = dueDate - now;
+        return diff >= 0 && diff <= oneDayMs;
+      });
+
+      if (dueSoonTasks.length === 0) return;
+
+      // בדיקה אם כבר נשלחה התראה
+      const existingNotifications = await Notification.list();
+      const existingLinks = new Set(
+        existingNotifications
+          .filter(n => n.type === NOTIFICATION_TYPES.TASK_DUE)
+          .map(n => n.link)
+      );
+
+      for (const task of dueSoonTasks) {
+        const link = `/tasks/${task.id}`;
+        if (!existingLinks.has(link)) {
+          await notifyTaskDueSoon(task);
+        }
+      }
+    } catch (err) {
+      console.error('Error checking due date notifications:', err);
+    }
   };
 
   const { todoTasks, doneTasks, cancelledTasks, archivedTasks, uniqueUsers, uniqueCreators } = useMemo(() => {

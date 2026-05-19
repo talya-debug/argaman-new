@@ -154,7 +154,16 @@ function AddManualItemDialog({ onAddItem }) {
             sub_category: '',
             supplier_name: 'פריט ידני',
             tipe_item: 'אבזר',
-            clause_number: clauseNumber
+            clause_number: clauseNumber,
+            tipe_item_snapshot: {
+                name: itemName,
+                model: itemName,
+                price_no_vat: unitPrice,
+                unit: 'יח\'',
+                category: 'פריט ידני',
+                tipe_item: 'אבזר',
+                clause_number: clauseNumber
+            }
         };
 
         onAddItem(manualItem);

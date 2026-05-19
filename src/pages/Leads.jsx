@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lead, Quote, QuoteLine, Project, Task, User } from "@/entities";
 import { uploadFile } from "@/api/storage";
@@ -23,6 +23,7 @@ export default function Leads() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isCreatingProject, setIsCreatingProject] = useState(false);
   const [projectCreationInProgress, setProjectCreationInProgress] = useState(new Set());
+  const creatingRef = useRef(false);
   const [activeView, setActiveView] = useState('active');
 
   useEffect(() => {
@@ -54,17 +55,13 @@ export default function Leads() {
   };
 
   const createProjectFromLead = async (lead) => {
-    if (projectCreationInProgress.has(lead.id)) {
+    if (creatingRef.current || projectCreationInProgress.has(lead.id)) {
         console.log(`Project creation already in progress for lead ${lead.id}`);
         return;
     }
 
-    if (isCreatingProject) {
-        console.log("Project creation already in progress globally");
-        return;
-    }
-
     try {
+      creatingRef.current = true;
       setIsCreatingProject(true);
       setProjectCreationInProgress(prev => new Set([...prev, lead.id]));
 
@@ -164,6 +161,7 @@ export default function Leads() {
         toast.error("שגיאה ביצירת פרויקט מהליד.");
         loadLeads();
     } finally {
+        creatingRef.current = false;
         setIsCreatingProject(false);
         setProjectCreationInProgress(prev => {
             const newSet = new Set(prev);
