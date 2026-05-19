@@ -420,7 +420,7 @@ export default function SupplierPayments() {
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <Select value={record.status || 'יש להזמין'} onValueChange={async (v) => { try { await PurchaseRecord.update(record.id, { status: v }); await loadData(); toast.success('סטטוס עודכן'); } catch(e) { toast.error('שגיאה'); } }}>
-                                                    <SelectTrigger className="h-8 text-xs w-[130px]">
+                                                    <SelectTrigger className={`h-8 text-xs w-[130px] ${purchaseStatusConfig[record.status]?.color || 'bg-gray-100'}`}>
                                                         <SelectValue />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -518,7 +518,7 @@ export default function SupplierPayments() {
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <Select value={sub.payment_status || 'ממתין לאישור'} onValueChange={async (v) => { try { await SubContractor.update(sub.id, { payment_status: v }); await loadData(); toast.success('סטטוס עודכן'); } catch(e) { toast.error('שגיאה'); } }}>
-                                                    <SelectTrigger className="h-8 text-xs w-[140px]">
+                                                    <SelectTrigger className={`h-8 text-xs w-[140px] ${subStatusConfig[sub.payment_status]?.color || 'bg-gray-100'}`}>
                                                         <SelectValue />
                                                     </SelectTrigger>
                                                     <SelectContent>

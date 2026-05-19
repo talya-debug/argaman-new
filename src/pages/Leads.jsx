@@ -120,7 +120,7 @@ export default function Leads() {
 
       const startupTasks = [
           {
-              title: "אדמיניסטרציה – פתיחת תיקייה, כניסה למעקב גבייה",
+              title: "פתיחת תיקייה וכניסה למעקב גבייה",
               assigned_to: "חיה",
               source_type: "project_completion",
               priority: "גבוהה",

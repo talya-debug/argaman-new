@@ -222,8 +222,6 @@ const sections = [
 ];
 
 export default function Training() {
-  const [openSection, setOpenSection] = useState(0);
-
   return (
     <div className="p-6 max-w-4xl mx-auto" dir="rtl">
       <div className="mb-8">
@@ -231,29 +229,25 @@ export default function Training() {
           <BookOpen className="w-8 h-8 text-blue-600" />
           הדרכת מערכת ארגמן
         </h1>
-        <p className="text-gray-500 mt-2">לחצו על כל נושא כדי לפתוח את ההסבר</p>
+        <p className="text-gray-500 mt-2">כל מה שצריך לדעת על המערכת</p>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {sections.map((section, index) => {
-          const isOpen = openSection === index;
           const Icon = section.icon;
           return (
-            <Card key={index} className="border-0 shadow-md overflow-hidden cursor-pointer" onClick={() => setOpenSection(isOpen ? -1 : index)}>
+            <Card key={index} className="border-0 shadow-md overflow-hidden">
               <div className="flex items-center gap-4 p-5" style={{ borderRight: `4px solid ${section.color}` }}>
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${section.color}15` }}>
                   <Icon size={22} style={{ color: section.color }} />
                 </div>
-                <h2 className="text-lg font-bold text-slate-800 flex-1">{section.title}</h2>
-                <span style={{ fontSize: '20px', color: '#9ca3af', fontWeight: 'bold', lineHeight: 1 }}>{isOpen ? '−' : '+'}</span>
+                <h2 className="text-lg font-bold text-slate-800">{section.title}</h2>
               </div>
-              {isOpen && (
-                <CardContent className="pt-0 pb-5 px-5">
-                  <div className="bg-slate-50 rounded-lg p-5 text-gray-700 leading-relaxed whitespace-pre-line text-[15px]">
-                    {section.content}
-                  </div>
-                </CardContent>
-              )}
+              <CardContent className="pt-0 pb-5 px-5">
+                <div className="bg-slate-50 rounded-lg p-5 text-gray-700 leading-relaxed whitespace-pre-line text-[15px]">
+                  {section.content}
+                </div>
+              </CardContent>
             </Card>
           );
         })}

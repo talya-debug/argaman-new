@@ -228,52 +228,7 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* גרפים */}
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16, marginBottom: 20 }}>
-          {/* גבייה לפי פרויקט */}
-          <Card>
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 16px' }}>גבייה לפי פרויקט</h3>
-            {computed.collectionChart.length > 0 ? (
-              <ResponsiveContainer width="100%" height={Math.max(250, computed.collectionChart.length * 60)}>
-                <BarChart data={computed.collectionChart} layout="vertical" margin={{ right: 30, left: 10 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--dark-border)" />
-                  <XAxis type="number" tickFormatter={v => `₪${fmtNum(v)}`} style={{ fontSize: 11 }} />
-                  <YAxis type="category" dataKey="name" width={150} style={{ fontSize: 12 }} tick={{ fill: 'var(--text-secondary)' }} />
-                  <Tooltip formatter={v => fmt(v)} contentStyle={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', borderRadius: 8, fontSize: 13 }} />
-                  <Bar dataKey="paid" name="שולם" fill="#22c55e" radius={[0, 4, 4, 0]} />
-                  <Bar dataKey="open" name="פתוח" fill="#f59e0b" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : <p style={{ color: 'var(--text-muted)', fontSize: 14, textAlign: 'center', padding: 40 }}>אין נתוני גבייה</p>}
-          </Card>
-
-          {/* תכנון מול ביצוע */}
-          <Card>
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px' }}>תכנון מול ביצוע</h3>
-            {computed.planVsActual.length > 0 ? (
-              <>
-                <ResponsiveContainer width="100%" height={Math.max(220, computed.planVsActual.length * 60)}>
-                  <BarChart data={computed.planVsActual} layout="vertical" margin={{ right: 20, left: 10 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--dark-border)" />
-                    <XAxis type="number" tickFormatter={v => `₪${fmtNum(v/1000)}k`} style={{ fontSize: 10 }} />
-                    <YAxis type="category" dataKey="name" width={150} style={{ fontSize: 12 }} tick={{ fill: 'var(--text-secondary)' }} />
-                    <Tooltip formatter={v => fmt(v)} contentStyle={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)', borderRadius: 8, fontSize: 12 }} />
-                    <Bar dataKey="budget" name="הצעה מאושרת" fill="#3b82f6" radius={[0, 3, 3, 0]} />
-                    <Bar dataKey="invoiced" name="חויב" fill="#22c55e" radius={[0, 3, 3, 0]} />
-                    <Bar dataKey="spent" name="הוצאות רכש" fill="#f59e0b" radius={[0, 3, 3, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 8 }}>
-                  {[{label:'הצעה',color:'#3b82f6'},{label:'חויב',color:'#22c55e'},{label:'הוצאות',color:'#f59e0b'}].map((l,i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
-                      <div style={{ width: 10, height: 10, borderRadius: 3, background: l.color }} /> {l.label}
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : <p style={{ color: 'var(--text-muted)', fontSize: 14, textAlign: 'center', padding: 40 }}>אין נתונים</p>}
-          </Card>
-        </div>
+        {/* גרפים הוסרו — מידע מפורט בדוחות */}
 
         {/* פרויקטים — כרטיסי התקדמות */}
         <Card style={{ marginBottom: 20 }}>
