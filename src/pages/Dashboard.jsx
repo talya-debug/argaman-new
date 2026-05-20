@@ -86,7 +86,12 @@ export default function Dashboard() {
       const pTasks = d.tasks.filter(t => t.project_id === p.id && t.status !== 'הושלם' && t.status !== 'בוטל');
       const pPurchases = d.purchases.filter(pr => pr.project_id === p.id);
       const purchaseTotal = pPurchases.reduce((s, pr) => s + (Number(pr.actual_total_cost) || 0), 0);
-      return { ...p, paid, open, invoiced, budget, pct, openTasks: pTasks.length, purchaseTotal, purchaseCount: pPurchases.length };
+      // יומן עבודה אחרון לפרויקט
+      const pLogs = d.workLogs.filter(w => w.project_id === p.id).sort((a, b) => (b.date || b.created_date || '').localeCompare(a.date || a.created_date || ''));
+      const lastLog = pLogs[0];
+      const lastLogDate = lastLog ? (lastLog.date || lastLog.created_date) : null;
+      const daysSinceLog = lastLogDate ? Math.floor((new Date() - new Date(lastLogDate)) / 86400000) : null;
+      return { ...p, paid, open, invoiced, budget, pct, openTasks: pTasks.length, purchaseTotal, purchaseCount: pPurchases.length, lastLogDate, daysSinceLog };
     });
 
     // גרף גבייה לפי פרויקט
@@ -155,7 +160,8 @@ export default function Dashboard() {
   const alerts = [];
   if (computed.overdueColl.length > 0) alerts.push({ icon: DollarSign, color: '#dc2626', title: `${computed.overdueColl.length} תשלומים באיחור — ${fmt(computed.overdueAmount)}`, sub: computed.overdueColl.slice(0,2).map(c => c.project_name || 'פרויקט').join(', '), link: 'CollectionDashboard' });
   if (computed.overdueTasks.length > 0) alerts.push({ icon: Clock, color: '#f59e0b', title: `${computed.overdueTasks.length} משימות עברו דדליין`, sub: computed.overdueTasks.slice(0,2).map(t => t.title).join(', '), link: 'Tasks' });
-  if (computed.daysSinceLastLog !== null && computed.daysSinceLastLog > 3) alerts.push({ icon: HardHat, color: '#f97316', title: `יומן עבודה לא עודכן ${computed.daysSinceLastLog} ימים`, sub: `עדכון אחרון: ${new Date(computed.lastLogDate.date || computed.lastLogDate.created_date).toLocaleDateString('he-IL')}`, link: 'Projects' });
+  const staleProjects = computed.projectData.filter(p => p.status === 'בביצוע' && (p.daysSinceLog === null || p.daysSinceLog > 5));
+  if (staleProjects.length > 0) alerts.push({ icon: HardHat, color: '#f97316', title: `${staleProjects.length} פרויקטים ללא עדכון יומן`, sub: staleProjects.slice(0,3).map(p => p.name?.replace('פרויקט - ', '')).join(', '), link: 'Projects' });
   if (computed.vehicleAlerts.length > 0) {
     const errors = computed.vehicleAlerts.filter(a => a.type === 'error');
     const warnings = computed.vehicleAlerts.filter(a => a.type === 'warning');
@@ -268,11 +274,14 @@ export default function Dashboard() {
                   )}
 
                   {/* מטריקות */}
-                  <div style={{ display: 'flex', gap: 20, fontSize: 12 }}>
+                  <div style={{ display: 'flex', gap: 20, fontSize: 12, flexWrap: 'wrap' }}>
                     {p.open > 0 && <span style={{ color: '#D4A843', fontWeight: 500 }}>גבייה פתוחה: {fmt(p.open)}</span>}
                     {p.paid > 0 && <span style={{ color: '#22c55e' }}>שולם: {fmt(p.paid)}</span>}
                     {p.openTasks > 0 && <span style={{ color: 'var(--text-muted)' }}>{p.openTasks} משימות</span>}
                     {p.purchaseCount > 0 && <span style={{ color: '#8b5cf6' }}>{p.purchaseCount} פריטי רכש</span>}
+                    <span style={{ color: p.daysSinceLog === null ? '#dc2626' : p.daysSinceLog > 5 ? '#f97316' : p.daysSinceLog > 2 ? '#eab308' : '#22c55e', fontWeight: 600 }}>
+                      {p.daysSinceLog === null ? 'אין יומן עבודה' : p.daysSinceLog === 0 ? 'יומן: היום' : `יומן: לפני ${p.daysSinceLog} ימים`}
+                    </span>
                   </div>
                 </div>
               );
@@ -280,38 +289,8 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        {/* שורה תחתונה — יומני עבודה + הצעות */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 16 }}>
-
-          {/* יומני עבודה אחרונים */}
-          <Card>
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Calendar size={18} style={{ color: '#06b6d4' }} /> יומני עבודה אחרונים
-            </h3>
-            {d.workLogs.length === 0 ? (
-              <p style={{ color: 'var(--text-muted)', fontSize: 14, textAlign: 'center', padding: 20 }}>אין יומני עבודה</p>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {d.workLogs.slice(0, 6).map((w, i) => {
-                  const proj = d.projects.find(p => p.id === w.project_id);
-                  return (
-                    <div key={i} style={{ padding: '10px 14px', borderRadius: 10, border: '1px solid var(--dark-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div>
-                        <p style={{ margin: 0, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{proj?.name?.replace('פרויקט - ', '') || 'פרויקט'}</p>
-                        <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--text-muted)', maxWidth: 250, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{w.work_description?.substring(0, 60)}</p>
-                      </div>
-                      <div style={{ textAlign: 'left', flexShrink: 0 }}>
-                        <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#06b6d4' }}>{w.total_hours || w.working_hours || 0} שעות</p>
-                        <p style={{ margin: 0, fontSize: 11, color: 'var(--text-muted)' }}>{w.number_of_workers || 0} עובדים</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </Card>
-
-          {/* הצעות מחיר */}
+        {/* הצעות מחיר */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
           <Card>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
