@@ -359,6 +359,7 @@ function InvoiceStatusTracker({ invoiceNum, projectId, project, invoiceTotal, co
         setLoading(true);
         try {
             if (!collectionTask) {
+                // שלב 0→1: אישור חשבון והעברה לגבייה — רק זה מותר מהפרויקט
                 const today = new Date().toISOString().split('T')[0];
                 await CollectionTask.create({
                     project_name: project?.name || '',
@@ -371,19 +372,7 @@ function InvoiceStatusTracker({ invoiceNum, projectId, project, invoiceTotal, co
                     responsible: 'רבקה',
                     invoice_number: `חשבון ${invoiceNum}`,
                 });
-                toast.success(`חשבון ${invoiceNum} אושר — נוצרה משימת גבייה`);
-            } else if (activeStep === 1) {
-                await CollectionTask.update(collectionTask.id, { collection_status: 'נשלח חשבון עסקה – ממתין לאישור הלקוח' });
-                toast.success(`חשבון עסקה ${invoiceNum} נשלח — ממתין לאישור הלקוח`);
-            } else if (activeStep === 2) {
-                await CollectionTask.update(collectionTask.id, { collection_status: 'חשבונית מס הופקה' });
-                toast.success(`חשבונית מס ${invoiceNum} הופקה`);
-            } else if (activeStep === 3) {
-                await CollectionTask.update(collectionTask.id, { collection_status: 'נשלחה חשבונית – ממתין לתשלום' });
-                toast.success(`חשבונית ${invoiceNum} נשלחה — ממתין לתשלום`);
-            } else if (activeStep === 4) {
-                await CollectionTask.update(collectionTask.id, { collection_status: 'שולם ונשלחה חשבונית מס' });
-                toast.success(`חשבון ${invoiceNum} סומן כשולם`);
+                toast.success(`חשבון ${invoiceNum} אושר והועבר לגבייה`);
             }
             if (onUpdate) onUpdate();
         } catch (e) {
@@ -393,15 +382,8 @@ function InvoiceStatusTracker({ invoiceNum, projectId, project, invoiceTotal, co
         setLoading(false);
     };
 
-    const nextLabels = [
-        'אשר חשבון',
-        'שלח חשבון עסקה',
-        'הפק חשבונית מס',
-        'שלח חשבונית',
-        'סמן כשולם',
-        null
-    ];
-    const nextLabel = nextLabels[activeStep];
+    // מהפרויקט אפשר רק לאשר חשבון — השאר מתעדכן בגבייה
+    const nextLabel = activeStep === 0 ? 'אשר חשבון והעבר לגבייה' : null;
 
     return (
         <div style={{ marginTop: 16, padding: 16, background: '#f8f9fb', borderRadius: 10, border: '1px solid #e2e4e9' }}>
