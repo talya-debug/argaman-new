@@ -149,40 +149,21 @@ td { border-bottom: 1px solid #e5e7eb; vertical-align: top; }
 </head>
 <body>
 
-<!-- פרטי לקוח — עמוד 1 בלבד, position absolute -->
-<div style="position:absolute; top:85px; right:0; left:0; display:flex; justify-content:space-between; padding:0 0 16px 0;">
-  <div>
-    <div style="font-size:13px; font-weight:700; color:#1a3a7a; border-bottom:2px solid #C9A84C; display:inline-block; padding-bottom:3px; margin-bottom:6px;">פרטי לקוח</div>
-    <div style="margin-top:6px;">
-      <div><strong>לכבוד:</strong> ${clientName}</div>
-      ${clientPhone ? `<div><strong>טלפון:</strong> ${clientPhone}</div>` : ''}
-      ${clientAddress ? `<div><strong>כתובת:</strong> ${clientAddress}</div>` : ''}
-      ${clientEmail ? `<div><strong>דוא"ל:</strong> ${clientEmail}</div>` : ''}
-    </div>
-  </div>
-  <div style="text-align:left;">
-    <div style="font-size:13px; font-weight:700; color:#1a3a7a; border-bottom:2px solid #C9A84C; display:inline-block; padding-bottom:3px; margin-bottom:6px;">פרטי הצעה</div>
-    <div style="margin-top:6px;">
-      <div><strong>מספר הצעה:</strong> ${quote?.quote_number || '-'}</div>
-      <div><strong>תאריך:</strong> ${dateStr}</div>
-      <div><strong>תוקף:</strong> 30 יום</div>
-    </div>
-  </div>
-</div>
-
 <table>
   <thead>
+    <!-- הדר חוזר בכל עמוד — לוגו + שם חברה + קו -->
     <tr class="repeat-header">
       <td colspan="6">
         <div class="header-content">
           <div class="company">
             <h1>ארגמן מערכות מיזוג מתקדמות בע"מ</h1>
             <div class="sub">מיזוג אוויר | חימום תת רצפתי | אוורור ופינוי עשן</div>
-            <div class="info">ח.פ: 516524287 | מספר קבלן: 37992 | שבט בנימין 29/4, גבעת זאב</div>
+            <div class="info">ח.פ: 516524287 | מספר קבלן: 37992 | שבט בנימין 29/4, גבעת זאב | 050-9281254</div>
           </div>
         </div>
       </td>
     </tr>
+    <!-- כותרות עמודות -->
     <tr>
       <th style="width:7%;">סעיף</th>
       <th style="width:15%;">קטגוריה</th>
@@ -193,8 +174,28 @@ td { border-bottom: 1px solid #e5e7eb; vertical-align: top; }
     </tr>
   </thead>
   <tbody>
-    <!-- ריווח לפרטי לקוח בעמוד 1 -->
-    <tr><td colspan="6" style="height:110px; border:none;"></td></tr>
+    <!-- פרטי לקוח + הצעה — שורה ראשונה ב-tbody, מופיע רק בעמוד 1 -->
+    <tr><td colspan="6" style="border:none; padding:16px 0;">
+      <div style="display:flex; justify-content:space-between;">
+        <div>
+          <div style="font-size:13px; font-weight:700; color:#1a3a7a; border-bottom:2px solid #C9A84C; display:inline-block; padding-bottom:3px; margin-bottom:6px;">פרטי לקוח</div>
+          <div style="margin-top:6px;">
+            <div><strong>לכבוד:</strong> ${clientName}</div>
+            ${clientPhone ? `<div><strong>טלפון:</strong> ${clientPhone}</div>` : ''}
+            ${clientAddress ? `<div><strong>כתובת:</strong> ${clientAddress}</div>` : ''}
+            ${clientEmail ? `<div><strong>דוא"ל:</strong> ${clientEmail}</div>` : ''}
+          </div>
+        </div>
+        <div style="text-align:left;">
+          <div style="font-size:13px; font-weight:700; color:#1a3a7a; border-bottom:2px solid #C9A84C; display:inline-block; padding-bottom:3px; margin-bottom:6px;">פרטי הצעה</div>
+          <div style="margin-top:6px;">
+            <div><strong>מספר הצעה:</strong> ${quote?.quote_number || '-'}</div>
+            <div><strong>תאריך:</strong> ${dateStr}</div>
+            <div><strong>תוקף:</strong> 30 יום</div>
+          </div>
+        </div>
+      </div>
+    </td></tr>
     ${rowsHTML}
     ${summaryRows}
     <!-- תנאים -->
