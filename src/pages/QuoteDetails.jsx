@@ -11,6 +11,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import QuoteBuilder from '../components/quotes/QuoteBuilder';
 import QuotePreview from '../components/quotes/QuotePreview';
+import { buildQuoteHTML } from '../lib/quoteHtml';
 import ExcelImportDialog from '../components/quotes/ExcelImportDialog';
 
 export default function QuoteDetails() {
@@ -383,78 +384,69 @@ export default function QuoteDetails() {
         }
     };
 
-    const handleGeneratePDF = () => {
-        setViewMode('preview');
-        setShowPreview(true);
+    const handleGeneratePDF = async () => {
+        const fileName = `quote-${quote?.quote_number || quote?.id || 'new'}.pdf`;
+        const isPrivate = quote?.quote_type === 'פרטי';
 
-        setTimeout(async () => {
-            const input = document.getElementById('pdf-preview-content');
-            if (!input) {
-                toast.error("שגיאה: תוכן PDF לא נמצא.");
+        toast.info('מייצר PDF...');
+
+        try {
+            const html = buildQuoteHTML({ quote, quoteLines, lead, isPrivate });
+
+            const response = await fetch('/api/generate-pdf', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ html }),
+            });
+
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            toast.success('PDF הורד בהצלחה');
+        } catch (error) {
+            console.error("PDF generation error:", error);
+            toast.error("שגיאה ביצירת PDF — משתמש בגיבוי");
+
+            // גיבוי — שיטה ישנה עם html2canvas
+            setViewMode('preview');
+            setShowPreview(true);
+            setTimeout(async () => {
+                const input = document.getElementById('pdf-preview-content');
+                if (!input) { setShowPreview(false); return; }
+                try {
+                    const canvas = await html2canvas(input, { scale: 2, useCORS: true, logging: false, width: 794, windowWidth: 794 });
+                    const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: 'a4' });
+                    const pdfW = pdf.internal.pageSize.getWidth();
+                    const pdfH = pdf.internal.pageSize.getHeight();
+                    const scale = pdfW / canvas.width;
+                    const scaledH = canvas.height * scale;
+                    let yOffset = 0, pageIdx = 0;
+                    while (yOffset < scaledH) {
+                        if (pageIdx > 0) pdf.addPage();
+                        const srcY = Math.round(yOffset / scale);
+                        const srcHeight = Math.min(Math.round(pdfH / scale), canvas.height - srcY);
+                        const pageCanvas = document.createElement('canvas');
+                        pageCanvas.width = canvas.width;
+                        pageCanvas.height = srcHeight;
+                        pageCanvas.getContext('2d').drawImage(canvas, 0, srcY, canvas.width, srcHeight, 0, 0, canvas.width, srcHeight);
+                        pdf.addImage(pageCanvas.toDataURL('image/png'), 'PNG', 0, 0, pdfW, srcHeight * scale);
+                        yOffset += pdfH;
+                        pageIdx++;
+                    }
+                    pdf.save(fileName);
+                } catch (e) { console.error(e); }
                 setShowPreview(false);
-                return;
-            }
-
-            try {
-                // A4 at 96dpi = 794px wide; scale:2 for crisp rendering
-                const A4_PX_WIDTH  = 794;
-                const A4_PX_HEIGHT = 1123; // 297mm at 96dpi
-
-                const canvas = await html2canvas(input, {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    width: A4_PX_WIDTH,
-                    windowWidth: A4_PX_WIDTH,
-                    scrollX: 0,
-                    scrollY: 0,
-                    x: 0,
-                    y: 0,
-                });
-
-                const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: 'a4' });
-                const pdfW  = pdf.internal.pageSize.getWidth();   // px
-                const pdfH  = pdf.internal.pageSize.getHeight();  // px
-
-                const imgW = canvas.width;   // 794*2 = 1588
-                const imgH = canvas.height;
-
-                // Scale image so width fits exactly into one PDF page width
-                const scale    = pdfW / imgW;
-                const scaledH  = imgH * scale;
-                const pageH    = pdfH;
-
-                let yOffset = 0;   // offset into image (in scaled px)
-                let pageIdx = 0;
-
-                while (yOffset < scaledH) {
-                    if (pageIdx > 0) pdf.addPage();
-
-                    // Crop the canvas to just this page's slice
-                    const srcY      = Math.round(yOffset / scale);           // unscaled
-                    const srcHeight = Math.min(Math.round(pageH / scale), imgH - srcY); // unscaled
-
-                    const pageCanvas = document.createElement('canvas');
-                    pageCanvas.width  = imgW;
-                    pageCanvas.height = Math.round(srcHeight);
-                    pageCanvas.getContext('2d').drawImage(canvas, 0, srcY, imgW, srcHeight, 0, 0, imgW, srcHeight);
-
-                    const sliceImg = pageCanvas.toDataURL('image/png');
-                    pdf.addImage(sliceImg, 'PNG', 0, 0, pdfW, srcHeight * scale);
-
-                    yOffset += pageH;
-                    pageIdx++;
-                }
-
-                pdf.save(`quote-${quote?.quote_number || quote?.id || 'new'}.pdf`);
-
-                setShowPreview(false);
-            } catch (error) {
-                console.error("Error generating PDF:", error);
-                toast.error("שגיאה ביצירת PDF.");
-                setShowPreview(false);
-            }
-        }, 600);
+            }, 600);
+        }
     };
 
     const handleImportSuccess = async (importedLines) => {
