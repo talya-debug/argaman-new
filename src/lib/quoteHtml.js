@@ -46,7 +46,7 @@ export function buildQuoteHTML({ quote, quoteLines, lead, isPrivate }) {
     </tr>`;
   }).join('');
 
-  // שורת סיכום בתוך tbody
+  // שורות סיכום
   let summaryRows = `
     <tr class="summary"><td colspan="6" style="padding:0; border:none;"><div style="height:12px;"></div></td></tr>
     <tr class="summary" style="background:#f8f9fc;">
@@ -123,47 +123,59 @@ export function buildQuoteHTML({ quote, quoteLines, lead, isPrivate }) {
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { font-family: 'Heebo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; font-size: 13px; line-height: 1.5; }
-body { direction: rtl; color: #333; }
+body { direction: rtl; color: #333; min-height: 100vh; display: flex; flex-direction: column; }
 table { width: 100%; border-collapse: collapse; }
-thead { display: table-header-group; }
 tr { page-break-inside: avoid; break-inside: avoid; }
 tr.summary { break-before: avoid; page-break-before: avoid; break-inside: avoid; }
 .page-break { break-before: page; page-break-before: always; }
-
-/* הדר חוזר */
-.repeat-header td { padding: 0; border: none; }
-.header-content { display: flex; justify-content: space-between; align-items: center; padding: 0 0 12px 0; border-bottom: 3px solid #1a3a7a; margin-bottom: 8px; }
-.header-content .company { text-align: right; }
-.header-content .company h1 { font-size: 20px; font-weight: 700; color: #1a3a7a; margin-bottom: 2px; }
-.header-content .company .sub { font-size: 12px; color: #C9A84C; font-weight: 600; }
-.header-content .company .info { font-size: 10px; color: #888; margin-top: 2px; }
-.header-content img { width: 110px; height: auto; }
-
-/* כותרות טבלה */
 th { padding: 8px 8px; text-align: right; font-weight: 700; color: #fff; background: #1a3a7a; font-size: 12px; border-bottom: 2px solid #C9A84C; }
-
 td { border-bottom: 1px solid #e5e7eb; vertical-align: top; }
-
 .header-row td { border: none; }
+
+/* פוטר צמוד לתחתית */
+.footer-wrapper { margin-top: auto; }
+
+@media print {
+  @page { margin: 12mm; }
+}
 </style>
 </head>
 <body>
 
+<!-- הדר עליון — עמוד 1 בלבד -->
+<div style="display:flex; justify-content:space-between; align-items:center; padding:0 0 14px 0; border-bottom:3px solid #1a3a7a; margin-bottom:16px;">
+  <div>
+    <div style="font-size:22px; font-weight:700; color:#1a3a7a; margin-bottom:2px;">ארגמן מערכות מיזוג מתקדמות בע"מ</div>
+    <div style="font-size:12px; color:#C9A84C; font-weight:600;">מיזוג אוויר | חימום תת רצפתי | אוורור ופינוי עשן</div>
+    <div style="font-size:10px; color:#888; margin-top:2px;">ח.פ: 516524287 | מספר קבלן: 37992 | שבט בנימין 29/4, גבעת זאב | 050-9281254</div>
+  </div>
+  <img src="https://argaman-new.vercel.app/logo.jpg" style="width:120px; height:auto; border-radius:8px;" />
+</div>
+
+<!-- פרטי לקוח + פרטי הצעה -->
+<div style="display:flex; justify-content:space-between; padding:12px 0 16px 0; border-bottom:2px solid #e5e7eb; margin-bottom:16px;">
+  <div>
+    <div style="font-size:13px; font-weight:700; color:#1a3a7a; border-bottom:2px solid #C9A84C; display:inline-block; padding-bottom:3px; margin-bottom:8px;">פרטי לקוח</div>
+    <div style="margin-top:4px; line-height:1.8;">
+      <div><strong>לכבוד:</strong> ${clientName}</div>
+      ${clientPhone ? `<div><strong>טלפון:</strong> ${clientPhone}</div>` : ''}
+      ${clientAddress ? `<div><strong>כתובת:</strong> ${clientAddress}</div>` : ''}
+      ${clientEmail ? `<div><strong>דוא"ל:</strong> ${clientEmail}</div>` : ''}
+    </div>
+  </div>
+  <div style="text-align:left;">
+    <div style="font-size:13px; font-weight:700; color:#1a3a7a; border-bottom:2px solid #C9A84C; display:inline-block; padding-bottom:3px; margin-bottom:8px;">פרטי הצעה</div>
+    <div style="margin-top:4px; line-height:1.8;">
+      <div><strong>מספר הצעה:</strong> ${quote?.quote_number || '-'}</div>
+      <div><strong>תאריך:</strong> ${dateStr}</div>
+      <div><strong>תוקף:</strong> 30 יום</div>
+    </div>
+  </div>
+</div>
+
+<!-- טבלת תכולה -->
 <table>
   <thead>
-    <!-- הדר חוזר בכל עמוד — לוגו + שם חברה + קו -->
-    <tr class="repeat-header">
-      <td colspan="6">
-        <div class="header-content">
-          <div class="company">
-            <h1>ארגמן מערכות מיזוג מתקדמות בע"מ</h1>
-            <div class="sub">מיזוג אוויר | חימום תת רצפתי | אוורור ופינוי עשן</div>
-            <div class="info">ח.פ: 516524287 | מספר קבלן: 37992 | שבט בנימין 29/4, גבעת זאב | 050-9281254</div>
-          </div>
-        </div>
-      </td>
-    </tr>
-    <!-- כותרות עמודות -->
     <tr>
       <th style="width:7%;">סעיף</th>
       <th style="width:15%;">קטגוריה</th>
@@ -174,28 +186,6 @@ td { border-bottom: 1px solid #e5e7eb; vertical-align: top; }
     </tr>
   </thead>
   <tbody>
-    <!-- פרטי לקוח + הצעה — שורה ראשונה ב-tbody, מופיע רק בעמוד 1 -->
-    <tr><td colspan="6" style="border:none; padding:16px 0;">
-      <div style="display:flex; justify-content:space-between;">
-        <div>
-          <div style="font-size:13px; font-weight:700; color:#1a3a7a; border-bottom:2px solid #C9A84C; display:inline-block; padding-bottom:3px; margin-bottom:6px;">פרטי לקוח</div>
-          <div style="margin-top:6px;">
-            <div><strong>לכבוד:</strong> ${clientName}</div>
-            ${clientPhone ? `<div><strong>טלפון:</strong> ${clientPhone}</div>` : ''}
-            ${clientAddress ? `<div><strong>כתובת:</strong> ${clientAddress}</div>` : ''}
-            ${clientEmail ? `<div><strong>דוא"ל:</strong> ${clientEmail}</div>` : ''}
-          </div>
-        </div>
-        <div style="text-align:left;">
-          <div style="font-size:13px; font-weight:700; color:#1a3a7a; border-bottom:2px solid #C9A84C; display:inline-block; padding-bottom:3px; margin-bottom:6px;">פרטי הצעה</div>
-          <div style="margin-top:6px;">
-            <div><strong>מספר הצעה:</strong> ${quote?.quote_number || '-'}</div>
-            <div><strong>תאריך:</strong> ${dateStr}</div>
-            <div><strong>תוקף:</strong> 30 יום</div>
-          </div>
-        </div>
-      </div>
-    </td></tr>
     ${rowsHTML}
     ${summaryRows}
     <!-- תנאים -->
@@ -205,15 +195,16 @@ td { border-bottom: 1px solid #e5e7eb; vertical-align: top; }
         <div style="font-size:12px; color:#555; white-space:pre-line; line-height:1.8;">${terms}</div>
       </div>
     </td></tr>
-    <!-- פוטר -->
-    <tr class="summary"><td colspan="6" style="padding:16px 0 0; border:none; text-align:center;">
-      <div style="border-top:3px solid #1a3a7a; padding-top:10px;">
-        <div style="font-weight:600; color:#1a3a7a;">תודה על אמונכם בנו!</div>
-        <div style="font-size:11px; color:#888; margin-top:2px;">050-9281254 | 054-9734747 | argaman.ac@gmail.com</div>
-      </div>
-    </td></tr>
   </tbody>
 </table>
+
+<!-- פוטר צמוד לתחתית -->
+<div class="footer-wrapper">
+  <div style="border-top:3px solid #1a3a7a; padding-top:10px; margin-top:24px; text-align:center;">
+    <div style="font-weight:600; color:#1a3a7a;">תודה על אמונכם בנו!</div>
+    <div style="font-size:11px; color:#888; margin-top:2px;">050-9281254 | 054-9734747 | argaman.ac@gmail.com</div>
+  </div>
+</div>
 
 ${aboutPage}
 
