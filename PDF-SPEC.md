@@ -1,172 +1,116 @@
-# מפרט טיוב PDF הצעת מחיר — ארגמן
+# תיקון PDF הצעת מחיר — מסמך למתכנת
 
-## מצב נוכחי
+## לינק למערכת
+https://argaman-new.vercel.app
 
-### איך זה עובד היום
-המערכת מייצרת PDF של הצעת מחיר בשני שלבים:
+## GitHub
+https://github.com/talya-debug/argaman-new
 
-1. **קומפוננטת QuotePreview** (`src/components/quotes/QuotePreview.jsx`) — מרנדרת HTML של ההצעה בדפדפן (מוסתרת מהמשתמש)
-2. **API route** (`api/generate-pdf.js`) — מקבל HTML, מריץ Puppeteer עם @sparticuz/chromium, מחזיר PDF
+## כניסה לבדיקה
 
-הפלו בקוד:
-```
-QuoteDetails.jsx → handleGeneratePDF()
-  → buildQuoteHTML() (src/lib/quoteHtml.js) → יוצר HTML string
-  → POST /api/generate-pdf → Puppeteer → PDF
-  → הורדה לדפדפן
-  → אם נכשל → fallback ל-html2canvas + jsPDF (שיטה ישנה)
-```
-
-### שני סוגי הצעות
-
-| סוג | quote_type | מה כולל |
-|-----|-----------|---------|
-| **מסחרי** | `מסחרי` | הדר חברה + פרטי לקוח + טבלת פריטים + סיכום + תנאים + פוטר |
-| **פרטי** | `פרטי` | הכל כמו מסחרי + **דף אודות החברה** בעמוד נפרד בסוף |
-
-הבחירה נעשית בדף QuoteDetails בשדה select — מסחרי/פרטי.
+| שם | שם משתמש | סיסמה |
+|----|----------|-------|
+| יניר | yanir | Argaman2026! |
+| שי | shai | Argaman2026! |
 
 ---
 
-## הבעיה
+## רקע — מה זה ומה הפלו
+
+המערכת מנהלת הצעות מחיר לחברת מיזוג אוויר. הפלו:
+1. נכנסים להצעת מחיר קיימת (דף הצעות מחיר → לחיצה על הצעה)
+2. בדף ההצעה יש כפתור "הורד PDF"
+3. המערכת בונה HTML, שולחת אותו ל-API שמריץ Puppeteer, ומחזירה PDF להורדה
+
+## שני סוגי הצעות
+
+| סוג | שדה במערכת | מה כולל ב-PDF |
+|-----|-----------|---------------|
+| **מסחרי** | `quote.quote_type = 'מסחרי'` | הדר חברה + פרטי לקוח + טבלת פריטים + סיכום כספי + תנאים + פוטר |
+| **פרטי** | `quote.quote_type = 'פרטי'` | הכל כמו מסחרי + **דף אודות החברה** בעמוד נפרד אחרון |
+
+הבחירה בין מסחרי לפרטי נעשית בדף ההצעה — יש dropdown למעלה.
+
+---
+
+## מה הבעיה
 
 ה-PDF נחתך ולא יציב:
-- שורות טבלה נחתכות בין עמודים
-- הדר (שם חברה) לא חוזר בעמוד 2+
-- שוליים לא מספיקים
-- פרטי לקוח עלולים להיחתך
-- בהצעות ארוכות (20+ שורות) העמודים לא מתחלקים נכון
+- **שורות טבלה נחתכות** בין עמודים — חצי שורה בתחתית עמוד אחד וחצי בראש הבא
+- **הדר (שם חברה) לא חוזר** בעמוד 2+ — עמוד 2 מתחיל ישר עם שורות טבלה בלי שם חברה
+- **שוליים** — תוכן צמוד לקצוות
+- **פרטי לקוח** — עלולים להיחתך או להיות מוסתרים
 
 ---
 
-## מה צריך לתקן — לפי הסקיל (skill_pdf_stable.md)
+## ניסיונות שנעשו ולא הצליחו
 
-### עקרונות מפתח
+### ניסיון 1: html2canvas + jsPDF (השיטה המקורית)
+- המערכת הישנה השתמשה ב-html2canvas שעושה "צילום מסך" של ה-HTML ומדביק כתמונה לתוך PDF
+- **בעיה:** הלוגו מ-URL חיצוני (Supabase) התנפח, טקסט נחתך מצד ימין, Tailwind CSS לא תמיד רונדר נכון ב-html2canvas
+- **קבצים:** `QuotePreview.jsx` (HTML), `QuoteDetails.jsx` (handleGeneratePDF)
 
-#### 1. הדר חוזר = thead בלבד
-כל מה שצריך לחזור בראש כל עמוד — שם חברה, קו, כותרות עמודות — חייב להיות בתוך `<thead>`.
+### ניסיון 2: Puppeteer + HTML string (הנוכחי)
+- נבנה API route ב-Vercel (`api/generate-pdf.js`) עם Puppeteer + @sparticuz/chromium
+- נבנה `src/lib/quoteHtml.js` שמייצר HTML string עם גופן Heebo, thead חוזר, CSS לשבירת עמודים
+- **בעיה:** ה-PDF עדיין נחתך. ככל הנראה ה-CSS של `thead { display: table-header-group }` לא עובד כמצופה ב-Puppeteer, או שהמבנה לא נכון. לא הצלחתי לבדוק את התוצאה מהממשק (אין לי גישה לדפדפן) ולכן לא הצלחתי לדבג
+
+### מה קיים כ-fallback
+אם ה-API של Puppeteer נכשל, המערכת חוזרת לשיטה הישנה (html2canvas). הקוד נמצא ב-`handleGeneratePDF` ב-`QuoteDetails.jsx`.
+
+---
+
+## הסקיל שצריך לעבוד לפיו
+
+קובץ: `skill_pdf_stable.md` (מצורף למטה)
+
+### 5 כללים מרכזיים:
+
+**1. הדר חוזר = thead בלבד**
 ```css
 thead { display: table-header-group; }
 ```
-**אסור** לשים לוגו/הדר כ-div מחוץ לטבלה — הוא לא יחזור בעמודים הבאים.
+כל מה שצריך לחזור בכל עמוד (שם חברה, קו, כותרות עמודות) — חייב להיות בתוך `<thead>`. לא כ-div מחוץ לטבלה.
 
-#### 2. סיכום/תנאים = שורה אחרונה ב-tbody
+**2. סיכום = שורה אחרונה ב-tbody**
 ```css
 tr.summary { break-before: avoid; page-break-before: avoid; break-inside: avoid; }
 ```
-**אסור** לשים סיכום כ-div מחוץ לטבלה — הוא ייקרע מהתוכן.
+סה"כ, מע"מ, תנאים — הכל בתוך `<tr>` אחרון ב-tbody. לא כ-div נפרד.
 
-#### 3. שורות לא נחתכות
+**3. שורות לא נחתכות**
 ```css
 tr { page-break-inside: avoid; break-inside: avoid; }
 ```
 
-#### 4. עמוד חדש (לדף אודות בפרטי)
+**4. עמוד חדש (לדף אודות)**
 ```css
 .page-break { break-before: page; page-break-before: always; }
 ```
 
-#### 5. גופן Heebo מוטמע
+**5. גופן Heebo + waitUntil**
 ```html
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 ```
-ב-Puppeteer: `waitUntil: 'networkidle0'` כדי לוודא שהגופן נטען.
+ב-Puppeteer: `waitUntil: 'networkidle0'`
 
 ---
 
-## מבנה HTML נדרש
+## קבצים רלוונטיים
 
-```html
-<html lang="he" dir="rtl">
-<head>
-  <link href="...Heebo..." rel="stylesheet">
-  <style>
-    * { font-family: 'Heebo', sans-serif; }
-    body { direction: rtl; }
-    table { width: 100%; border-collapse: collapse; }
-    thead { display: table-header-group; }
-    tr { page-break-inside: avoid; break-inside: avoid; }
-    tr.summary { break-before: avoid; }
-    .page-break { break-before: page; page-break-before: always; }
-  </style>
-</head>
-<body>
-
-<table>
-  <thead>
-    <!-- שורה 1: הדר חברה (חוזר בכל עמוד) -->
-    <tr>
-      <td colspan="6">
-        שם חברה + לוגו + קו
-      </td>
-    </tr>
-    <!-- שורה 2: כותרות עמודות (חוזר בכל עמוד) -->
-    <tr>
-      <th>סעיף</th>
-      <th>קטגוריה</th>
-      <th>תיאור</th>
-      <th>תפוקה</th>
-      <th>כמות</th>
-      <th>סה"כ</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- שורה ראשונה: פרטי לקוח + הצעה (מופיע רק בעמוד 1) -->
-    <tr>
-      <td colspan="6">לכבוד... | מספר הצעה...</td>
-    </tr>
-
-    <!-- שורות פריטים -->
-    <tr>...</tr>
-    <tr>...</tr>
-
-    <!-- שורות כותרת (is_header) -->
-    <tr class="header-row">
-      <td colspan="6">שם קטגוריה</td>
-    </tr>
-
-    <!-- סיכום (break-inside: avoid) -->
-    <tr class="summary">סכום ביניים...</tr>
-    <tr class="summary">מע"מ...</tr>
-    <tr class="summary">סה"כ לתשלום...</tr>
-
-    <!-- תנאים -->
-    <tr class="summary">
-      <td colspan="6">תנאים והערות...</td>
-    </tr>
-
-    <!-- פוטר -->
-    <tr class="summary">
-      <td colspan="6">תודה + פרטי התקשרות</td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- דף אודות — רק בפרטי -->
-<div class="page-break"></div>
-<div>תוכן אודות החברה...</div>
-
-</body>
-</html>
-```
+| קובץ | מה הוא עושה | מה צריך לתקן |
+|-------|------------|-------------|
+| `src/lib/quoteHtml.js` | בונה HTML string של ההצעה | **זה הקובץ העיקרי לתיקון** — המבנה, ה-CSS, ה-thead |
+| `api/generate-pdf.js` | Puppeteer API — מקבל HTML ומחזיר PDF | ייתכן שצריך לכוונן margins או הגדרות |
+| `src/pages/QuoteDetails.jsx` | handleGeneratePDF — קורא ל-buildQuoteHTML ושולח ל-API | לא צריך לשנות אלא אם משנים את הפלו |
+| `src/components/quotes/QuotePreview.jsx` | תצוגה מקדימה בדפדפן (לא PDF) | לא צריך לגעת |
 
 ---
 
-## קבצים רלוונטים
-
-| קובץ | תפקיד |
-|-------|--------|
-| `src/lib/quoteHtml.js` | בונה HTML string להצעה — **זה מה שצריך לתקן** |
-| `api/generate-pdf.js` | Puppeteer API route — ייתכן שצריך התאמות שוליים |
-| `src/pages/QuoteDetails.jsx` | handleGeneratePDF — קורא ל-buildQuoteHTML ושולח ל-API |
-| `src/components/quotes/QuotePreview.jsx` | תצוגה מקדימה בדפדפן (לא משפיע על PDF) |
-| `skill_pdf_stable.md` | סקיל עם כל הכללים והדוגמאות |
-
----
-
-## Puppeteer config (api/generate-pdf.js)
+## Puppeteer config נוכחי
 
 ```javascript
+// api/generate-pdf.js
 const pdfBuffer = await page.pdf({
   format: 'A4',
   printBackground: true,
@@ -174,23 +118,42 @@ const pdfBuffer = await page.pdf({
 });
 ```
 
-ייתכן שצריך לכוונן שוליים. לבדוק עם הצעה של 5 שורות, 15 שורות, ו-30+ שורות.
+---
+
+## מבנה HTML נוכחי (quoteHtml.js)
+
+```
+<html dir="rtl">
+  <head>Heebo font + CSS</head>
+  <body>
+    <table>
+      <thead>
+        <tr>הדר חברה (שם + תת כותרת + ח.פ)</tr>
+        <tr>כותרות עמודות (סעיף, קטגוריה, תיאור, תפוקה, כמות, סה"כ)</tr>
+      </thead>
+      <tbody>
+        <tr>פרטי לקוח + פרטי הצעה (שורה ראשונה)</tr>
+        <tr>שורות פריטים...</tr>
+        <tr>שורות כותרת (is_header) — שם קטגוריה</tr>
+        <tr class="summary">סכום ביניים</tr>
+        <tr class="summary">הנחה (אם יש)</tr>
+        <tr class="summary">מע"מ</tr>
+        <tr class="summary">סה"כ לתשלום</tr>
+        <tr class="summary">תנאים והערות</tr>
+        <tr class="summary">פוטר</tr>
+      </tbody>
+    </table>
+
+    <!-- רק בפרטי: -->
+    <div class="page-break"></div>
+    <div>דף אודות החברה</div>
+  </body>
+</html>
+```
 
 ---
 
-## בדיקות נדרשות
-
-1. **הצעה קצרה (3-5 שורות)** — עמוד אחד, הכל נראה טוב
-2. **הצעה בינונית (10-15 שורות)** — 2 עמודים, הדר חוזר בעמוד 2
-3. **הצעה ארוכה (25+ שורות)** — 3+ עמודים, שום שורה לא נחתכת
-4. **הצעה עם כותרות (is_header)** — כותרות קטגוריה מופיעות נכון
-5. **הצעה פרטית** — דף אודות בעמוד נפרד בסוף
-6. **הצעה עם הנחה** — שורת הנחה מופיעה בסיכום
-7. **RTL** — כל הטקסט מימין לשמאל, מספרים תקינים
-
----
-
-## נתוני חברה להדר
+## נתוני חברה
 
 ```
 ארגמן מערכות מיזוג מתקדמות בע"מ
@@ -198,12 +161,69 @@ const pdfBuffer = await page.pdf({
 ח.פ: 516524287 | מספר קבלן: 37992
 שבט בנימין 29/4, גבעת זאב
 שי ארגמן: 050-9281254 | יניר ארזואן: 054-9734747
-argaman.ac@gmail.com
+argaman.ac@gmail.com | משרד: 077-5625046
 ```
 
 ---
 
-## תוכן דף אודות (להצעה פרטית)
+## שדות QuoteLine (כל שורה בטבלה)
 
-קיים בתוך `buildQuoteHTML` בקובץ `src/lib/quoteHtml.js` — משתנה `aboutPage`.
-כולל: הדר, כותרת "אודות", 4 פסקאות על החברה, רשימת שירותים, פוטר עם פרטי התקשרות.
+```javascript
+{
+  quote_id: string,          // מזהה ההצעה
+  name_snapshot: string,     // שם פריט
+  model_snapshot: string,    // דגם
+  category_snapshot: string, // קטגוריה (מאייד, מעבה, אביזרים...)
+  sub_category_snapshot: string,
+  btu_snapshot: number,      // BTU
+  price_no_vat_snapshot: number, // מחיר ליחידה ללא מע"מ
+  quantity: number,
+  line_total: number,        // מחיר × כמות
+  clause_number: string,     // מספר סעיף
+  order_index: number,       // סדר בטבלה
+  is_header: boolean,        // שורת כותרת (שם קטגוריה בלבד, בלי מחיר)
+}
+```
+
+---
+
+## בדיקות שצריך לעשות
+
+1. **הצעה קצרה (3-5 שורות)** — עמוד אחד, הכל מסודר
+2. **הצעה בינונית (10-15 שורות)** — 2 עמודים, הדר חוזר בעמוד 2
+3. **הצעה ארוכה (25+ שורות)** — 3+ עמודים, שום שורה לא נחתכת, הדר בכל עמוד
+4. **הצעה עם כותרות (is_header)** — שורות כותרת מופיעות נכון
+5. **הצעה פרטית** — דף אודות בעמוד נפרד בסוף
+6. **הצעה עם הנחה** — שורת הנחה מופיעה בסיכום
+7. **RTL** — עברית מימין לשמאל, סימן ₪ במקום הנכון, מספרים תקינים
+8. **שוליים** — תוכן לא צמוד לקצוות, מרווח נקי מכל הצדדים
+
+---
+
+## סקיל PDF יציב — כללים מלאים
+
+### CSS בסיסי
+```css
+* { font-family: 'Heebo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; font-size: 14px; line-height: 1.5; }
+body { direction: rtl; }
+table { width: 100%; border-collapse: collapse; }
+thead { display: table-header-group; }
+tr { page-break-inside: avoid; break-inside: avoid; }
+.page-break { break-before: page; page-break-before: always; }
+```
+
+### בעיות נפוצות ופתרונות
+
+| בעיה | סיבה | פתרון |
+|------|------|-------|
+| לוגו/הדר לא חוזר בעמוד 2+ | לוגו מחוץ לטבלה | להעביר ל-thead |
+| סיכום נקרע מהטבלה | סיכום כ-div נפרד | להעביר לשורה אחרונה ב-tbody |
+| שורה נחתכת באמצע | חסר break-inside | להוסיף break-inside:avoid על tr |
+| גופן לא נטען | Heebo לא מוטמע | לטעון מ-CDN עם waitUntil:'networkidle0' |
+| RTL לא עובד | חסר dir | להוסיף dir="rtl" על html ו-body |
+
+### מקור הסקיל
+תיקון מוכח מפרויקט ישי יוסף (מאי 2026). קבצים לרפרנס:
+- `src/utils/pdfEngine.js`
+- `src/utils/generateQuotePDF.js`
+(בפרויקט ישי, לא בארגמן)
