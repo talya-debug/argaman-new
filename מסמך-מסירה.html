@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { font-family: 'Heebo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+body { direction: rtl; color: #1e2235; padding: 40px; max-width: 800px; margin: 0 auto; line-height: 1.7; font-size: 14px; }
+
+.header { text-align: center; padding-bottom: 24px; border-bottom: 3px solid #1a3a7a; margin-bottom: 32px; }
+.header h1 { font-size: 28px; font-weight: 800; color: #1a3a7a; }
+.header .sub { font-size: 14px; color: #C9A84C; font-weight: 600; margin-top: 4px; }
+.header .date { font-size: 12px; color: #888; margin-top: 8px; }
+
+h2 { font-size: 18px; font-weight: 700; color: #1a3a7a; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 2px solid #C9A84C; display: inline-block; }
+
+p, li { font-size: 14px; color: #444; }
+
+table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 13px; }
+th { background: #1a3a7a; color: #fff; padding: 10px 12px; text-align: right; font-weight: 600; }
+td { padding: 8px 12px; border-bottom: 1px solid #e5e7eb; }
+tr:nth-child(even) { background: #f8f9fc; }
+
+.box { background: #f0f4ff; border: 1px solid #d0d8f0; border-radius: 8px; padding: 16px; margin: 12px 0 20px; }
+.box-warning { background: #fef3cd; border-color: #f0d060; }
+.box-green { background: #ecfdf5; border-color: #86efac; }
+
+.tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.tag-done { background: #dcfce7; color: #166534; }
+.tag-wait { background: #fef9c3; color: #854d0e; }
+.tag-future { background: #e0e7ff; color: #3730a3; }
+
+ul { padding-right: 20px; margin: 8px 0; }
+li { margin-bottom: 4px; }
+
+.footer { margin-top: 40px; padding-top: 16px; border-top: 3px solid #1a3a7a; text-align: center; font-size: 12px; color: #888; }
+
+@media print { body { padding: 20px; } @page { margin: 15mm; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>מערכת ניהול ארגמן — סיכום ומסירה</h1>
+  <div class="sub">ארגמן מערכות מיזוג מתקדמות בע"מ</div>
+  <div class="date">מאי 2026</div>
+</div>
+
+<!-- כניסה -->
+<h2>כניסה למערכת</h2>
+
+<div class="box-green box">
+  <strong>לינק:</strong> <a href="https://argaman-new.vercel.app">https://argaman-new.vercel.app</a>
+</div>
+
+<table>
+  <thead><tr><th>שם</th><th>שם משתמש</th><th>סיסמה</th><th>תפקיד</th></tr></thead>
+  <tbody>
+    <tr><td>יניר</td><td>yanir</td><td>yanir123</td><td>מנהל</td></tr>
+    <tr><td>שי</td><td>shai</td><td>shai123</td><td>מנהל</td></tr>
+    <tr><td>רבקה</td><td>rivka</td><td>rivka123</td><td>כספים</td></tr>
+    <tr><td>דבורה</td><td>dvora</td><td>dvora123</td><td>משתמש</td></tr>
+    <tr><td>חיה</td><td>chaya</td><td>chaya123</td><td>משתמש</td></tr>
+    <tr><td>יהודה</td><td>yehuda</td><td>yehuda123</td><td>משתמש</td></tr>
+  </tbody>
+</table>
+
+<!-- מה כולל -->
+<h2>מה כוללת המערכת</h2>
+
+<p>המערכת נבנתה מאפס על בסיס המערכת הקודמת, עם עיצוב חדש ושדרוג משמעותי למודולים הקיימים + תוספות של מודולים חדשים:</p>
+
+<table>
+  <thead><tr><th>מודול</th><th>מה כולל</th></tr></thead>
+  <tbody>
+    <tr><td><strong>לוח בקרה</strong></td><td>תמונת מצב כללית — גבייה, הוצאות, הצעות, רכש. יומן עבודה אחרון לכל פרויקט פעיל עם התראות צבעוניות</td></tr>
+    <tr><td><strong>לידים</strong></td><td>ניהול לקוחות פוטנציאליים. טופס ליד ציבורי לקליטה עצמאית. המרת ליד לפרויקט בלחיצה</td></tr>
+    <tr><td><strong>הצעות מחיר</strong></td><td>בניית הצעה מהמחירון (1,732 פריטים), ייבוא מאקסל, drag & drop לסידור שורות. ייצוא PDF מקצועי. שני סוגים — מסחרי ופרטי (עם דף אודות)</td></tr>
+    <tr><td><strong>פרויקטים</strong></td><td>מעקב מלא: כתב כמויות, רכש, יומני עבודה, קבלני משנה, דשבורד רווחיות. תעריף שעתי לפי פרויקט. חודשי עיקבון</td></tr>
+    <tr><td><strong>כתב כמויות</strong></td><td>מעקב ביצוע, חיוב חשבונות חלקיים, הפקת חשבונית PDF ממותגת, אישור חשבון והעברה ישירה לגבייה</td></tr>
+    <tr><td><strong>רכש</strong></td><td>הזמנת ציוד מתוך כתב כמויות, פריטים ידניים וגרילים, קיבוץ פריטים להזמנת רכש ממותגת ב-PDF, מעקב קבלה וחשבוניות</td></tr>
+    <tr><td><strong>הוצאות לתשלום</strong></td><td>דף מרכזי לרבקה — רכש ציוד + קבלני משנה מכל הפרויקטים. שינוי סטטוס תשלום ישירות עם צבעים</td></tr>
+    <tr><td><strong>גבייה</strong></td><td>מעקב תשלומים מלקוחות. סטטוסים מפורטים מאישור חשבון עד שולם. KPI עם לחיצה לפירוט</td></tr>
+    <tr><td><strong>משימות</strong></td><td>יצירה ידנית + אוטומטית (פתיחת פרויקט, הזמנת רכש, עיקבון). שיוך לעובד, עדיפות, דדליין</td></tr>
+    <tr><td><strong>מחירון</strong></td><td>ניהול מרכזי — חיפוש, סינון לפי ספק/קטגוריה, עריכה, הוספה ומחיקה</td></tr>
+    <tr><td><strong>רכבים</strong></td><td>ניהול צי רכבים, מעקב טסט וביטוח עם התראות, הוצאות, מסמכים, דיווח קילומטראז' ציבורי</td></tr>
+    <tr><td><strong>דוחות</strong></td><td>רווח/הפסד חודשי, סטטוס פרויקטים, צפי הכנסות, הוצאות מפורטות (רכש/קבלנים/עבודה), גיול חובות. ייצוא XLSX מעוצב</td></tr>
+    <tr><td><strong>הדרכה</strong></td><td>דף הדרכה מובנה במערכת עם הסבר על כל מודול ושגרות עבודה</td></tr>
+  </tbody>
+</table>
+
+<!-- מה חדש לגמרי -->
+<h2>מודולים חדשים (לא היו במערכת הישנה)</h2>
+
+<table>
+  <thead><tr><th>מודול</th><th>מה כולל</th></tr></thead>
+  <tbody>
+    <tr><td><strong>רכבים + דיווח ק"מ</strong></td><td>ניהול צי רכבים, מעקב טסט וביטוח עם התראות, הוצאות, דיווח קילומטראז' ציבורי</td></tr>
+    <tr><td><strong>מחירון</strong></td><td>דף ניהול נפרד — 1,732 פריטים, חיפוש, סינון, עריכה, הוספה ומחיקה</td></tr>
+    <tr><td><strong>דוחות</strong></td><td>5 דוחות: רווח/הפסד, סטטוס פרויקטים, צפי הכנסות, הוצאות מפורטות, גיול חובות</td></tr>
+    <tr><td><strong>הוצאות לתשלום</strong></td><td>דף מרכזי לרבקה — רכש ציוד + קבלני משנה מכל הפרויקטים, שינוי סטטוס ישיר</td></tr>
+    <tr><td><strong>מערכת התראות</strong></td><td>פעמון התראות — משימות, דדליינים, תשלומים באיחור, אי מילוי יומן</td></tr>
+    <tr><td><strong>הדרכה</strong></td><td>דף מובנה במערכת עם הסבר על כל מודול ושגרות עבודה</td></tr>
+    <tr><td><strong>התראות עיקבון</strong></td><td>משימה אוטומטית לרבקה כשפרויקט מסתיים — לפי חודשי העיקבון שהוגדרו</td></tr>
+  </tbody>
+</table>
+
+<!-- מה שודרג -->
+<h2>מודולים שהיו ושודרגו</h2>
+
+<table>
+  <thead><tr><th>מודול</th><th>מה השתנה</th></tr></thead>
+  <tbody>
+    <tr><td><strong>לוח בקרה</strong></td><td>נבנה מחדש — גבייה, הוצאות, הצעות, רכש, יומן עבודה אחרון לכל פרויקט עם צבעים</td></tr>
+    <tr><td><strong>הצעות מחיר</strong></td><td>PDF מקצועי עם לוגו, שני סוגים (מסחרי/פרטי), drag & drop לסידור שורות, ייבוא מאקסל</td></tr>
+    <tr><td><strong>רכש</strong></td><td>הזמנת רכש ממותגת ב-PDF, קיבוץ פריטים לספק, פריטים ידניים וגרילים, מעקב קבלה וחשבוניות</td></tr>
+    <tr><td><strong>גבייה</strong></td><td>דשבורד עם KPI, סטטוסים מפורטים, הפרדה מפרויקט — מנהל מאשר, רבקה מנהלת גבייה</td></tr>
+    <tr><td><strong>כתב כמויות</strong></td><td>חיוב חשבונות חלקיים, חשבונית PDF ממותגת, אישור והעברה ישירה לגבייה</td></tr>
+    <tr><td><strong>ייצוא נתונים</strong></td><td>XLSX מעוצב עם כותרות, צבעים ועמודות מותאמות — במקום CSV</td></tr>
+    <tr><td><strong>פרויקטים</strong></td><td>תעריף שעתי לפי פרויקט, חודשי עיקבון, דשבורד רווחיות</td></tr>
+  </tbody>
+</table>
+
+
+<!-- וואטסאפ -->
+<h2>בוט וואטסאפ</h2>
+
+<div class="box box-warning">
+  <strong>הבוט מוכן להפעלה.</strong> כדי להתחיל צריך:
+  <ul style="margin-top:8px;">
+    <li>טלפון עסקי / חשבון Meta Business</li>
+    <li>GROUP_ID של קבוצת הוואטסאפ</li>
+  </ul>
+  <p style="margin-top:8px;">יכולות: הודעה בקבוצה → נוצרת משימה, תזכורת יומן עבודה (18:00), תזכורת משימות (09:00), סיכום שבועי (ראשון 08:00).</p>
+  <p style="margin-top:8px;"><strong>⚠️ לאחר הטמעת הבוט — הריטיינר החודשי ישתנה, באישור יניר.</strong></p>
+</div>
+
+<!-- cutover -->
+<h2>מעבר מהמערכת הישנה</h2>
+
+<div class="box">
+  <p>כדי להשלים את המעבר מהמערכת הישנה:</p>
+  <ol style="margin-top:8px; padding-right:20px;">
+    <li><strong>לוודא שכל העובדים מצליחים להתחבר</strong> למערכת החדשה</li>
+    <li><strong>לבחור יום קאט-אופ</strong> — מאותו יום כל העבודה רק במערכת החדשה</li>
+  </ol>
+  <p style="margin-top:8px;">אנחנו נוודא שכל הנתונים שהוזנו במערכת הישנה עוברים לחדשה.</p>
+</div>
+
+<!-- פיתוחים עתידיים -->
+<h2>פיתוחים עתידיים</h2>
+
+<p>הפיתוחים הבאים זמינים לשיקולכם, בתשלום נוסף:</p>
+<table>
+  <thead><tr><th>נושא</th><th>הסבר</th></tr></thead>
+  <tbody>
+    <tr><td>התממשקות FIXUS</td><td>חיבור למערכת שירות fixus.co.il או בניית מודול שירות עצמאי</td></tr>
+    <tr><td>בקשות תשלום ממותגות</td><td>PDF ממותג של בקשת תשלום + צירוף קבצים</td></tr>
+    <tr><td>דוחות מתקדמים</td><td>תזרים מזומנים, צפי רבעוני, השוואה שנתית</td></tr>
+  </tbody>
+</table>
+
+<!-- תמיכה -->
+<h2>תמיכה</h2>
+
+<div class="box-green box">
+  <p><strong>פתיחת קריאת שירות:</strong></p>
+  <p style="margin:8px 0;"><a href="https://tickets.talyaosher.com/?project=Argaman" style="color:#1a3a7a; font-weight:700; font-size:15px;">https://tickets.talyaosher.com/?project=Argaman</a></p>
+  <p style="margin-top:12px;"><strong>חשוב — ככל שהפירוט מדויק יותר, הטיפול מהיר יותר. נא לכלול:</strong></p>
+  <ul style="margin-top:6px;">
+    <li>באיזה דף/מודול הבעיה (למשל: הצעות מחיר, גבייה, דשבורד)</li>
+    <li>מה ניסיתם לעשות ומה קרה בפועל</li>
+    <li>צילום מסך אם אפשר</li>
+  </ul>
+  <p style="margin-top:12px; color:#666;"><strong>דוגמה לפנייה טובה:</strong></p>
+  <div style="background:#fff; border:1px solid #d0d8f0; border-radius:6px; padding:12px; margin-top:6px; font-size:13px; color:#555;">
+    <p><strong>נושא:</strong> PDF הצעת מחיר — שם לקוח לא מופיע</p>
+    <p><strong>תיאור:</strong> נכנסתי להצעה Q-45027889 (תחמ"ש רחובות), לחצתי "הורד PDF". ה-PDF ירד אבל בשדה "לכבוד" כתוב רק מקף במקום שם הלקוח. ראיתי שבתצוגה המקדימה השם כן מופיע.</p>
+    <p><strong>מצורף:</strong> צילום מסך של ה-PDF</p>
+  </div>
+  <p style="margin-top:16px; font-size:12px; color:#888;">טליה אושר | talya@talyaosher.com | 054-4407557</p>
+</div>
+
+<div class="footer">
+  <p>ארגמן מערכות מיזוג מתקדמות בע"מ — מערכת ניהול | מאי 2026</p>
+  <p>פותח ע"י טליה אושר — talyaosher.com</p>
+</div>
+
+</body>
+</html>
