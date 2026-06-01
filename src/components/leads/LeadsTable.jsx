@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/tooltip";
 import { toast } from 'sonner';
 import { useIsMobile } from "@/hooks/use-mobile";
+import LeadActivityLog from './LeadActivityLog';
 
 const statusColors = {
   "חדש": "bg-blue-50 text-blue-700 border-blue-300",
@@ -171,6 +172,7 @@ function LeadMobileCard({ lead, onEdit, onUpdate, onDelete, onQuoteAction, leadQ
             </AlertDialogContent>
           </AlertDialog>
         </div>
+        <LeadActivityLog leadId={lead.id} />
       </div>
     </div>
   );
@@ -188,6 +190,7 @@ export default function LeadsTable({
   const [editValues, setEditValues] = useState({});
   const [savingCells, setSavingCells] = useState({});
   const [leadQuotes, setLeadQuotes] = useState({});
+  const [expandedLead, setExpandedLead] = useState(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -331,12 +334,13 @@ export default function LeadsTable({
             </TableHeader>
             <TableBody>
               {leads.map((lead) => (
+                <React.Fragment key={lead.id}>
                 <TableRow
-                  key={lead.id}
-                  className="transition-colors"
-                  style={{ borderBottom: '1px solid var(--dark-border)' }}
+                  className="transition-colors cursor-pointer"
+                  style={{ borderBottom: expandedLead === lead.id ? 'none' : '1px solid var(--dark-border)' }}
                   onMouseEnter={(e) => { for (const td of e.currentTarget.querySelectorAll('td')) td.style.background = 'var(--argaman-bg)'; }}
                   onMouseLeave={(e) => { for (const td of e.currentTarget.querySelectorAll('td')) td.style.background = ''; }}
+                  onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
                 >
                   <TableCell>
                     <div className="flex items-start gap-3">
@@ -673,6 +677,14 @@ export default function LeadsTable({
                     </div>
                   </TableCell>
                 </TableRow>
+                {expandedLead === lead.id && (
+                  <TableRow>
+                    <TableCell colSpan={7} style={{ background: 'var(--dark)', padding: '12px 20px', borderBottom: '1px solid var(--dark-border)' }}>
+                      <LeadActivityLog leadId={lead.id} />
+                    </TableCell>
+                  </TableRow>
+                )}
+                </React.Fragment>
               ))}
             </TableBody>
           </Table>

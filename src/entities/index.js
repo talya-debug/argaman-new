@@ -20,6 +20,7 @@ export const PurchaseOrder = createEntity('purchase_orders');
 export const Vehicle = createEntity('vehicles');
 export const VehicleExpense = createEntity('vehicle_expenses');
 export const VehicleDocument = createEntity('vehicle_documents');
+export const LeadActivity = createEntity('lead_activities');
 
 // User entity עם תמיכה ב-me() לתאימות עם הקוד הקיים
 const _UserEntity = createEntity('users');
