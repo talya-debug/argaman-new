@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Quote, QuoteLine, Lead, PriceItem, User } from '@/entities';
+import { Quote, QuoteLine, Lead, PriceItem, User, Project, Task } from '@/entities';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowRight, FileText, Settings, Save, FileDown, Upload, Building2, Home } from 'lucide-react';
+import { ArrowRight, FileText, Settings, Save, FileDown, Upload, Building2, Home, FolderOpen } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createPageUrl } from '@/utils';
 import { toast } from "sonner";
@@ -28,6 +28,8 @@ export default function QuoteDetails() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [viewMode, setViewMode] = useState('build');
+    const [existingProject, setExistingProject] = useState(null);
+    const [isCreatingProject, setIsCreatingProject] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
     const [showImportDialog, setShowImportDialog] = useState(false);
 
@@ -80,6 +82,12 @@ export default function QuoteDetails() {
             setSuppliers(uniqueSuppliers);
 
             setSelectedSupplier(currentQuote.supplier_name || null);
+
+            // בדיקה האם כבר יש פרויקט להצעה הזו
+            try {
+                const projects = await Project.filter({ quote_id: id });
+                setExistingProject(projects && projects.length > 0 ? projects[0] : null);
+            } catch (e) { setExistingProject(null); }
 
             let lines = await QuoteLine.filter({ quote_id: id });
 
@@ -384,6 +392,48 @@ export default function QuoteDetails() {
         }
     };
 
+    // יצירת פרויקט מהצעה מאושרת
+    const handleCreateProject = async () => {
+        if (isCreatingProject) return;
+        setIsCreatingProject(true);
+        try {
+            const newProject = await Project.create({
+                name: `פרויקט - ${lead?.name || quote?.client_name || 'לקוח'}`,
+                client_name: lead?.name || quote?.client_name || '',
+                lead_id: quote?.lead_id || '',
+                quote_id: quote?.id || quoteId,
+                status: 'בתכנון',
+                start_date: new Date().toISOString().split('T')[0],
+                responsible: '',
+                deduction_insurance_percentage: 0,
+                deduction_retention_percentage: 0,
+                deduction_lab_tests_percentage: 0,
+            });
+
+            // עדכון סטטוס ליד לאושר
+            if (quote?.lead_id) {
+                try { await Lead.update(quote.lead_id, { status: 'אושר' }); } catch(e) {}
+            }
+
+            // משימות התנעה
+            const tasks = [
+                { title: 'פתיחת תיקייה וכניסה למעקב גבייה', assigned_to: 'חיה', priority: 'גבוהה' },
+                { title: 'פגישת התנעה יניר ויהודה', assigned_to: 'יניר', priority: 'גבוהה' },
+            ];
+            for (const t of tasks) {
+                await Task.create({ ...t, project_id: newProject.id, client_name: newProject.name, source_type: 'project_completion', status: 'חדש', auto_created: true });
+            }
+
+            setExistingProject(newProject);
+            toast.success('פרויקט נוצר בהצלחה');
+            navigate(createPageUrl(`ProjectDetails?id=${newProject.id}`));
+        } catch (error) {
+            console.error('Failed to create project:', error);
+            toast.error('שגיאה ביצירת פרויקט');
+        }
+        setIsCreatingProject(false);
+    };
+
     const handleGeneratePDF = async () => {
         const fileName = `quote-${quote?.quote_number || quote?.id || 'new'}.pdf`;
         const isPrivate = quote?.quote_type === 'פרטי';
@@ -562,6 +612,18 @@ export default function QuoteDetails() {
                                 <Upload className="w-4 h-4 ml-2"/>
                                 ייבוא מ-CSV
                             </Button>
+                            {quote?.status === 'אושרה' && !existingProject && (
+                                <Button onClick={handleCreateProject} disabled={isCreatingProject} className="bg-green-600 hover:bg-green-700 text-white">
+                                    <FolderOpen className="w-4 h-4 ml-2"/>
+                                    {isCreatingProject ? 'יוצר...' : 'צור פרויקט'}
+                                </Button>
+                            )}
+                            {existingProject && (
+                                <Button variant="outline" onClick={() => navigate(createPageUrl(`ProjectDetails?id=${existingProject.id}`))}>
+                                    <FolderOpen className="w-4 h-4 ml-2"/>
+                                    עבור לפרויקט
+                                </Button>
+                            )}
                             <Button variant="ghost" onClick={() => navigate(createPageUrl("Leads"))}>
                                 <ArrowRight className="w-4 h-4 ml-2"/>
                                 חזרה ללידים

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Project, Quote, User } from "@/entities";
 import { Button } from "@/components/ui/button";
-import { Plus, FolderOpen } from "lucide-react";
+import { Plus, FolderOpen, Archive, RotateCcw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +21,7 @@ const statusColors = {
   'בוטל': 'bg-red-50 text-red-700 border-red-300',
 };
 
-const ProjectCard = ({ project, onClick }) => (
+const ProjectCard = ({ project, onClick, onArchive }) => (
     <div
         className="rounded-xl cursor-pointer transition-all duration-300 hover:-translate-y-1"
         style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-border)' }}
@@ -43,9 +43,14 @@ const ProjectCard = ({ project, onClick }) => (
             <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>{project.client_name}</p>
             <div className="flex justify-between items-center text-sm">
                 <Badge className={`${statusColors[project.status] || 'bg-gray-100 text-gray-600'} border`}>{project.status}</Badge>
-                <span style={{ color: 'var(--text-muted)' }}>
-                    התחלה: {project.start_date ? format(new Date(project.start_date), 'dd/MM/yy', { locale: he }) : 'N/A'}
-                </span>
+                <div className="flex items-center gap-2">
+                    <span style={{ color: 'var(--text-muted)' }}>
+                        התחלה: {project.start_date ? format(new Date(project.start_date), 'dd/MM/yy', { locale: he }) : 'N/A'}
+                    </span>
+                    <button onClick={(e) => { e.stopPropagation(); onArchive(project); }} title={project.is_archived ? 'שחזר מארכיון' : 'העבר לארכיון'} style={{ padding: '4px', borderRadius: '4px', border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-muted)' }}>
+                        {project.is_archived ? <RotateCcw size={16} /> : <Archive size={16} />}
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -76,6 +81,19 @@ export default function Projects() {
 
   const handleProjectClick = (projectId) => {
     navigate(createPageUrl(`ProjectDetails?id=${projectId}`));
+  };
+
+  const handleArchive = async (project) => {
+    const newArchived = !project.is_archived;
+    const action = newArchived ? 'העברה לארכיון' : 'שחזור מארכיון';
+    if (!confirm(`${action}: ${project.name}?\n\nהערה: משימות, גבייה ורכש פתוחים יישארו נגישים.`)) return;
+    try {
+      await Project.update(project.id, { is_archived: newArchived });
+      toast.success(newArchived ? 'הועבר לארכיון' : 'שוחזר מארכיון');
+      loadProjects();
+    } catch (e) {
+      toast.error('שגיאה');
+    }
   };
 
   const handleNewProject = async () => {
@@ -121,10 +139,7 @@ export default function Projects() {
             <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>ניהול פרויקטים</h1>
             <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>מעקב וניהול כל הפרויקטים הפעילים וההיסטוריים</p>
           </div>
-          <button onClick={handleNewProject} className="btn btn-primary">
-            <Plus className="w-4 h-4" />
-            פרויקט חדש מהצעה מאושרת
-          </button>
+          {/* פרויקט נוצר מדף הצעת מחיר → כפתור "צור פרויקט" */}
         </div>
 
         <Tabs defaultValue="active">
@@ -143,7 +158,7 @@ export default function Projects() {
                             </div>
                         ))
                     ) : (
-                        activeProjects.map(project => <ProjectCard key={project.id} project={project} onClick={handleProjectClick} />)
+                        activeProjects.map(project => <ProjectCard key={project.id} project={project} onClick={handleProjectClick} onArchive={handleArchive} />)
                     )}
                  </div>
                  { !isLoading && activeProjects.length === 0 && (
@@ -163,7 +178,7 @@ export default function Projects() {
                             </div>
                         ))
                     ) : (
-                        archivedProjects.map(project => <ProjectCard key={project.id} project={project} onClick={handleProjectClick} />)
+                        archivedProjects.map(project => <ProjectCard key={project.id} project={project} onClick={handleProjectClick} onArchive={handleArchive} />)
                     )}
                  </div>
                  { !isLoading && archivedProjects.length === 0 && (

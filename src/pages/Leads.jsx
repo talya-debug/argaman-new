@@ -198,10 +198,7 @@ export default function Leads() {
           last_interaction_date: new Date().toISOString().split('T')[0]
         });
 
-        if (oldStatus !== finalData.status && finalData.status === 'אושר') {
-            await createProjectFromLead({ ...editingLead, ...finalData });
-            return;
-        }
+        // פרויקט נוצר מדף ההצעה — לא מכאן
 
       } else {
         const newLead = await Lead.create({
@@ -218,10 +215,7 @@ export default function Leads() {
           link: '/Leads',
         });
 
-        if (newLead.status === 'אושר') {
-          await createProjectFromLead(newLead);
-          return;
-        }
+        // פרויקט נוצר מדף ההצעה — לא מכאן
       }
       setShowForm(false);
       setEditingLead(null);
@@ -243,10 +237,7 @@ export default function Leads() {
         last_interaction_date: new Date().toISOString().split('T')[0]
       });
 
-      if (leadData.status && leadData.status !== oldStatus && leadData.status === 'אושר') {
-        await createProjectFromLead({ ...currentLead, ...leadData });
-        return;
-      }
+      // פרויקט נוצר מדף ההצעה — לא מכאן
 
       loadLeads();
     } catch (error) {
