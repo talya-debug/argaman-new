@@ -41,24 +41,10 @@ import { toast } from 'sonner';
 import { useIsMobile } from "@/hooks/use-mobile";
 import LeadActivityLog from './LeadActivityLog';
 
-const statusColors = {
-  "חדש": "bg-blue-50 text-blue-700 border-blue-300",
-  "איסוף מידע מלקוח": "bg-amber-50 text-amber-700 border-amber-300",
-  "סיווג / הכנת הצעה": "bg-purple-50 text-purple-700 border-purple-300",
-  "תיאום סיור": "bg-orange-50 text-orange-700 border-orange-300",
-  "סיור בוצע": "bg-teal-50 text-teal-700 border-teal-300",
-  "הכנת הצעה": "bg-indigo-50 text-indigo-700 border-indigo-300",
-  "הצעה מוכנה ממתינה לאישור": "bg-pink-50 text-pink-700 border-pink-300",
-  "הצעה נשלחה": "bg-green-50 text-green-700 border-green-300",
-  "המתנה לאישור / משא ומתן": "bg-cyan-50 text-cyan-700 border-cyan-300",
-  "אושר": "bg-emerald-50 text-emerald-700 border-emerald-300",
-  "נדחה": "bg-red-50 text-red-700 border-red-300"
+const needsAttentionColors = {
+  true: "bg-red-50 text-red-700 border-red-300",
+  false: "bg-green-50 text-green-700 border-green-300",
 };
-
-const STATUSES = [
-  "דורש טיפול",
-  "לא דורש טיפול"
-];
 
 const RESPONSIBLES = ["יניר", "חיה", "רבקה", "דבורה", "יהודה", "שי"];
 
@@ -84,9 +70,9 @@ function LeadMobileCard({ lead, onEdit, onUpdate, onDelete, onQuoteAction, leadQ
               )}
             </div>
           </div>
-          <Badge className={`text-xs whitespace-nowrap ${statusColors[lead.status] || 'bg-gray-50 text-gray-600'}`}>
-            {lead.status}
-          </Badge>
+          <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${lead.needs_attention !== false ? needsAttentionColors[true] : needsAttentionColors[false]}`}>
+            {lead.needs_attention !== false ? 'דורש טיפול' : 'טופל'}
+          </span>
         </div>
 
         {/* פרטי קשר */}
@@ -326,7 +312,7 @@ export default function LeadsTable({
                 <TableHead className="text-right font-semibold w-60" style={{ color: 'var(--argaman)' }}>שם ליד</TableHead>
                 <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>פרטי יצירת קשר</TableHead>
                 <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>קישור לתיקיית לקוח</TableHead>
-                <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>סטטוס</TableHead>
+                <TableHead className="text-center font-semibold" style={{ color: 'var(--argaman)' }}>טיפול</TableHead>
                 <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>אחראי</TableHead>
                 <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>תאריך פולואפ</TableHead>
                 <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>פעולות</TableHead>
@@ -544,24 +530,13 @@ export default function LeadsTable({
                     )}
                   </TableCell>
 
-                  <TableCell>
-                     <Select
-                        value={lead.status}
-                        onValueChange={(value) => saveEdit(lead.id, 'status', value)}
-                      >
-                        <SelectTrigger className={`text-right text-xs h-8 border-0 shadow-none focus:ring-0 ${statusColors[lead.status] || 'bg-gray-50 text-gray-600'}`}>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {STATUSES.map((status) => (
-                            <SelectItem key={status} value={status} className="text-right">
-                              <Badge className={`text-xs w-full justify-start ${statusColors[status] || 'bg-gray-50 text-gray-600'} border`}>
-                                {status}
-                              </Badge>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                  <TableCell className="text-center">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); saveEdit(lead.id, 'needs_attention', !lead.needs_attention); }}
+                      className={`px-3 py-1 rounded-full text-xs font-medium border cursor-pointer transition-colors ${lead.needs_attention !== false ? needsAttentionColors[true] : needsAttentionColors[false]}`}
+                    >
+                      {lead.needs_attention !== false ? 'דורש טיפול' : 'טופל'}
+                    </button>
                   </TableCell>
 
                   <TableCell className="text-right">

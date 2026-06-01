@@ -314,16 +314,14 @@ export default function Leads() {
   const handleFilterChange = (filters) => {
     let filtered = leads;
 
-    // View filter - active vs archive
-    if (activeView === 'archive') {
-      filtered = filtered.filter(lead => lead.status === 'אושר' || lead.status === 'נדחה');
-    } else {
-      filtered = filtered.filter(lead => lead.status !== 'אושר' && lead.status !== 'נדחה');
+    // סינון לפי דורש טיפול
+    if (filters.status === 'needs') {
+      filtered = filtered.filter(lead => lead.needs_attention !== false);
+    } else if (filters.status === 'handled') {
+      filtered = filtered.filter(lead => lead.needs_attention === false);
     }
-
-    if (filters.status && filters.status !== 'all') {
-      filtered = filtered.filter(lead => lead.status === filters.status);
-    }
+    // סינון ארכיון
+    filtered = filtered.filter(lead => !lead.is_archived);
 
     if (filters.responsible && filters.responsible !== 'all') {
       filtered = filtered.filter(lead => lead.responsible === filters.responsible);

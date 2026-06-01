@@ -4,18 +4,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, Filter } from "lucide-react";
 
-const STATUSES = [
-  "חדש",
-  "איסוף מידע מלקוח",
-  "סיווג / הכנת הצעה",
-  "תיאום סיור",
-  "סיור בוצע",
-  "הכנת הצעה",
-  "הצעה מוכנה ממתינה לאישור",
-  "הצעה נשלחה",
-  "המתנה לאישור / משא ומתן",
-  "אושר",
-  "נדחה"
+const ATTENTION_OPTIONS = [
+  { value: 'needs', label: 'דורש טיפול' },
+  { value: 'handled', label: 'טופל' },
 ];
 
 const RESPONSIBLES = ["יניר", "שי", "חיה", "דבורה", "רבקה", "יהודה"];
@@ -55,10 +46,10 @@ export default function LeadFilters({ onFilterChange, leads }) {
                 <SelectValue placeholder="כל הסטטוסים" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">כל הסטטוסים</SelectItem>
-                {STATUSES.map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {status}
+                <SelectItem value="all">הכל</SelectItem>
+                {ATTENTION_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
                   </SelectItem>
                 ))}
               </SelectContent>
