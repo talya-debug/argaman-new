@@ -314,14 +314,13 @@ export default function Leads() {
   const handleFilterChange = (filters) => {
     let filtered = leads;
 
-    // סינון לפי דורש טיפול
-    if (filters.status === 'needs') {
-      filtered = filtered.filter(lead => lead.needs_attention !== false);
-    } else if (filters.status === 'handled') {
-      filtered = filtered.filter(lead => lead.needs_attention === false);
+    // סינון לפי סטטוס ליד
+    if (filters.status && filters.status !== 'all') {
+      filtered = filtered.filter(lead => (lead.lead_status || 'דורש טיפול') === filters.status);
+    } else {
+      // ברירת מחדל — לא מציג ארכיון
+      filtered = filtered.filter(lead => (lead.lead_status || 'דורש טיפול') !== 'ארכיון');
     }
-    // סינון ארכיון
-    filtered = filtered.filter(lead => !lead.is_archived);
 
     if (filters.responsible && filters.responsible !== 'all') {
       filtered = filtered.filter(lead => lead.responsible === filters.responsible);

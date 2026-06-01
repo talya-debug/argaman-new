@@ -41,10 +41,11 @@ import { toast } from 'sonner';
 import { useIsMobile } from "@/hooks/use-mobile";
 import LeadActivityLog from './LeadActivityLog';
 
-const needsAttentionColors = {
-  true: "bg-red-50 text-red-700 border-red-300",
-  false: "bg-green-50 text-green-700 border-green-300",
-};
+const LEAD_STATUSES = [
+  { value: 'דורש טיפול', color: 'bg-red-50 text-red-700 border-red-300' },
+  { value: 'טופל', color: 'bg-green-50 text-green-700 border-green-300' },
+  { value: 'ארכיון', color: 'bg-gray-100 text-gray-500 border-gray-300' },
+];
 
 const RESPONSIBLES = ["יניר", "חיה", "רבקה", "דבורה", "יהודה", "שי"];
 
@@ -70,9 +71,9 @@ function LeadMobileCard({ lead, onEdit, onUpdate, onDelete, onQuoteAction, leadQ
               )}
             </div>
           </div>
-          <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${lead.needs_attention !== false ? needsAttentionColors[true] : needsAttentionColors[false]}`}>
-            {lead.needs_attention !== false ? 'דורש טיפול' : 'טופל'}
-          </span>
+          <Badge className={`text-xs whitespace-nowrap ${(LEAD_STATUSES.find(s => s.value === (lead.lead_status || 'דורש טיפול'))?.color) || 'bg-gray-50 text-gray-600'}`}>
+            {lead.lead_status || 'דורש טיפול'}
+          </Badge>
         </div>
 
         {/* פרטי קשר */}
@@ -530,13 +531,17 @@ export default function LeadsTable({
                     )}
                   </TableCell>
 
-                  <TableCell className="text-center">
-                    <button
-                      onClick={(e) => { e.stopPropagation(); saveEdit(lead.id, 'needs_attention', !lead.needs_attention); }}
-                      className={`px-3 py-1 rounded-full text-xs font-medium border cursor-pointer transition-colors ${lead.needs_attention !== false ? needsAttentionColors[true] : needsAttentionColors[false]}`}
-                    >
-                      {lead.needs_attention !== false ? 'דורש טיפול' : 'טופל'}
-                    </button>
+                  <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
+                    <Select value={lead.lead_status || 'דורש טיפול'} onValueChange={(value) => saveEdit(lead.id, 'lead_status', value)}>
+                      <SelectTrigger className={`text-right text-xs h-8 w-[120px] mx-auto border ${(LEAD_STATUSES.find(s => s.value === (lead.lead_status || 'דורש טיפול'))?.color) || 'bg-gray-50 text-gray-600'}`}>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {LEAD_STATUSES.map(s => (
+                          <SelectItem key={s.value} value={s.value}>{s.value}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </TableCell>
 
                   <TableCell className="text-right">

@@ -194,6 +194,9 @@ export default function Quotes() {
                               if (quote.status === 'אושרה') {
                                 return <Button size="sm" onClick={() => navigate(`/QuoteDetails?id=${quote.id}`)} className="text-xs gap-1 bg-green-600 hover:bg-green-700 text-white"><FolderOpen size={12} />צור פרויקט</Button>;
                               }
+                              if (quote.status === 'מוכנה' || quote.status === 'נשלחה') {
+                                return <Button size="sm" variant="outline" onClick={async () => { await handleStatusChange(quote.id, 'אושרה'); navigate(`/QuoteDetails?id=${quote.id}`); }} className="text-xs gap-1 text-green-700 hover:bg-green-50"><FolderOpen size={12} />אשר וצור פרויקט</Button>;
+                              }
                               return <Button size="sm" variant="ghost" onClick={() => { Quote.update(quote.id, { is_archived: true }); toast.success('הועבר לארכיון'); loadQuotes(); }} className="text-xs gap-1 text-gray-400"><Archive size={12} />ארכיון</Button>;
                             })()}
                           </TableCell>
