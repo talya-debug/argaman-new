@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Quote, Lead, Project, User } from "@/entities";
 import { Button } from "@/components/ui/button";
-import { Plus, Search, FileText } from "lucide-react";
+import { Plus, Search, FileText, FolderOpen, Archive } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +29,7 @@ const statusColors = {
 export default function Quotes() {
   const [quotes, setQuotes] = useState([]);
   const [filteredQuotes, setFilteredQuotes] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
@@ -51,9 +52,13 @@ export default function Quotes() {
     setIsLoading(true);
     try {
       await User.me();
-      const data = await Quote.list('-created_date');
-      setQuotes(data);
-      setFilteredQuotes(data);
+      const [data, allProjects] = await Promise.all([
+        Quote.list('-created_date'),
+        Project.list(),
+      ]);
+      setQuotes(data.filter(q => !q.is_archived));
+      setFilteredQuotes(data.filter(q => !q.is_archived));
+      setProjects(allProjects);
     } catch (error) {
       console.error('Error loading quotes:', error);
     }
@@ -76,35 +81,18 @@ export default function Quotes() {
       await Quote.update(quoteId, { status: newStatus });
       setQuotes(prev => prev.map(q => q.id === quoteId ? { ...q, status: newStatus } : q));
 
-      // אם ההצעה אושרה — לעדכן את הליד ל"אושר" וליצור פרויקט
+      // עדכון סטטוס ליד כשהצעה מאושרת
       if (newStatus === 'אושרה' && quote?.lead_id) {
         try {
           const lead = await Lead.get(quote.lead_id);
           if (lead && lead.status !== 'אושר') {
             await Lead.update(quote.lead_id, { status: 'אושר' });
           }
-          // בדיקה אם כבר יש פרויקט
-          const existingProjects = await Project.filter({ lead_id: quote.lead_id });
-          if (!existingProjects || existingProjects.length === 0) {
-            const newProject = await Project.create({
-              name: `פרויקט - ${lead.name}`,
-              client_name: lead.name,
-              lead_id: lead.id,
-              quote_id: quoteId,
-              status: 'בתכנון',
-              start_date: new Date().toISOString().split('T')[0],
-              responsible: lead.responsible,
-              description: `פרויקט שנוצר מהצעת מחיר: ${lead.name}`,
-              deduction_insurance_percentage: 0,
-              deduction_retention_percentage: 0,
-              deduction_lab_tests_percentage: 0
-            });
-            toast.success(`פרויקט "${newProject.name}" נוצר בהצלחה!`);
-          }
         } catch (e) {
-          console.error('Error creating project from quote approval:', e);
+          console.error('Error updating lead status:', e);
         }
       }
+      // פרויקט נוצר מתוך דף ההצעה — כפתור "צור פרויקט"
 
       toast.success(`סטטוס עודכן ל-${newStatus}`);
     } catch (error) {
@@ -162,6 +150,7 @@ export default function Quotes() {
                       <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>סכום</TableHead>
                       <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>תאריך</TableHead>
                       <TableHead className="text-center font-semibold" style={{ color: 'var(--argaman)' }}>סטטוס</TableHead>
+                      <TableHead className="text-center font-semibold" style={{ color: 'var(--argaman)' }}>פעולות</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -195,6 +184,18 @@ export default function Quotes() {
                                 ))}
                               </SelectContent>
                             </Select>
+                          </TableCell>
+                          <TableCell className="text-center" onClick={e => e.stopPropagation()}>
+                            {(() => {
+                              const proj = projects.find(p => p.quote_id === quote.id);
+                              if (proj) {
+                                return <Button size="sm" variant="outline" onClick={() => navigate(`/ProjectDetails?id=${proj.id}`)} className="text-xs gap-1"><FolderOpen size={12} />לפרויקט</Button>;
+                              }
+                              if (quote.status === 'אושרה') {
+                                return <Button size="sm" onClick={() => navigate(`/QuoteDetails?id=${quote.id}`)} className="text-xs gap-1 bg-green-600 hover:bg-green-700 text-white"><FolderOpen size={12} />צור פרויקט</Button>;
+                              }
+                              return <Button size="sm" variant="ghost" onClick={() => { Quote.update(quote.id, { is_archived: true }); toast.success('הועבר לארכיון'); loadQuotes(); }} className="text-xs gap-1 text-gray-400"><Archive size={12} />ארכיון</Button>;
+                            })()}
                           </TableCell>
                         </TableRow>
                       ))
