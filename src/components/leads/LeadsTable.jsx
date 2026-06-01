@@ -15,7 +15,8 @@ import {
   Calendar as CalendarIcon,
   Trash2,
   Image as ImageIcon,
-  ExternalLink
+  ExternalLink,
+  Plus
 } from "lucide-react";
 import { format } from "date-fns";
 import { he } from "date-fns/locale";
@@ -54,17 +55,8 @@ const statusColors = {
 };
 
 const STATUSES = [
-  "חדש",
-  "איסוף מידע מלקוח",
-  "סיווג / הכנת הצעה",
-  "תיאום סיור",
-  "סיור בוצע",
-  "הכנת הצעה",
-  "הצעה מוכנה ממתינה לאישור",
-  "הצעה נשלחה",
-  "המתנה לאישור / משא ומתן",
-  "אושר",
-  "נדחה"
+  "דורש טיפול",
+  "לא דורש טיפול"
 ];
 
 const RESPONSIBLES = ["יניר", "חיה", "רבקה", "דבורה", "יהודה", "שי"];
@@ -126,16 +118,18 @@ function LeadMobileCard({ lead, onEdit, onUpdate, onDelete, onQuoteAction, leadQ
 
         {/* כפתורי פעולה */}
         <div className="flex gap-2 pt-2" style={{ borderTop: '1px solid var(--dark-border)' }}>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onQuoteAction(lead)}
-            className={`flex-1 text-xs h-9 ${leadQuotes[lead.id]?.length > 0 ? 'text-blue-700 hover:bg-blue-50' : ''}`}
-            style={{ borderColor: 'var(--dark-border)', color: leadQuotes[lead.id]?.length > 0 ? undefined : 'var(--text-secondary)' }}
-          >
-            <FileText className="w-3.5 h-3.5 ml-1" />
-            {leadQuotes[lead.id]?.length > 0 ? 'הצעת מחיר' : 'צור הצעה'}
-          </Button>
+          <div className="flex flex-col gap-1 flex-1">
+            {(leadQuotes[lead.id] || []).map(q => (
+              <Button key={q.id} variant="outline" size="sm" className="text-xs h-7 text-blue-700 hover:bg-blue-50 justify-start" style={{ borderColor: 'var(--dark-border)' }}
+                onClick={() => window.location.href = `/QuoteDetails?id=${q.id}`}>
+                <FileText className="w-3 h-3 ml-1" />{q.quote_number || 'הצעה'} {q.status === 'אושרה' ? '✓' : ''}
+              </Button>
+            ))}
+            <Button variant="outline" size="sm" className="text-xs h-7 text-green-700 hover:bg-green-50 justify-start" style={{ borderColor: 'var(--dark-border)' }}
+              onClick={() => onQuoteAction(lead, true)}>
+              <Plus className="w-3 h-3 ml-1" />הצעה חדשה
+            </Button>
+          </div>
           <Button
             variant="outline"
             size="sm"
@@ -619,24 +613,18 @@ export default function LeadsTable({
 
                   <TableCell>
                     <div className="flex items-center gap-1">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                           <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => onQuoteAction(lead)}
-                            className={`h-8 w-8 p-0 ${leadQuotes[lead.id] && leadQuotes[lead.id].length > 0 ? 'text-blue-700 hover:bg-blue-50' : 'hover:bg-[#252836]'}`}
-                            style={{ color: leadQuotes[lead.id] && leadQuotes[lead.id].length > 0 ? undefined : 'var(--text-muted)' }}
-                          >
-                            <FileText className="w-4 h-4" />
+                      <div className="flex flex-col gap-1">
+                        {(leadQuotes[lead.id] || []).map(q => (
+                          <Button key={q.id} variant="ghost" size="sm" className="h-7 text-xs justify-start text-blue-700 hover:bg-blue-50 px-2"
+                            onClick={() => window.location.href = `/QuoteDetails?id=${q.id}`}>
+                            <FileText className="w-3 h-3 ml-1" />{q.quote_number || 'הצעה'} {q.status === 'אושרה' ? '✓' : ''}
                           </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{leadQuotes[lead.id] && leadQuotes[lead.id].length > 0 ? 'הצג/ערוך הצעת מחיר' : 'צור הצעת מחיר'}</p>
-                           {leadQuotes[lead.id] && leadQuotes[lead.id].length > 0 && <p className="text-xs text-blue-500">קיימת הצעה</p>}
-                        </TooltipContent>
-                      </Tooltip>
-
+                        ))}
+                        <Button variant="ghost" size="sm" className="h-7 text-xs justify-start text-green-700 hover:bg-green-50 px-2"
+                          onClick={() => onQuoteAction(lead, true)}>
+                          <Plus className="w-3 h-3 ml-1" />הצעה חדשה
+                        </Button>
+                      </div>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button

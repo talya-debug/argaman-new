@@ -263,19 +263,19 @@ export default function Leads() {
     setShowForm(true);
   };
 
-  const handleQuoteAction = async (lead) => {
+  const handleQuoteAction = async (lead, forceNew = false) => {
     try {
-      const quotes = await Quote.filter({ lead_id: lead.id });
-      if (quotes && quotes.length > 0) {
-        const latestQuote = quotes.sort((a,b) => new Date(b.createdAt || b.created_date) - new Date(a.createdAt || a.created_date))[0];
-        if (latestQuote && latestQuote.id) {
-          console.log("Navigating to quote:", latestQuote.id);
-          navigate(`/QuoteDetails?id=${latestQuote.id}`);
-        } else {
-          console.error("Latest quote ID is invalid");
-          toast.error("שגיאה במציאת הצעת המחיר");
+      if (!forceNew) {
+        const quotes = await Quote.filter({ lead_id: lead.id });
+        if (quotes && quotes.length > 0) {
+          const latestQuote = quotes.sort((a,b) => new Date(b.createdAt || b.created_date) - new Date(a.createdAt || a.created_date))[0];
+          if (latestQuote && latestQuote.id) {
+            navigate(`/QuoteDetails?id=${latestQuote.id}`);
+            return;
+          }
         }
-      } else {
+      }
+      {
         console.log("יוצר טיוטת הצעת מחיר...");
 
         const quoteNumber = `Q-${Date.now().toString().slice(-8)}`;
