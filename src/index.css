@@ -103,6 +103,19 @@ body {
   color: var(--text-primary);
   direction: rtl;
   min-height: 100vh;
+  overflow: auto !important;
+}
+
+/* מניעת נעילת body ע"י Radix Dialog */
+body[data-scroll-locked] {
+  overflow: auto !important;
+  margin-right: 0 !important;
+}
+
+/* מניעת aria-hidden על root */
+#root[aria-hidden="true"] {
+  aria-hidden: false;
+  pointer-events: auto !important;
 }
 
 #root {
