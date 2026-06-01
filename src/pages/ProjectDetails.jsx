@@ -110,6 +110,16 @@ export default function ProjectDetails() {
 
         try {
             const oldStatus = project.status;
+
+            // ארכיון — מעביר ומחזיר לדף פרויקטים
+            if (details.status === 'ארכיון') {
+                if (!confirm('להעביר את הפרויקט לארכיון?\n\nמשימות, גבייה ורכש פתוחים יישארו נגישים.')) return;
+                await Project.update(project.id, { is_archived: true, status: oldStatus });
+                toast.success('הפרויקט הועבר לארכיון');
+                navigate(createPageUrl('Projects'));
+                return;
+            }
+
             await Project.update(project.id, details);
 
             if (details.status && details.status !== oldStatus && details.status === 'הושלם') {
@@ -228,6 +238,7 @@ export default function ProjectDetails() {
                             <SelectItem value="בביצוע">בביצוע</SelectItem>
                             <SelectItem value="הושלם">הושלם</SelectItem>
                             <SelectItem value="בוטל">בוטל</SelectItem>
+                            <SelectItem value="ארכיון">ארכיון</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
