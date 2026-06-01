@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const QUOTE_STATUSES = ['טיוטה', 'מוכנה', 'נשלחה', 'מאושרת', 'נדחתה'];
+const QUOTE_STATUSES = ['טיוטה', 'מוכנה', 'נשלחה', 'אושרה', 'נדחתה'];
 
 const statusColors = {
   'טיוטה': 'bg-amber-50 text-amber-700 border-amber-300',
