@@ -426,7 +426,13 @@ export default function QuoteDetails() {
 
             setExistingProject(newProject);
             toast.success('פרויקט נוצר בהצלחה');
-            navigate(createPageUrl(`ProjectDetails?id=${newProject.id}`));
+            const projId = newProject.id || newProject._id;
+            if (projId) {
+                navigate(`/ProjectDetails?id=${projId}`);
+            } else {
+                toast.info('פרויקט נוצר — עבור לדף פרויקטים');
+                navigate('/Projects');
+            }
         } catch (error) {
             console.error('Failed to create project:', error);
             toast.error('שגיאה ביצירת פרויקט');
