@@ -113,7 +113,7 @@ export default function Layout({ children, currentPageName }) {
         zIndex: 100, overflowY: 'auto',
       }} className="desktop-sidebar">{sidebarContent}</aside>
 
-      {mobileOpen && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 998 }} onClick={() => setMobileOpen(false)} />}
+      {mobileOpen && <div className="mobile-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 998 }} onClick={() => setMobileOpen(false)} />}
 
       <aside className="mobile-sidebar" style={{
         position: 'fixed', top: 0, right: 0, bottom: 0, width: '280px',
@@ -154,7 +154,7 @@ export default function Layout({ children, currentPageName }) {
           main { margin-right: 0 !important; }
           main > div:last-child { padding: 20px 16px !important; padding-top: 20px !important; }
         }
-        @media (min-width: 769px) { .mobile-sidebar { display: none !important; } }
+        @media (min-width: 769px) { .mobile-sidebar { display: none !important; } .mobile-overlay { display: none !important; } }
       `}</style>
     </div>
   )
