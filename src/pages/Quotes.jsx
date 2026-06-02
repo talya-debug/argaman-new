@@ -191,11 +191,29 @@ export default function Quotes() {
                               if (proj) {
                                 return <Button size="sm" variant="outline" onClick={() => navigate(`/ProjectDetails?id=${proj.id}`)} className="text-xs gap-1"><FolderOpen size={12} />לפרויקט</Button>;
                               }
-                              if (quote.status === 'אושרה') {
-                                return <Button size="sm" onClick={() => navigate(`/QuoteDetails?id=${quote.id}`)} className="text-xs gap-1 bg-green-600 hover:bg-green-700 text-white"><FolderOpen size={12} />צור פרויקט</Button>;
-                              }
-                              if (quote.status === 'מוכנה' || quote.status === 'נשלחה') {
-                                return <Button size="sm" variant="outline" onClick={async () => { await handleStatusChange(quote.id, 'אושרה'); navigate(`/QuoteDetails?id=${quote.id}`); }} className="text-xs gap-1 text-green-700 hover:bg-green-50"><FolderOpen size={12} />אשר וצור פרויקט</Button>;
+                              if (quote.status === 'אושרה' || quote.status === 'מוכנה' || quote.status === 'נשלחה') {
+                                return <Button size="sm" onClick={async () => {
+                                  try {
+                                    if (quote.status !== 'אושרה') await handleStatusChange(quote.id, 'אושרה');
+                                    const existingProj = projects.find(p => p.quote_id === quote.id);
+                                    if (existingProj) { navigate(`/ProjectDetails?id=${existingProj.id}`); return; }
+                                    const lead = quote.lead_id ? await Lead.get(quote.lead_id).catch(() => null) : null;
+                                    const newProject = await Project.create({
+                                      name: 'פרויקט - ' + (lead?.name || quote.client_name || 'לקוח'),
+                                      client_name: lead?.name || quote.client_name || '',
+                                      lead_id: quote.lead_id || '',
+                                      quote_id: quote.id,
+                                      status: 'בתכנון',
+                                      start_date: new Date().toISOString().split('T')[0],
+                                      responsible: '',
+                                      deduction_insurance_percentage: 0,
+                                      deduction_retention_percentage: 0,
+                                      deduction_lab_tests_percentage: 0,
+                                    });
+                                    toast.success('פרויקט נוצר');
+                                    navigate('/ProjectDetails?id=' + newProject.id);
+                                  } catch(e) { console.error(e); toast.error('שגיאה'); }
+                                }} className="text-xs gap-1 bg-green-600 hover:bg-green-700 text-white"><FolderOpen size={12} />צור פרויקט</Button>;
                               }
                               return <Button size="sm" variant="ghost" onClick={() => { Quote.update(quote.id, { is_archived: true }); toast.success('הועבר לארכיון'); loadQuotes(); }} className="text-xs gap-1 text-gray-400"><Archive size={12} />ארכיון</Button>;
                             })()}
