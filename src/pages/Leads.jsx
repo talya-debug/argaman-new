@@ -364,21 +364,6 @@ export default function Leads() {
           </div>
         </div>
 
-        <div className="flex gap-2 mb-4">
-          <button
-            onClick={() => setActiveView('active')}
-            className={`btn btn-sm ${activeView === 'active' ? 'btn-primary' : 'btn-secondary'}`}
-          >
-            לידים פעילים
-          </button>
-          <button
-            onClick={() => setActiveView('archive')}
-            className={`btn btn-sm ${activeView === 'archive' ? 'btn-primary' : 'btn-secondary'}`}
-          >
-            ארכיון
-          </button>
-        </div>
-
         <LeadFilters onFilterChange={handleFilterChange} leads={leads} />
         <LeadsTable
           leads={filteredLeads}

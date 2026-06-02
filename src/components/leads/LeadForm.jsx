@@ -29,7 +29,7 @@ export default function LeadForm({ lead, onSubmit, onCancel }) {
     phone: '',
     email: '',
     address: '',
-    status: 'חדש',
+    lead_status: 'דורש טיפול',
     followup_date: '',
     responsible: '',
     notes: '',

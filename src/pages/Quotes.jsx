@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Quote, Lead, Project, User } from "@/entities";
+import { Quote, Lead, Project, User, Task } from "@/entities";
 import { Button } from "@/components/ui/button";
 import { Plus, Search, FileText, FolderOpen, Archive } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -210,12 +210,20 @@ export default function Quotes() {
                                       deduction_retention_percentage: 0,
                                       deduction_lab_tests_percentage: 0,
                                     });
+                                    // משימות התנעה
+                                    const startupTasks = [
+                                      { title: 'פתיחת תיקייה וכניסה למעקב גבייה', assigned_to: 'חיה', priority: 'גבוהה' },
+                                      { title: 'פגישת התנעה יניר ויהודה', assigned_to: 'יניר', priority: 'גבוהה' },
+                                    ];
+                                    for (const t of startupTasks) {
+                                      await Task.create({ ...t, project_id: newProject.id, client_name: newProject.name, source_type: 'project_completion', status: 'חדש', auto_created: true });
+                                    }
                                     toast.success('פרויקט נוצר');
                                     navigate('/ProjectDetails?id=' + newProject.id);
                                   } catch(e) { console.error(e); toast.error('שגיאה'); }
                                 }} className="text-xs gap-1 bg-green-600 hover:bg-green-700 text-white"><FolderOpen size={12} />צור פרויקט</Button>;
                               }
-                              return <Button size="sm" variant="ghost" onClick={() => { Quote.update(quote.id, { is_archived: true }); toast.success('הועבר לארכיון'); loadQuotes(); }} className="text-xs gap-1 text-gray-400"><Archive size={12} />ארכיון</Button>;
+                              return <Button size="sm" variant="ghost" onClick={async () => { await Quote.update(quote.id, { is_archived: true }); toast.success('הועבר לארכיון'); await loadQuotes(); }} className="text-xs gap-1 text-gray-400"><Archive size={12} />ארכיון</Button>;
                             })()}
                           </TableCell>
                         </TableRow>
