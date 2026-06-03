@@ -282,8 +282,8 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                             <Table dir="rtl">
                                 <TableHeader>
                                     <TableRow style={{ background: 'rgba(212, 168, 67, 0.05)', borderBottom: '1px solid var(--dark-border)' }}>
-                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>שם הלקוח</TableHead>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>פירוט המשימה</TableHead>
+                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>שם הלקוח</TableHead>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>נותן המשימה</TableHead>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>אחראי</TableHead>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>תאריך יעד</TableHead>
@@ -303,7 +303,6 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                                             onMouseEnter={(e) => { for (const td of e.currentTarget.querySelectorAll('td')) td.style.background = 'var(--argaman-bg)'; }}
                                             onMouseLeave={(e) => { for (const td of e.currentTarget.querySelectorAll('td')) td.style.background = ''; }}
                                         >
-                                            <TableCell className="font-medium" style={{ color: 'var(--text-primary)' }}>{task.client_name || 'לא שויך'}</TableCell>
                                             <TableCell className="max-w-xs">
                                                  <Dialog>
                                                     <DialogTrigger asChild>
@@ -318,6 +317,7 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                                                     </DialogContent>
                                                 </Dialog>
                                             </TableCell>
+                                            <TableCell className="font-medium" style={{ color: 'var(--text-primary)' }}>{task.client_name || 'לא שויך'}</TableCell>
                                             <TableCell><EditableCell value={task.creator} task={task} fieldName="creator" onUpdate={onUpdate} /></TableCell>
                                             <TableCell><EditableCell value={task.assigned_to} task={task} fieldName="assigned_to" options={userOptions} onUpdate={onUpdate} /></TableCell>
                                             <TableCell><EditableCell value={task.due_date} task={task} fieldName="due_date" onUpdate={onUpdate} /></TableCell>
