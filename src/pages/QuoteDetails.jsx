@@ -18,6 +18,7 @@ export default function QuoteDetails() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const quoteId = searchParams.get('id');
+    const leadIdParam = searchParams.get('lead_id');
 
     const [quote, setQuote] = useState(null);
     const [lead, setLead] = useState(null);
@@ -140,6 +141,27 @@ export default function QuoteDetails() {
 
                 if (quoteId) {
                     await loadData(quoteId);
+                } else if (leadIdParam) {
+                    // הצעה חדשה — טוען ליד בלי ליצור הצעה
+                    try {
+                        const currentLead = await Lead.get(leadIdParam);
+                        setLead(currentLead);
+                        setQuote({
+                            lead_id: leadIdParam,
+                            client_name: currentLead.name,
+                            client_phone: currentLead.phone || '',
+                            client_address: currentLead.address || '',
+                            client_email: currentLead.email || '',
+                            title: `הצעת מחיר עבור ${currentLead.name}`,
+                            quote_number: `Q-${Date.now().toString().slice(-8)}`,
+                            status: 'טיוטה',
+                            vat_percentage: 18,
+                            discount_percentage: 0,
+                            subtotal: 0,
+                            total: 0,
+                            _isNew: true,
+                        });
+                    } catch(e) { console.error(e); }
                 }
             } catch (e) {
                 console.error("Failed to initialize data:", e);
@@ -341,11 +363,6 @@ export default function QuoteDetails() {
     };
 
     const handleSaveQuote = async () => {
-        if (!quoteId && !quote?.id) {
-            toast.error("לא ניתן לשמור הצעה ללא מזהה.");
-            return;
-        }
-
         setIsSaving(true);
         const subtotal = quoteLines.reduce((sum, line) => sum + (line.line_total || 0), 0);
 
@@ -360,6 +377,24 @@ export default function QuoteDetails() {
         const total = subtotalAfterDiscount + vat;
 
         try {
+            // הצעה חדשה — יוצר ב-Firebase רק עכשיו
+            if (quote?._isNew && !quoteId && !quote?.id) {
+                const { _isNew, ...quoteData } = quote;
+                const newQuote = await Quote.create({
+                    ...quoteData,
+                    subtotal: subtotalAfterDiscount,
+                    total,
+                    vat_percentage: vatPercentage,
+                    status: 'מוכנה',
+                });
+                setQuote(prev => ({ ...prev, id: newQuote.id, _isNew: false }));
+                // עדכון URL
+                window.history.replaceState(null, '', `/QuoteDetails?id=${newQuote.id}`);
+                toast.success('הצעה נוצרה ונשמרה');
+                setIsSaving(false);
+                return;
+            }
+
             const quoteIdToUpdate = quoteId || quote.id;
             const updatedQuoteData = {
                 ...quote,

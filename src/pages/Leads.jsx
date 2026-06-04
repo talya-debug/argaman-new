@@ -276,34 +276,8 @@ export default function Leads() {
         }
       }
       {
-        console.log("יוצר טיוטת הצעת מחיר...");
-
-        const quoteNumber = `Q-${Date.now().toString().slice(-8)}`;
-
-        const newQuote = await Quote.create({
-          lead_id: lead.id,
-          client_name: lead.name,
-          client_address: lead.address || '',
-          client_phone: lead.phone || '',
-          client_email: lead.email || '',
-          title: `הצעת מחיר עבור ${lead.name}`,
-          quote_number: quoteNumber,
-          status: 'טיוטה',
-          vat_percentage: 18,
-          discount_percentage: 0,
-          responsible: lead.responsible,
-          price_list_file_url: lead.price_list_file_url || null,
-          subtotal: 0,
-          total: 0
-        });
-
-        if (newQuote && newQuote.id) {
-          console.log("הצעה נוצרה עם ID:", newQuote.id);
-          navigate(`/QuoteDetails?id=${newQuote.id}`);
-        } else {
-          console.error("Failed to create new quote");
-          toast.error("שגיאה ביצירת הצעת מחיר חדשה");
-        }
+        // נווט לדף הצעה חדשה עם פרטי הליד — ההצעה תישמר רק כשלוחצים "שמור"
+        navigate(`/QuoteDetails?lead_id=${lead.id}`);
       }
     } catch (error) {
        console.error("Error in handleQuoteAction:", error);
