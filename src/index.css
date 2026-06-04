@@ -112,9 +112,16 @@ body[data-scroll-locked] {
   margin-right: 0 !important;
 }
 
-/* מניעת aria-hidden על root */
+/* מניעת חסימה על root */
 #root[aria-hidden="true"] {
-  aria-hidden: false;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* מניעת overlay תקוע */
+[data-radix-dialog-overlay],
+[data-state="open"][role="dialog"] ~ * {
   pointer-events: auto !important;
 }
 

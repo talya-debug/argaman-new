@@ -183,14 +183,13 @@ export default function LeadsTable({
   useEffect(() => {
     const fetchLeadQuotes = async () => {
       if (leads.length > 0) {
-        const leadIds = leads.map(l => l.id);
-        const allQuotes = await Quote.filter({ lead_id: { $in: leadIds } });
-
+        // טוען את כל ההצעות — Firebase in query מוגבל ל-30
+        const allQuotes = await Quote.list();
         const quotesMap = allQuotes.reduce((acc, quote) => {
-          if (!acc[quote.lead_id]) {
-            acc[quote.lead_id] = [];
+          if (quote.lead_id) {
+            if (!acc[quote.lead_id]) acc[quote.lead_id] = [];
+            acc[quote.lead_id].push(quote);
           }
-          acc[quote.lead_id].push(quote);
           return acc;
         }, {});
         setLeadQuotes(quotesMap);
