@@ -38,6 +38,19 @@ function ProtectedPage({ children }) {
   return children;
 }
 
+// ניקוי overlay תקוע כל 3 שניות
+if (typeof window !== 'undefined') {
+  setInterval(() => {
+    document.body.removeAttribute('data-scroll-locked');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+    const root = document.getElementById('root');
+    if (root && root.getAttribute('aria-hidden') === 'true') {
+      root.removeAttribute('aria-hidden');
+    }
+  }, 3000);
+}
+
 function App() {
   return (
     <AuthProvider>

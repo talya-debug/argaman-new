@@ -106,22 +106,32 @@ body {
   overflow: auto !important;
 }
 
-/* מניעת נעילת body ע"י Radix Dialog */
+/* מניעת נעילה ע"י Radix */
 body[data-scroll-locked] {
   overflow: auto !important;
   margin-right: 0 !important;
+  padding-right: 0 !important;
 }
 
-/* מניעת חסימה על root */
 #root[aria-hidden="true"] {
   pointer-events: auto !important;
   opacity: 1 !important;
   visibility: visible !important;
 }
 
-/* מניעת overlay תקוע */
-[data-radix-dialog-overlay],
-[data-state="open"][role="dialog"] ~ * {
+/* הסרת כל overlay תקוע */
+[data-radix-dialog-overlay][data-state="closed"],
+[data-radix-alert-dialog-overlay][data-state="closed"] {
+  display: none !important;
+}
+
+/* מניעת חסימת לחיצות */
+[data-radix-dialog-overlay] {
+  pointer-events: auto !important;
+}
+
+/* ביטול aria-hidden שנתקע */
+[aria-hidden="true"]:not([role="dialog"]):not([data-radix-dialog-overlay]):not([data-radix-alert-dialog-overlay]) {
   pointer-events: auto !important;
 }
 
