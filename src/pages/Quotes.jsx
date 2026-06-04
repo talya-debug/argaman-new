@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Quote, Lead, Project, User, Task } from "@/entities";
 import { Button } from "@/components/ui/button";
-import { Plus, Search, FileText, FolderOpen, Archive } from "lucide-react";
+import { Plus, Search, FileText, FolderOpen, Archive, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -223,7 +223,10 @@ export default function Quotes() {
                                   } catch(e) { console.error(e); toast.error('שגיאה'); }
                                 }} className="text-xs gap-1 bg-green-600 hover:bg-green-700 text-white"><FolderOpen size={12} />צור פרויקט</Button>;
                               }
-                              return <Button size="sm" variant="ghost" onClick={async () => { await Quote.update(quote.id, { is_archived: true }); toast.success('הועבר לארכיון'); await loadQuotes(); }} className="text-xs gap-1 text-gray-400"><Archive size={12} />ארכיון</Button>;
+                              return <div className="flex gap-1">
+                                <Button size="sm" variant="ghost" onClick={async () => { await Quote.update(quote.id, { is_archived: true }); toast.success('הועבר לארכיון'); await loadQuotes(); }} className="text-xs gap-1 text-gray-400"><Archive size={12} />ארכיון</Button>
+                                <Button size="sm" variant="ghost" onClick={async () => { if (!confirm('למחוק את ההצעה לצמיתות?')) return; try { await Quote.delete(quote.id); toast.success('הצעה נמחקה'); await loadQuotes(); } catch(e) { toast.error('שגיאה'); } }} className="text-xs gap-1 text-red-400 hover:text-red-600"><Trash2 size={12} />מחק</Button>
+                              </div>;
                             })()}
                           </TableCell>
                         </TableRow>

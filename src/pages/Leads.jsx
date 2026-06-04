@@ -374,7 +374,7 @@ export default function Leads() {
           isLoading={isLoading}
         />
 
-        <Dialog open={showForm} onOpenChange={(open) => {
+        <Dialog open={showForm} modal={true} onOpenChange={(open) => {
           setShowForm(open);
           if (!open) setEditingLead(null);
         }}>
