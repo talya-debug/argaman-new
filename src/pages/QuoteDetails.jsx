@@ -227,16 +227,18 @@ export default function QuoteDetails() {
             return;
         }
 
-        let currentQuoteId = quoteId;
+        let currentQuoteId = quoteId || quote?.id;
 
         if (!currentQuoteId) {
             try {
-                const quoteNumber = `Q-${Date.now().toString().slice(-8)}`;
+                const quoteNumber = quote?.quote_number || `Q-${Date.now().toString().slice(-8)}`;
+                const clientName = quote?.client_name || lead?.name || 'לקוח חדש';
 
                 const newQuoteData = {
-                    client_name: 'לקוח חדש',
-                    title: `הצעת מחיר ${quoteNumber}`,
+                    client_name: clientName,
+                    title: `הצעת מחיר עבור ${clientName}`,
                     quote_number: quoteNumber,
+                    lead_id: quote?.lead_id || lead?.id || '',
                     status: 'טיוטה',
                     vat_percentage: 18,
                     discount_percentage: 0,
@@ -251,7 +253,7 @@ export default function QuoteDetails() {
                 const newQuote = await Quote.create(newQuoteData);
 
                 currentQuoteId = newQuote.id;
-                setQuote(newQuote);
+                setQuote(prev => ({ ...prev, ...newQuote, _isNew: false }));
 
                 window.history.replaceState(null, '', `/QuoteDetails?id=${currentQuoteId}`);
 
@@ -541,17 +543,19 @@ export default function QuoteDetails() {
     };
 
     const handleImportSuccess = async (importedLines) => {
-        let currentQuoteId = quoteId;
+        let currentQuoteId = quoteId || quote?.id;
 
         // Create quote if it doesn't exist
         if (!currentQuoteId) {
             try {
-                const quoteNumber = `Q-${Date.now().toString().slice(-8)}`;
+                const quoteNumber = quote?.quote_number || `Q-${Date.now().toString().slice(-8)}`;
+                const clientName = quote?.client_name || lead?.name || 'לקוח חדש';
 
                 const newQuote = await Quote.create({
-                    client_name: 'לקוח חדש',
-                    title: `הצעת מחיר ${quoteNumber}`,
+                    client_name: clientName,
+                    title: `הצעת מחיר עבור ${clientName}`,
                     quote_number: quoteNumber,
+                    lead_id: quote?.lead_id || lead?.id || '',
                     status: 'טיוטה',
                     vat_percentage: 18,
                     discount_percentage: 0,
@@ -560,9 +564,9 @@ export default function QuoteDetails() {
                 });
 
                 currentQuoteId = newQuote.id;
-                setQuote(newQuote);
+                setQuote(prev => ({ ...prev, ...newQuote, _isNew: false }));
                 window.history.replaceState(null, '', `/QuoteDetails?id=${currentQuoteId}`);
-                toast.success(`הצעת מחיר ${quoteNumber} נוצרה עקב ייבוא.`);
+                toast.success(`הצעת מחיר עבור ${clientName} נוצרה.`);
             } catch (error) {
                 console.error("Failed to create quote:", error);
                 toast.error("שגיאה ביצירת הצעת מחיר.");
