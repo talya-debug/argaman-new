@@ -127,7 +127,7 @@ function AddManualItemDialog({ onAddItem }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         if (!itemName.trim()) {
             toast.error("יש למלא שם פריט");
             return;
@@ -167,7 +167,7 @@ function AddManualItemDialog({ onAddItem }) {
         };
 
         onAddItem(manualItem);
-        
+
         // Reset form
         setItemName('');
         setQuantity(1);
@@ -176,100 +176,103 @@ function AddManualItemDialog({ onAddItem }) {
         setIsOpen(false);
     };
 
+    // שימוש במודל פשוט במקום Radix Dialog — מונע בעיית מסך מוחשך
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline" className="bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700">
-                    <PlusCircle className="w-4 h-4 ml-2" />
-                    הוסף פריט ידני
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-lg bg-white shadow-xl rounded-lg" dir="rtl">
-                <div className="bg-white p-1 rounded-lg">
-                    <DialogHeader className="bg-purple-50 p-4 rounded-t-lg border-b">
-                        <DialogTitle className="text-slate-800 text-lg font-bold">הוספת פריט ידני להצעה</DialogTitle>
-                    </DialogHeader>
+        <>
+            <Button variant="outline" className="bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700" onClick={() => setIsOpen(true)}>
+                <PlusCircle className="w-4 h-4 ml-2" />
+                הוסף פריט ידני
+            </Button>
 
-                    <div className="p-6 bg-white">
-                        <form onSubmit={handleSubmit} className="space-y-6 text-slate-800">
-                            <div>
-                                <Label htmlFor="clause-number" className="text-gray-700 font-semibold">מספר סעיף (אופציונלי)</Label>
-                                <Input
-                                    id="clause-number"
-                                    value={clauseNumber}
-                                    onChange={(e) => setClauseNumber(e.target.value)}
-                                    placeholder="לדוגמה: A1, 1.2.3..."
-                                    className="text-right bg-white border-gray-300 mt-2"
-                                />
-                            </div>
+            {isOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center" dir="rtl">
+                    <div className="fixed inset-0 bg-black/40" onClick={() => setIsOpen(false)} />
+                    <div className="relative z-10 max-w-lg w-full mx-4 bg-white shadow-xl rounded-lg">
+                        <div className="bg-purple-50 p-4 rounded-t-lg border-b">
+                            <h3 className="text-slate-800 text-lg font-bold">הוספת פריט ידני להצעה</h3>
+                        </div>
 
-                            <div>
-                                <Label htmlFor="item-name" className="text-gray-700 font-semibold">שם הפריט *</Label>
-                                <Input
-                                    id="item-name"
-                                    value={itemName}
-                                    onChange={(e) => setItemName(e.target.value)}
-                                    placeholder="לדוגמה: עבודת התקנה, הובלה, אביזר מיוחד..."
-                                    className="text-right bg-white border-gray-300 mt-2"
-                                    required
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
+                        <div className="p-6 bg-white rounded-b-lg">
+                            <form onSubmit={handleSubmit} className="space-y-6 text-slate-800">
                                 <div>
-                                    <Label htmlFor="quantity" className="text-gray-700 font-semibold">כמות *</Label>
+                                    <Label htmlFor="clause-number" className="text-gray-700 font-semibold">מספר סעיף (אופציונלי)</Label>
                                     <Input
-                                        id="quantity"
-                                        type="number"
-                                        min="0.01"
-                                        step="0.01"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(parseFloat(e.target.value) || 1)}
+                                        id="clause-number"
+                                        value={clauseNumber}
+                                        onChange={(e) => setClauseNumber(e.target.value)}
+                                        placeholder="לדוגמה: A1, 1.2.3..."
+                                        className="text-right bg-white border-gray-300 mt-2"
+                                    />
+                                </div>
+
+                                <div>
+                                    <Label htmlFor="item-name" className="text-gray-700 font-semibold">שם הפריט *</Label>
+                                    <Input
+                                        id="item-name"
+                                        value={itemName}
+                                        onChange={(e) => setItemName(e.target.value)}
+                                        placeholder="לדוגמה: עבודת התקנה, הובלה, אביזר מיוחד..."
                                         className="text-right bg-white border-gray-300 mt-2"
                                         required
                                     />
                                 </div>
-                                <div>
-                                    <Label htmlFor="unit-price" className="text-gray-700 font-semibold">
-                                        מחיר יחידה (₪) *
-                                    </Label>
-                                    <Input
-                                        id="unit-price"
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        value={unitPrice}
-                                        onChange={(e) => setUnitPrice(parseFloat(e.target.value) || 0)}
-                                        className="text-right bg-white border-gray-300 mt-2"
-                                        required
-                                    />
-                                    <p className="text-xs text-gray-500 mt-1">ניתן להזין 0 לפריטים ללא חיוב</p>
-                                </div>
-                            </div>
 
-                            <div className={`p-4 rounded-lg border ${unitPrice === 0 ? 'bg-blue-50 border-blue-200' : 'bg-purple-50 border-purple-200'}`}>
-                                <div className="flex justify-between items-center">
-                                    <Label className="text-sm font-semibold text-gray-700">סכום כולל</Label>
-                                    {unitPrice === 0 && (
-                                        <Badge className="bg-blue-50 text-blue-600 text-xs">ללא חיוב</Badge>
-                                    )}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <Label htmlFor="quantity" className="text-gray-700 font-semibold">כמות *</Label>
+                                        <Input
+                                            id="quantity"
+                                            type="number"
+                                            min="0.01"
+                                            step="0.01"
+                                            value={quantity}
+                                            onChange={(e) => setQuantity(parseFloat(e.target.value) || 1)}
+                                            className="text-right bg-white border-gray-300 mt-2"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="unit-price" className="text-gray-700 font-semibold">
+                                            מחיר יחידה (₪) *
+                                        </Label>
+                                        <Input
+                                            id="unit-price"
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            value={unitPrice}
+                                            onChange={(e) => setUnitPrice(parseFloat(e.target.value) || 0)}
+                                            className="text-right bg-white border-gray-300 mt-2"
+                                            required
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">ניתן להזין 0 לפריטים ללא חיוב</p>
+                                    </div>
                                 </div>
-                                <p className="text-2xl font-bold text-purple-600">₪{(quantity * unitPrice).toLocaleString()}</p>
-                            </div>
 
-                            <div className="flex justify-end gap-3 pt-4 border-t">
-                                <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-                                    ביטול
-                                </Button>
-                                <Button type="submit" className="bg-purple-600 hover:bg-purple-700 text-white">
-                                    הוסף פריט
-                                </Button>
-                            </div>
-                        </form>
+                                <div className={`p-4 rounded-lg border ${unitPrice === 0 ? 'bg-blue-50 border-blue-200' : 'bg-purple-50 border-purple-200'}`}>
+                                    <div className="flex justify-between items-center">
+                                        <Label className="text-sm font-semibold text-gray-700">סכום כולל</Label>
+                                        {unitPrice === 0 && (
+                                            <Badge className="bg-blue-50 text-blue-600 text-xs">ללא חיוב</Badge>
+                                        )}
+                                    </div>
+                                    <p className="text-2xl font-bold text-purple-600">₪{(quantity * unitPrice).toLocaleString()}</p>
+                                </div>
+
+                                <div className="flex justify-end gap-3 pt-4 border-t">
+                                    <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+                                        ביטול
+                                    </Button>
+                                    <Button type="submit" className="bg-purple-600 hover:bg-purple-700 text-white">
+                                        הוסף פריט
+                                    </Button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </DialogContent>
-        </Dialog>
+            )}
+        </>
     );
 }
 
