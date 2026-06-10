@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -184,8 +185,8 @@ function AddManualItemDialog({ onAddItem }) {
                 הוסף פריט ידני
             </Button>
 
-            {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center" dir="rtl">
+            {isOpen && createPortal(
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center" dir="rtl">
                     <div className="fixed inset-0 bg-black/40" onClick={() => setIsOpen(false)} />
                     <div className="relative z-10 max-w-lg w-full mx-4 bg-white shadow-xl rounded-lg">
                         <div className="bg-purple-50 p-4 rounded-t-lg border-b">
@@ -270,7 +271,8 @@ function AddManualItemDialog({ onAddItem }) {
                             </form>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </>
     );

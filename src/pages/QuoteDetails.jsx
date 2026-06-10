@@ -287,6 +287,7 @@ export default function QuoteDetails() {
         try {
             const createdLine = await QuoteLine.create(newLine);
             setQuoteLines(prev => [...prev, createdLine]);
+            toast.success(`פריט "${item.name}" נוסף להצעה`);
         } catch(e) {
             console.error("Failed to add item:", e);
             toast.error("שגיאה בהוספת פריט");
