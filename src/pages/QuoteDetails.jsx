@@ -266,18 +266,19 @@ export default function QuoteDetails() {
 
         const lineTotal = (item.price_no_vat || 0) * (item.quantity || 1);
         const maxOrderIndex = Math.max(...quoteLines.map(l => l.order_index || 0), -1);
+        // Firestore לא מקבל undefined — חובה לתת ערך ברירת מחדל לכל שדה
         const newLine = {
             quote_id: currentQuoteId,
-            price_item_id: item.id,
-            model_snapshot: item.model,
-            name_snapshot: item.name,
-            description_snapshot: item.description,
-            category_snapshot: item.category,
-            sub_category_snapshot: item.sub_category,
-            btu_snapshot: item.btu,
-            image_url_snapshot: item.image_url,
+            price_item_id: item.id || '',
+            model_snapshot: item.model || '',
+            name_snapshot: item.name || '',
+            description_snapshot: item.description || '',
+            category_snapshot: item.category || '',
+            sub_category_snapshot: item.sub_category || '',
+            btu_snapshot: item.btu || 0,
+            image_url_snapshot: item.image_url || '',
             price_no_vat_snapshot: item.price_no_vat || 0,
-            tipe_item_snapshot: item.tipe_item,
+            tipe_item_snapshot: item.tipe_item || '',
             quantity: item.quantity || 1,
             line_total: lineTotal,
             clause_number: item.clause_number || '',
