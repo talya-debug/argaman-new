@@ -91,7 +91,7 @@ export default function Login() {
 
           <Button type="submit" disabled={loading} style={{ marginTop: 8, gap: 8 }}>
             {loading ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
-            {loading ? 'מתחבר...' : 'התחבר'}
+            {loading ? 'מתחבר...' : 'כניסה למערכת'}
           </Button>
         </form>
       </div>
