@@ -306,7 +306,7 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                                             <TableCell className="max-w-xs">
                                                  <Dialog>
                                                     <DialogTrigger asChild>
-                                                        <span className="cursor-pointer hover:underline font-semibold" style={{ color: 'var(--dark, #1a1a2e)' }}>{task.title}</span>
+                                                        <span className="cursor-pointer hover:underline font-semibold" style={{ color: '#000000' }}>{task.title}</span>
                                                     </DialogTrigger>
                                                     <DialogContent className="max-w-2xl" style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)' }}>
                                                         <DialogHeader><DialogTitle style={{ color: 'var(--argaman)' }}>{task.title}</DialogTitle></DialogHeader>
