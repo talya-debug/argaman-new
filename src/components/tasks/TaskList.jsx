@@ -283,9 +283,9 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                                 <TableHeader>
                                     <TableRow style={{ background: 'rgba(212, 168, 67, 0.05)', borderBottom: '1px solid var(--dark-border)' }}>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>פירוט המשימה</TableHead>
-                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>שם הלקוח</TableHead>
-                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>נותן המשימה</TableHead>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>אחראי</TableHead>
+                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>נותן המשימה</TableHead>
+                                        <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>שם הלקוח</TableHead>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>תאריך יעד</TableHead>
                                         <TableHead className="text-right font-semibold" style={{ color: 'var(--argaman)' }}>סטטוס</TableHead>
                                         <TableHead className="text-center font-semibold" style={{ color: 'var(--argaman)' }}>פעולות</TableHead>
@@ -306,7 +306,7 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                                             <TableCell className="max-w-xs">
                                                  <Dialog>
                                                     <DialogTrigger asChild>
-                                                        <span className="cursor-pointer hover:underline" style={{ color: 'var(--argaman-light)' }}>{task.title}</span>
+                                                        <span className="cursor-pointer hover:underline font-semibold" style={{ color: 'var(--dark, #1a1a2e)' }}>{task.title}</span>
                                                     </DialogTrigger>
                                                     <DialogContent className="max-w-2xl" style={{ background: 'var(--dark-card)', borderColor: 'var(--dark-border)' }}>
                                                         <DialogHeader><DialogTitle style={{ color: 'var(--argaman)' }}>{task.title}</DialogTitle></DialogHeader>
@@ -317,9 +317,9 @@ export default function TaskList({ title, tasks, isLoading, onEdit, icon, defaul
                                                     </DialogContent>
                                                 </Dialog>
                                             </TableCell>
-                                            <TableCell className="font-medium" style={{ color: 'var(--text-primary)' }}>{task.client_name || 'לא שויך'}</TableCell>
-                                            <TableCell><EditableCell value={task.creator} task={task} fieldName="creator" onUpdate={onUpdate} /></TableCell>
                                             <TableCell><EditableCell value={task.assigned_to} task={task} fieldName="assigned_to" options={userOptions} onUpdate={onUpdate} /></TableCell>
+                                            <TableCell><EditableCell value={task.creator} task={task} fieldName="creator" onUpdate={onUpdate} /></TableCell>
+                                            <TableCell className="font-medium" style={{ color: 'var(--text-primary)' }}>{task.client_name || 'לא שויך'}</TableCell>
                                             <TableCell><EditableCell value={task.due_date} task={task} fieldName="due_date" onUpdate={onUpdate} /></TableCell>
                                             <TableCell><EditableCell value={task.status} task={task} fieldName="status" options={Object.keys(statusColors)} onUpdate={onUpdate} /></TableCell>
                                             <TableCell className="text-center">
