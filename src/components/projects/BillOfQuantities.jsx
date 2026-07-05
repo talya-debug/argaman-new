@@ -551,6 +551,27 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
 
     const calculateInvoiceTotals = (invoiceNum) => { const { afterDiscount } = calcInvoiceSummary(invoiceNum); return afterDiscount; };
 
+    // סנכרון אוטומטי לגבייה: כשסכום של חשבון מאושר (שעדיין לא שולם) משתנה —
+    // מעדכנים את הסכום ברשומת הגבייה כדי שיישאר תואם
+    const syncedAmountsRef = React.useRef({});
+    useEffect(() => {
+        if (!collectionTasks || !localQuoteLines) return;
+        for (let num = 1; num <= maxInvoiceNumber; num++) {
+            const task = collectionTasks.find(t => t.project_id === projectId && t.invoice_number === `חשבון ${num}`);
+            if (!task) continue;
+            // חשבון ששולם (או שולם חלקית) — לא נוגעים בסכום
+            if (task.collection_status && task.collection_status.includes('שולם')) continue;
+            const current = calcInvoiceSummary(num).finalTotal;
+            const saved = task.amount_to_collect || 0;
+            if (Math.abs(current - saved) < 0.5) continue; // כבר תואם — אין צורך לעדכן
+            if (syncedAmountsRef.current[task.id] === Math.round(current)) continue; // כבר בתהליך עדכון לערך זה
+            syncedAmountsRef.current[task.id] = Math.round(current);
+            CollectionTask.update(task.id, { amount_to_collect: current })
+                .then(() => { if (onUpdateQuoteLine) onUpdateQuoteLine(null, true); })
+                .catch(e => console.error('סנכרון סכום גבייה נכשל:', e));
+        }
+    }, [collectionTasks, invoicesData, localQuoteLines, project, projectId, maxInvoiceNumber]);
+
     const addNewInvoice = () => { const nextInvoiceNum = maxInvoiceNumber + 1; setMaxInvoiceNumber(nextInvoiceNum); setActiveTab(`invoice-${nextInvoiceNum}`); };
 
     const calculatePaymentDueDate = (baseDate, paymentTerms) => {
