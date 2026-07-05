@@ -25,10 +25,11 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
     const [notes, setNotes] = useState('');
 
     const totalInvoiced = existingEntries.reduce((sum, entry) => sum + (entry.calculated_percentage || 0), 0);
-    const remainingPercentage = Math.max(0, 100 - totalInvoiced);
+    // עיגול ל-4 ספרות כדי למנוע שגיאת דיוק עשרוני (למשל 1-0.9=0.0999...) שחוסמת חיוב היתרה
+    const remainingPercentage = Math.max(0, Math.round((100 - totalInvoiced) * 10000) / 10000);
     const totalQuantity = quoteLine?.quantity || 1;
     const invoicedQuantity = existingEntries.reduce((sum, entry) => sum + (entry.quantity_completed || 0), 0);
-    const remainingQuantity = Math.max(0, totalQuantity - invoicedQuantity);
+    const remainingQuantity = Math.max(0, Math.round((totalQuantity - invoicedQuantity) * 10000) / 10000);
 
     const calculateAmount = () => {
         const basePrice = quoteLine?.line_total || 0;
@@ -214,9 +215,10 @@ const EditInvoiceEntryDialog = ({ entry, quoteLine, projectId, onInvoiceUpdated,
     const totalQuantity = quoteLine?.quantity || 1;
     const otherEntries = existingEntries.filter(e => e.id !== entry?.id);
     const totalInvoicedOthers = otherEntries.reduce((sum, e) => sum + (e.calculated_percentage || 0), 0);
-    const remainingPercentageForOthers = Math.max(0, 100 - totalInvoicedOthers);
+    // עיגול ל-4 ספרות למניעת שגיאת דיוק עשרוני שחוסמת חיוב היתרה
+    const remainingPercentageForOthers = Math.max(0, Math.round((100 - totalInvoicedOthers) * 10000) / 10000);
     const invoicedQuantityOthers = otherEntries.reduce((sum, e) => sum + (e.quantity_completed || 0), 0);
-    const remainingQuantityForOthers = Math.max(0, totalQuantity - invoicedQuantityOthers);
+    const remainingQuantityForOthers = Math.max(0, Math.round((totalQuantity - invoicedQuantityOthers) * 10000) / 10000);
 
     const calculateAmount = () => {
         const basePrice = quoteLine?.line_total || 0;
