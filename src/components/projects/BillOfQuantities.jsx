@@ -420,7 +420,7 @@ function InvoiceStatusTracker({ invoiceNum, projectId, project, invoiceTotal, co
             {/* כפתור פעולה */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ fontSize: 13, color: '#64748b' }}>
-                    {collectionTask && <span>סכום: ₪{(collectionTask.amount_to_collect || invoiceTotal || 0).toLocaleString()}</span>}
+                    {collectionTask && <span>סכום: ₪{(invoiceTotal || collectionTask.amount_to_collect || 0).toLocaleString()}</span>}
                     {collectionTask?.payment_due_date && <span style={{ marginRight: 16 }}>יעד תשלום: {new Date(collectionTask.payment_due_date).toLocaleDateString('he-IL')}</span>}
                 </div>
                 {nextLabel && (
@@ -600,20 +600,27 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         if (!projectId) { toast.error("חסר מזהה פרויקט"); return; }
         toast.info("מכין קובץ אקסל...");
 
-        let allLines, freshEntries, freshProject;
-        try {
-            const [linesData, entriesData, projectData] = await Promise.all([
-                QuoteLine.filter({ quote_id: quoteId }),
-                ProgressEntry.filter({ project_id: projectId }),
-                Project.get(projectId)
-            ]);
-            allLines = linesData;
-            freshEntries = entriesData;
-            freshProject = projectData;
-        } catch (e) {
-            console.error('Fetch failed:', e);
-            toast.error("שגיאה בטעינת נתונים");
-            return;
+        // שימוש בנתונים שכבר טעונים ומוצגים במסך — אמין יותר ממשיכה חוזרת שיכולה לחזור ריקה
+        let allLines = (localQuoteLines && localQuoteLines.length) ? localQuoteLines.slice()
+                     : (quoteLines && quoteLines.length) ? quoteLines.slice() : [];
+        let freshEntries = progressEntries ? progressEntries.slice() : [];
+        let freshProject = project;
+        // גיבוי — אם אין נתונים במסך, מנסים למשוך מהשרת
+        if (!allLines.length) {
+            try {
+                const [linesData, entriesData, projectData] = await Promise.all([
+                    QuoteLine.filter({ quote_id: quoteId }),
+                    ProgressEntry.filter({ project_id: projectId }),
+                    Project.get(projectId)
+                ]);
+                allLines = linesData || [];
+                freshEntries = entriesData || [];
+                freshProject = projectData || project;
+            } catch (e) {
+                console.error('Fetch failed:', e);
+                toast.error("שגיאה בטעינת נתונים");
+                return;
+            }
         }
 
         allLines = allLines.slice().sort((a, b) => {
@@ -799,7 +806,8 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         const summaryFont = { bold: true, size: 10, name: 'Arial' };
         const summaryFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF5F5F5' } };
         const totalFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD4A843' } };
-        const totalFont = { bold: true, size: 11, name: 'Arial', color: { argb: 'FFFFFFFF' } };
+        // שורת הסה"כ לתשלום — פונט גדול ובולט כדי שתהיה ברורה מיד
+        const totalFont = { bold: true, size: 15, name: 'Arial', color: { argb: 'FFFFFFFF' } };
         const borderStyle = { style: 'thin', color: { argb: 'FFD0D0D0' } };
         const border = { top: borderStyle, bottom: borderStyle, left: borderStyle, right: borderStyle };
         const numFmt = '#,##0.00';
@@ -847,6 +855,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             // שורות סיכום (אחרי הנתונים)
             if (rowIdx >= rows.length - 20 && rowData[headerRow.length - 2] && typeof rowData[headerRow.length - 2] === 'string' && rowData[headerRow.length - 2] !== '') {
                 const isTotal = rowData[headerRow.length - 2]?.includes?.('סה"כ לתשלום') || rowData[headerRow.length - 2]?.includes?.('סה"כ מצטבר');
+                if (isTotal) excelRow.height = 36; // שורת סה"כ גבוהה יותר כדי להכיל את הפונט הגדול
                 excelRow.eachCell((cell, colNum) => {
                     cell.font = isTotal ? totalFont : summaryFont;
                     cell.fill = isTotal ? totalFill : summaryFill;
