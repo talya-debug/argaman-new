@@ -16,6 +16,9 @@ import ExcelJS from 'exceljs';
 import InvoicePDF from './InvoicePDF';
 import DeductionsModal from './DeductionsModal';
 
+// המרה בטוחה למספר — מונע קריסה כשערך שמור כטקסט (למשל "50") וגורם לחיבור מחרוזות
+const toNum = (v) => { const n = Number(v); return isNaN(n) ? 0 : n; };
+
 const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoiceAdded, existingEntries = [] }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [entryMethod, setEntryMethod] = useState('percentage');
@@ -24,11 +27,11 @@ const InvoiceEntryDialog = ({ quoteLine, projectId, invoiceNumber = 1, onInvoice
     const [entryDate, setEntryDate] = useState(new Date().toISOString().split('T')[0]);
     const [notes, setNotes] = useState('');
 
-    const totalInvoiced = existingEntries.reduce((sum, entry) => sum + (entry.calculated_percentage || 0), 0);
+    const totalInvoiced = existingEntries.reduce((sum, entry) => sum + toNum(entry.calculated_percentage), 0);
     // עיגול ל-4 ספרות כדי למנוע שגיאת דיוק עשרוני (למשל 1-0.9=0.0999...) שחוסמת חיוב היתרה
     const remainingPercentage = Math.max(0, Math.round((100 - totalInvoiced) * 10000) / 10000);
     const totalQuantity = quoteLine?.quantity || 1;
-    const invoicedQuantity = existingEntries.reduce((sum, entry) => sum + (entry.quantity_completed || 0), 0);
+    const invoicedQuantity = existingEntries.reduce((sum, entry) => sum + toNum(entry.quantity_completed), 0);
     const remainingQuantity = Math.max(0, Math.round((totalQuantity - invoicedQuantity) * 10000) / 10000);
 
     const calculateAmount = () => {
@@ -214,10 +217,10 @@ const EditInvoiceEntryDialog = ({ entry, quoteLine, projectId, onInvoiceUpdated,
 
     const totalQuantity = quoteLine?.quantity || 1;
     const otherEntries = existingEntries.filter(e => e.id !== entry?.id);
-    const totalInvoicedOthers = otherEntries.reduce((sum, e) => sum + (e.calculated_percentage || 0), 0);
+    const totalInvoicedOthers = otherEntries.reduce((sum, e) => sum + toNum(e.calculated_percentage), 0);
     // עיגול ל-4 ספרות למניעת שגיאת דיוק עשרוני שחוסמת חיוב היתרה
     const remainingPercentageForOthers = Math.max(0, Math.round((100 - totalInvoicedOthers) * 10000) / 10000);
-    const invoicedQuantityOthers = otherEntries.reduce((sum, e) => sum + (e.quantity_completed || 0), 0);
+    const invoicedQuantityOthers = otherEntries.reduce((sum, e) => sum + toNum(e.quantity_completed), 0);
     const remainingQuantityForOthers = Math.max(0, Math.round((totalQuantity - invoicedQuantityOthers) * 10000) / 10000);
 
     const calculateAmount = () => {
@@ -259,7 +262,7 @@ const EditInvoiceEntryDialog = ({ entry, quoteLine, projectId, onInvoiceUpdated,
                     <div className="p-6 bg-white">
                         <form onSubmit={handleSubmit} className="space-y-6 text-gray-700">
                             <div><Label htmlFor="entry-method" className="text-gray-700 font-semibold">שיטת הזנה</Label><Select value={entryMethod} onValueChange={setEntryMethod}><SelectTrigger className="bg-white border-gray-300"><SelectValue /></SelectTrigger><SelectContent className="bg-white"><SelectItem value="percentage">לפי אחוז ביצוע</SelectItem><SelectItem value="quantity">לפי כמות שבוצעה</SelectItem></SelectContent></Select></div>
-                            {entryMethod === 'percentage' ? (<div><Label htmlFor="percentage" className="text-gray-700 font-semibold">אחוז ביצוע (%) - 0 למחיקה</Label><Input id="percentage" type="number" min="0" max={remainingPercentageForOthers + (entry?.calculated_percentage || 0)} step="0.1" value={percentage} onChange={(e) => setPercentage(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" /></div>) : (<div><Label htmlFor="quantity" className="text-gray-700 font-semibold">כמות שבוצעה - 0 למחיקה</Label><Input id="quantity" type="number" min="0" max={remainingQuantityForOthers + (entry?.quantity_completed || 0)} step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" /></div>)}
+                            {entryMethod === 'percentage' ? (<div><Label htmlFor="percentage" className="text-gray-700 font-semibold">אחוז ביצוע (%) - 0 למחיקה</Label><Input id="percentage" type="number" min="0" max={remainingPercentageForOthers + toNum(entry?.calculated_percentage)} step="0.1" value={percentage} onChange={(e) => setPercentage(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" /></div>) : (<div><Label htmlFor="quantity" className="text-gray-700 font-semibold">כמות שבוצעה - 0 למחיקה</Label><Input id="quantity" type="number" min="0" max={remainingQuantityForOthers + toNum(entry?.quantity_completed)} step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)} className="text-right bg-white border-gray-300" /></div>)}
                             <div><Label htmlFor="entry-date" className="text-gray-700 font-semibold">תאריך</Label><Input id="entry-date" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="bg-white border-gray-300" /></div>
                             <div><Label htmlFor="notes" className="text-gray-700 font-semibold">הערות</Label><Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="הערות נוספות..." rows={3} className="bg-white border-gray-300" /></div>
                             <div className="flex justify-between pt-4 border-t">
@@ -531,7 +534,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             if (line.is_header) return;
             const entries = invoicesData[line.id] || [];
             const invoiceEntries = entries.filter(e => e.invoice_number === `חשבון ${invoiceNum}`);
-            rawSubtotal += invoiceEntries.reduce((sum, e) => sum + (e.amount_to_invoice || 0), 0);
+            rawSubtotal += invoiceEntries.reduce((sum, e) => sum + toNum(e.amount_to_invoice), 0);
         });
         const discountType = project?.boq_discount_type || 'percentage';
         const discountPct = project?.boq_discount_percentage || 0;
@@ -641,7 +644,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         const p = freshProject || project;
         const calcSummary = (iNum) => {
             let rawSubtotal = 0;
-            allLines.forEach(line => { if (line.is_header) return; const entries = (freshMap[line.id] || []).filter(e => e.invoice_number === `חשבון ${iNum}`); rawSubtotal += entries.reduce((sum, e) => sum + (e.amount_to_invoice || 0), 0); });
+            allLines.forEach(line => { if (line.is_header) return; const entries = (freshMap[line.id] || []).filter(e => e.invoice_number === `חשבון ${iNum}`); rawSubtotal += entries.reduce((sum, e) => sum + toNum(e.amount_to_invoice), 0); });
             const discountType = p?.boq_discount_type || 'percentage'; const discountPct = p?.boq_discount_percentage || 0; const discountFixed = p?.boq_discount_amount || 0;
             const discountAmt = discountType === 'fixed_amount' ? Math.min(discountFixed, rawSubtotal) : rawSubtotal * (discountPct / 100);
             const afterDiscount = rawSubtotal - discountAmt;
@@ -696,7 +699,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
             }
             const allEntriesForLine = freshMap[line.id] || [];
             const currentInvoiceEntry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${invoiceNum}`);
-            subtotalForCurrentInvoice += currentInvoiceEntry?.amount_to_invoice || 0;
+            subtotalForCurrentInvoice += toNum(currentInvoiceEntry?.amount_to_invoice);
             let allNotes = (line.description_snapshot && line.description_snapshot.includes("סיבה:")) ? line.description_snapshot : '';
             if (currentInvoiceEntry?.notes) allNotes += (allNotes ? ' | ' : '') + currentInvoiceEntry.notes;
 
@@ -712,7 +715,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                 let cumulativeTotal = 0;
                 for (let i = 1; i <= maxInvNum; i++) {
                     const entry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${i}`);
-                    const amount = entry?.amount_to_invoice || 0;
+                    const amount = toNum(entry?.amount_to_invoice);
                     row.push(Number(amount.toFixed(2)));
                     cumulativeTotal += amount;
                 }
@@ -723,7 +726,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                 let cumulativePct = 0;
                 for (let i = 1; i <= maxInvNum; i++) {
                     const entry = allEntriesForLine.find(e => e.invoice_number === `חשבון ${i}`);
-                    const pct = entry?.calculated_percentage || 0;
+                    const pct = toNum(entry?.calculated_percentage);
                     row.push(pct > 0 ? `${pct.toFixed(1)}%` : '-');
                     cumulativePct += pct;
                 }
@@ -951,8 +954,8 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                                                 }
                                                 const entries = invoicesData[line.id] || [];
                                                 const invoiceEntries = entries.filter(entry => entry.invoice_number === `חשבון ${invoiceNum}`);
-                                                const totalInvoiced = entries.reduce((sum, entry) => sum + (entry.calculated_percentage || 0), 0);
-                                                const invoiceAmount = invoiceEntries.reduce((sum, entry) => sum + (entry.amount_to_invoice || 0), 0);
+                                                const totalInvoiced = entries.reduce((sum, entry) => sum + toNum(entry.calculated_percentage), 0);
+                                                const invoiceAmount = invoiceEntries.reduce((sum, entry) => sum + toNum(entry.amount_to_invoice), 0);
                                                 const canAddMore = invoiceEntries.length < 1 && totalInvoiced < 100;
                                                 return (
                                                     <TableRow key={line.id}>
@@ -964,7 +967,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                                                         <TableCell className="text-right text-sm font-medium">{((line.quantity || 0) * totalInvoiced / 100).toFixed(2)}</TableCell><TableCell className="text-right"><Badge className={`${totalInvoiced >= 100 ? "bg-[rgba(74,222,128,0.1)] text-green-800" : totalInvoiced >= 75 ? "bg-orange-100 text-orange-800" : totalInvoiced >= 50 ? "bg-[rgba(251,191,36,0.1)] text-yellow-800" : "bg-[rgba(248,113,113,0.1)] text-red-800"}`}>{totalInvoiced.toFixed(1)}%</Badge></TableCell>
                                                         <TableCell className="text-right"><Input type="text" defaultValue={line.boq_notes || ''} onBlur={async (e) => { try { await QuoteLine.update(line.id, { boq_notes: e.target.value }); } catch {} }} className="h-8 text-xs border-gray-300" placeholder="הערות..." /></TableCell>
                                                         <TableCell className="text-right space-x-1">
-                                                            {invoiceEntries.length > 0 ? (invoiceEntries.map(entry => (<div key={entry.id} className="flex items-center justify-end gap-2"><EditInvoiceEntryDialog entry={entry} quoteLine={line} projectId={projectId} onInvoiceUpdated={() => handleInvoiceAction(line.id)} onEntryDeleted={() => handleInvoiceAction(line.id)} existingEntries={entries} /><div className="text-right"><p className="font-medium">₪{invoiceAmount.toLocaleString()}</p><p className="text-xs text-gray-500">{entry.calculated_percentage?.toFixed(1)}% - {new Date(entry.entry_date).toLocaleDateString('he-IL')}</p></div></div>))) : canAddMore ? (<InvoiceEntryDialog quoteLine={line} projectId={projectId} invoiceNumber={invoiceNum} onInvoiceAdded={() => handleInvoiceAction(line.id)} existingEntries={entries} />) : (<span className="text-gray-400">-</span>)}
+                                                            {invoiceEntries.length > 0 ? (invoiceEntries.map(entry => (<div key={entry.id} className="flex items-center justify-end gap-2"><EditInvoiceEntryDialog entry={entry} quoteLine={line} projectId={projectId} onInvoiceUpdated={() => handleInvoiceAction(line.id)} onEntryDeleted={() => handleInvoiceAction(line.id)} existingEntries={entries} /><div className="text-right"><p className="font-medium">₪{invoiceAmount.toLocaleString()}</p><p className="text-xs text-gray-500">{toNum(entry.calculated_percentage).toFixed(1)}% - {new Date(entry.entry_date).toLocaleDateString('he-IL')}</p></div></div>))) : canAddMore ? (<InvoiceEntryDialog quoteLine={line} projectId={projectId} invoiceNumber={invoiceNum} onInvoiceAdded={() => handleInvoiceAction(line.id)} existingEntries={entries} />) : (<span className="text-gray-400">-</span>)}
                                                         </TableCell>
                                                     </TableRow>
                                                 );
@@ -972,7 +975,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                                             {(() => {
                                                 const discountType = project?.boq_discount_type || 'percentage';
                                                 let rawSubtotal = 0;
-                                                localQuoteLines.forEach(line => { if (line.is_header) return; const entries = invoicesData[line.id] || []; const invEntries = entries.filter(entry => entry.invoice_number === `חשבון ${invoiceNum}`); rawSubtotal += invEntries.reduce((sum, entry) => sum + (entry.amount_to_invoice || 0), 0); });
+                                                localQuoteLines.forEach(line => { if (line.is_header) return; const entries = invoicesData[line.id] || []; const invEntries = entries.filter(entry => entry.invoice_number === `חשבון ${invoiceNum}`); rawSubtotal += invEntries.reduce((sum, entry) => sum + toNum(entry.amount_to_invoice), 0); });
                                                 const boqDiscPct = project?.boq_discount_percentage || 0; const boqDiscAmtFixed = project?.boq_discount_amount || 0;
                                                 const boqDiscAmt = discountType === 'fixed_amount' ? Math.min(boqDiscAmtFixed, rawSubtotal) : (rawSubtotal * (boqDiscPct / 100));
                                                 if (boqDiscAmt > 0 && rawSubtotal > 0) {
