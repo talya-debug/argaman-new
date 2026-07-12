@@ -507,10 +507,41 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         catch (error) { console.error("Failed to update clause number:", error); toast.error("שגיאה בעדכון מספר סעיף"); }
     };
 
-    const handleInvoiceAction = (quoteLineId) => { if (onUpdateQuoteLine) onUpdateQuoteLine(quoteLineId, true); };
+    // סנכרון גבייה מונע-אירוע: נקרא רק אחרי פעולת שמירה (הוספה/עריכה/מחיקה של חיוב, שינוי הנחה/קיזוז).
+    // מושך נתונים טריים, מעדכן את רשומות הגבייה שהשתנו — פעם אחת, ללא לולאה, בלי לרוץ ברינדור.
+    const syncAllCollections = async () => {
+        try {
+            const tasks = (collectionTasks || []).filter(t => t.project_id === projectId);
+            if (!tasks.length) return;
+            // נתונים טריים מהשרת — כדי לחשב סכום מדויק גם אם ה-state עוד לא התעדכן
+            const [freshEntries, freshProject] = await Promise.all([
+                ProgressEntry.filter({ project_id: projectId }),
+                Project.get(projectId),
+            ]);
+            const map = {};
+            localQuoteLines.forEach(l => { map[l.id] = []; });
+            freshEntries.forEach(e => { if (map[e.quote_line_id]) map[e.quote_line_id].push(e); });
+            let changed = false;
+            for (const task of tasks) {
+                if (task.collection_status && task.collection_status.includes('שולם')) continue; // שולם — נעול
+                const m = (task.invoice_number || '').match(/(\d+)/);
+                if (!m) continue;
+                const current = calcInvoiceSummary(parseInt(m[1]), map, freshProject || project).finalTotal;
+                if (Math.abs(current - toNum(task.amount_to_collect)) < 0.5) continue; // כבר תואם
+                await CollectionTask.update(task.id, { amount_to_collect: current });
+                changed = true;
+            }
+            if (changed && onUpdateQuoteLine) onUpdateQuoteLine(null, true); // רענון תצוגה רק אם באמת השתנה
+        } catch (e) { console.error('סנכרון גבייה נכשל:', e); }
+    };
+
+    const handleInvoiceAction = (quoteLineId) => {
+        if (onUpdateQuoteLine) onUpdateQuoteLine(quoteLineId, true);
+        syncAllCollections(); // עדכון סכום הגבייה אחרי שינוי בחיובים
+    };
 
     const handleDeductionsUpdate = async (deductions) => {
-        try { await Project.update(projectId, deductions); if (onUpdateQuoteLine) onUpdateQuoteLine(null, true); setShowDeductionsModal(false); }
+        try { await Project.update(projectId, deductions); if (onUpdateQuoteLine) onUpdateQuoteLine(null, true); setShowDeductionsModal(false); syncAllCollections(); }
         catch (error) { console.error('Error updating deductions:', error); }
     };
 
@@ -528,22 +559,22 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
         } catch (error) { console.error('Error updating payment terms:', error); toast.error("שגיאה בעדכון תנאי תשלום"); }
     };
 
-    const calcInvoiceSummary = (invoiceNum) => {
+    const calcInvoiceSummary = (invoiceNum, entriesByLine = invoicesData, proj = project) => {
         let rawSubtotal = 0;
         localQuoteLines.forEach(line => {
             if (line.is_header) return;
-            const entries = invoicesData[line.id] || [];
+            const entries = entriesByLine[line.id] || [];
             const invoiceEntries = entries.filter(e => e.invoice_number === `חשבון ${invoiceNum}`);
             rawSubtotal += invoiceEntries.reduce((sum, e) => sum + toNum(e.amount_to_invoice), 0);
         });
-        const discountType = project?.boq_discount_type || 'percentage';
-        const discountPct = project?.boq_discount_percentage || 0;
-        const discountFixed = project?.boq_discount_amount || 0;
+        const discountType = proj?.boq_discount_type || 'percentage';
+        const discountPct = proj?.boq_discount_percentage || 0;
+        const discountFixed = proj?.boq_discount_amount || 0;
         const discountAmt = discountType === 'fixed_amount' ? Math.min(discountFixed, rawSubtotal) : rawSubtotal * (discountPct / 100);
         const afterDiscount = rawSubtotal - discountAmt;
-        const insPct = project?.deduction_insurance_percentage || 0;
-        const retPct = project?.deduction_retention_percentage || 0;
-        const labPct = project?.deduction_lab_tests_percentage || 0;
+        const insPct = proj?.deduction_insurance_percentage || 0;
+        const retPct = proj?.deduction_retention_percentage || 0;
+        const labPct = proj?.deduction_lab_tests_percentage || 0;
         const insAmt = afterDiscount * (insPct / 100);
         const retAmt = afterDiscount * (retPct / 100);
         const labAmt = afterDiscount * (labPct / 100);
@@ -1018,7 +1049,7 @@ export default function BillOfQuantities({ quoteLines, projectId, project, quote
                     <div className="p-6 bg-white space-y-4">
                         <div><Label className="text-gray-700 font-semibold mb-2 block">סוג הנחה</Label><Select value={boqDiscountType} onValueChange={setBoqDiscountType}><SelectTrigger className="bg-white border-gray-300"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="percentage">אחוז (%)</SelectItem><SelectItem value="fixed_amount">סכום קבוע (₪)</SelectItem></SelectContent></Select></div>
                         <div><Label className="text-gray-700 font-semibold mb-2 block">{boqDiscountType === 'percentage' ? 'אחוז הנחה' : 'סכום הנחה'}</Label><Input type="number" min="0" max={boqDiscountType === 'percentage' ? 100 : undefined} step={boqDiscountType === 'percentage' ? '0.1' : '0.01'} value={boqDiscountType === 'percentage' ? boqDiscountPercentage : boqDiscountAmount} onChange={(e) => { const value = parseFloat(e.target.value) || 0; if (boqDiscountType === 'percentage') setBoqDiscountPercentage(Math.max(0, Math.min(100, value))); else setBoqDiscountAmount(Math.max(0, value)); }} className="text-center bg-white border-gray-300" /><p className="text-xs text-gray-500 mt-2">ההנחה תחושב על סה"כ כל החשבונות לפני קיזוזים ומע"מ{boqDiscountType === 'fixed_amount' && ' (אם הסכום גבוה מהחיוב, ההנחה תוגבל לסכום החיוב)'}</p></div>
-                        <div className="flex justify-end gap-3 pt-4 border-t"><Button type="button" variant="outline" onClick={() => setShowDiscountDialog(false)}>ביטול</Button><Button onClick={async () => { try { await Project.update(projectId, { boq_discount_type: boqDiscountType, boq_discount_percentage: boqDiscountPercentage, boq_discount_amount: boqDiscountAmount }); toast.success("הנחה כללית עודכנה"); if (onUpdateQuoteLine) onUpdateQuoteLine(null, true); setShowDiscountDialog(false); } catch (error) { console.error('Error updating BOQ discount:', error); toast.error("שגיאה בעדכון הנחה"); } }} className="bg-green-600 hover:bg-green-700 text-white">שמור</Button></div>
+                        <div className="flex justify-end gap-3 pt-4 border-t"><Button type="button" variant="outline" onClick={() => setShowDiscountDialog(false)}>ביטול</Button><Button onClick={async () => { try { await Project.update(projectId, { boq_discount_type: boqDiscountType, boq_discount_percentage: boqDiscountPercentage, boq_discount_amount: boqDiscountAmount }); toast.success("הנחה כללית עודכנה"); if (onUpdateQuoteLine) onUpdateQuoteLine(null, true); setShowDiscountDialog(false); syncAllCollections(); } catch (error) { console.error('Error updating BOQ discount:', error); toast.error("שגיאה בעדכון הנחה"); } }} className="bg-green-600 hover:bg-green-700 text-white">שמור</Button></div>
                     </div>
                 </DialogContent>
             </Dialog>
