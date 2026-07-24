@@ -56,8 +56,13 @@ export default function Quotes() {
         Quote.list('-created_date'),
         Project.list(),
       ]);
-      setQuotes(data.filter(q => !q.is_archived));
-      setFilteredQuotes(data.filter(q => !q.is_archived));
+      // הצעה מוסתרת אם היא בארכיון, או אם הפרויקט המקושר שלה הועבר לארכיון
+      const archivedProjectQuoteIds = new Set(
+        allProjects.filter(p => p.is_archived && p.quote_id).map(p => p.quote_id)
+      );
+      const visibleQuotes = data.filter(q => !q.is_archived && !archivedProjectQuoteIds.has(q.id));
+      setQuotes(visibleQuotes);
+      setFilteredQuotes(visibleQuotes);
       setProjects(allProjects);
     } catch (error) {
       console.error('Error loading quotes:', error);
